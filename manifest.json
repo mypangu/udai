@@ -1,0 +1,54 @@
+{
+  "name": "YouDai - Tamil Videos",
+  "short_name": "YouDai",
+  "description": "Watch Tamil TV shows and videos from multiple channels",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0c0c0c",
+  "theme_color": "#4ecdc4",
+  "orientation": "portrait-primary",
+  "categories": ["entertainment", "video", "tamil"],
+  "icons": [
+    {
+      "src": "/icons/icon-48.png",
+      "sizes": "48x48",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/icons/icon-96.png",
+      "sizes": "96x96",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/svg+xml"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Home",
+      "short_name": "Home",
+      "description": "Go to index page",
+      "url": "/index.html",
+      "icons": [
+        { "src": "/icons/icon-96.png", "sizes": "96x96", "type": "image/svg+xml" }
+      ]
+    },
+    {
+      "name": "Stream",
+      "short_name": "Stream",
+      "description": "Go to stream page",
+      "url": "/stream.html",
+      "icons": [
+        { "src": "/icons/icon-96.png", "sizes": "96x96", "type": "image/svg+xml" }
+      ]
+    }
+  ]
+}

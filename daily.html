@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Dailymotion M3U8 Extractor</title>
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <script>
+    async function getM3u8() {
+      const input = document.getElementById("videoInput").value.trim();
+      const result = document.getElementById("result");
+      result.innerHTML = "⏳ Processing...";
+
+      let videoId = "";
+
+      // Extract ID if full URL
+      if (input.includes("dailymotion.com") || input.includes("dai.ly")) {
+        const match = input.match(/(?:video\/|dai\.ly\/)([a-zA-Z0-9]+)/);
+        if (match) videoId = match[1];
+      } else {
+        videoId = input;
+      }
+
+      if (!videoId) {
+        result.innerHTML = "❌ Invalid input!";
+        return;
+      }
+
+      try {
+        // Fetch metadata from your Worker
+        const metaRes = await fetch(`https://dm.porus-in2012.workers.dev/meta?id=${videoId}`);
+        const data = await metaRes.json();
+
+        const m3u8Url = data?.qualities?.auto?.[0]?.url;
+
+        if (!m3u8Url) {
+          result.innerHTML = "❌ Could not extract m3u8.";
+          return;
+        }
+
+        const proxiedUrl = `https://dm.porus-in2012.workers.dev/proxy?u=${encodeURIComponent(m3u8Url)}`;
+
+        // Show result
+        result.innerHTML = `
+          ✅ Found M3U8 URL:<br>
+          <textarea rows="3" cols="70" readonly>${proxiedUrl}</textarea><br><br>
+          <button onclick="navigator.clipboard.writeText('${proxiedUrl}')">📋 Copy</button>
+          <button onclick="playStream('${proxiedUrl}')">▶ Play Here</button>
+          <a href="${proxiedUrl}" target="_blank"><button>🌐 Open</button></a>
+        `;
+      } catch (err) {
+        result.innerHTML = "❌ Error fetching metadata.";
+      }
+    }
+
+    function playStream(url) {
+      const video = document.getElementById("video");
+      video.style.display = "block"; // make sure it's visible
+
+      if (Hls.isSupported()) {
+        const hls = new Hls();
+        hls.loadSource(url);
+        hls.attachMedia(video);
+      } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
+        video.src = url;
+      } else {
+        alert("HLS not supported in this browser");
+      }
+    }
+  </script>
+</head>
+<body style="font-family: Arial; margin: 40px;">
+  <h2>Dailymotion M3U8 Extractor</h2>
+  <input type="text" id="videoInput" placeholder="Enter Video ID or URL" size="70">
+  <button onclick="getM3u8()">Fetch</button>
+
+  <div id="result" style="margin-top:20px; font-size:14px;"></div>
+
+  <video id="video" controls style="margin-top:20px; width:80%; max-width:800px; display:none;"></video>
+</body>
+</html>

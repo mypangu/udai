@@ -1,0 +1,1601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <title>YouDai Player - TV</title>
+  
+  <script src="dev.js"></script>
+
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="icon" type="image/png" href="/youdai/icons/icon-192.png">
+  
+  <script type="text/javascript"
+  src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework">
+</script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #0c0c0c 0%, #1a1a1a 100%);
+      color: #ffffff;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+      /* TV-specific cursor hiding */
+      cursor: none;
+    }
+
+    /* TV Focus Management */
+    .focusable {
+      outline: none;
+      border: 2px solid transparent;
+      transition: all 0.2s ease;
+      border-radius: 8px;
+    }
+
+    .focusable:focus,
+    .focusable.focused {
+      border-color: #4ecdc4;
+      box-shadow: 0 0 20px rgba(78, 205, 196, 0.4);
+      transform: scale(1.05);
+      z-index: 1000;
+      position: relative;
+    }
+
+    /* Top navigation bar - TV optimized */
+    .top-nav {
+      background: rgba(30, 30, 30, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 20px 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .nav-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 40px;
+    }
+
+    .back-btn {
+      background: rgba(255,255,255,0.1);
+      border: none;
+      border-radius: 12px;
+      padding: 15px 25px;
+      color: #fff;
+      cursor: pointer;
+      font-size: 18px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      min-width: 120px;
+      justify-content: center;
+    }
+
+    .back-btn:hover,
+    .back-btn:focus {
+      background: #4ecdc4;
+      transform: scale(1.1);
+      box-shadow: 0 4px 20px rgba(78, 205, 196, 0.4);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .nav-btn {
+      background: rgba(255,255,255,0.1);
+      border: none;
+      border-radius: 12px;
+      width: 60px;
+      height: 60px;
+      color: #fff;
+      cursor: pointer;
+      font-size: 20px;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .nav-btn:hover,
+    .nav-btn:focus {
+      background: #4ecdc4;
+      transform: scale(1.15);
+      box-shadow: 0 4px 20px rgba(78, 205, 196, 0.4);
+    }
+
+    .nav-btn.cast-btn:hover,
+    .nav-btn.cast-btn:focus {
+      background: #ff6b6b;
+      box-shadow: 0 4px 20px rgba(255, 107, 107, 0.4);
+    }
+
+    .nav-btn.share-btn:hover,
+    .nav-btn.share-btn:focus {
+      background: #45b7d1;
+      box-shadow: 0 4px 20px rgba(69, 183, 209, 0.4);
+    }
+
+    /* Player section */
+    .player-section {
+      background: #000;
+      position: relative;
+    }
+
+    .player-container {
+      position: relative;
+      width: 100%;
+      max-width: 1400px;
+      margin: 0 auto;
+      aspect-ratio: 16 / 9;
+      background: #000;
+    }
+
+    .player-iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .player-loading {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #4ecdc4;
+    }
+
+    .loading {
+      display: inline-block;
+      width: 60px;
+      height: 60px;
+      border: 6px solid rgba(78, 205, 196, 0.3);
+      border-radius: 50%;
+      border-top-color: #4ecdc4;
+      animation: spin 1s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .player-error {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      color: white;
+      text-align: center;
+      padding: 40px;
+      display: none;
+    }
+
+    .error-icon {
+      font-size: 72px;
+      margin-bottom: 30px;
+      color: #ff6b6b;
+    }
+
+    .error-title {
+      font-size: 28px;
+      margin: 0 0 20px 0;
+      font-weight: 600;
+    }
+
+    .error-message {
+      margin: 0 0 40px 0;
+      max-width: 600px;
+      line-height: 1.6;
+      opacity: 0.8;
+      font-size: 18px;
+    }
+
+    .error-actions {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .error-btn {
+      background: #4ecdc4;
+      border: none;
+      padding: 15px 30px;
+      border-radius: 12px;
+      color: white;
+      cursor: pointer;
+      font-size: 18px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      min-width: 140px;
+    }
+
+    .error-btn:hover,
+    .error-btn:focus {
+      transform: scale(1.1);
+      box-shadow: 0 4px 20px rgba(78, 205, 196, 0.4);
+    }
+
+    .error-btn.external {
+      background: #ff6b6b;
+    }
+
+    .error-btn.external:hover,
+    .error-btn.external:focus {
+      box-shadow: 0 4px 20px rgba(255, 107, 107, 0.4);
+    }
+
+    /* Video info section */
+    .video-info {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 40px 40px;
+    }
+
+    .video-title {
+      font-size: clamp(24px, 4vw, 36px);
+      font-weight: 700;
+      line-height: 1.3;
+      margin: 0 0 25px 0;
+      color: #fff;
+    }
+
+    .video-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .meta-left {
+      display: flex;
+      align-items: center;
+      gap: 30px;
+      flex-wrap: wrap;
+    }
+
+    .channel-info {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .channel-badge {
+      background: linear-gradient(135deg, #4ecdc4, #45b7d1);
+      padding: 10px 20px;
+      border-radius: 25px;
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .video-date {
+      color: rgba(255,255,255,0.7);
+      font-size: 16px;
+    }
+
+    .video-actions {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .action-btn {
+      background: rgba(255,255,255,0.1);
+      border: none;
+      border-radius: 25px;
+      padding: 12px 24px;
+      color: #fff;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      min-width: 120px;
+      justify-content: center;
+    }
+
+    .action-btn:hover,
+    .action-btn:focus {
+      background: rgba(255,255,255,0.2);
+      transform: scale(1.1);
+    }
+
+    .action-btn.cast:hover,
+    .action-btn.cast:focus {
+      background: #ff6b6b;
+      color: white;
+    }
+
+    .action-btn.share:hover,
+    .action-btn.share:focus {
+      background: #45b7d1;
+      color: white;
+    }
+
+    /* Related videos section - TV Grid */
+    .related-section {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 60px 40px;
+    }
+
+    .section-title {
+      font-size: clamp(26px, 3vw, 32px);
+      font-weight: 700;
+      margin: 0 0 40px 0;
+      color: #fff;
+    }
+
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 30px;
+    }
+
+    /* TV-optimized grid for different screen sizes */
+    @media (max-width: 1920px) {
+      .related-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 25px;
+      }
+    }
+
+    @media (max-width: 1280px) {
+      .related-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+      }
+    }
+
+    .related-card {
+      background: rgba(255,255,255,0.05);
+      border-radius: 16px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
+    }
+
+    .related-card:hover,
+    .related-card:focus,
+    .related-card.focused {
+      transform: scale(1.08);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+      border-color: #4ecdc4;
+      z-index: 10;
+      position: relative;
+    }
+
+    .related-thumbnail {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+    }
+
+    .related-thumbnail img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    .related-card:hover .related-thumbnail img,
+    .related-card:focus .related-thumbnail img,
+    .related-card.focused .related-thumbnail img {
+      transform: scale(1.05);
+    }
+
+    .play-icon {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0,0,0,0.7);
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #4ecdc4;
+      font-size: 24px;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+
+    .related-card:hover .play-icon,
+    .related-card:focus .play-icon,
+    .related-card.focused .play-icon {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1.1);
+    }
+
+    .related-content {
+      padding: 20px;
+    }
+
+    .related-title {
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 1.4;
+      margin: 0 0 12px 0;
+      color: #fff;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .related-date {
+      font-size: 14px;
+      color: rgba(255,255,255,0.6);
+      margin: 0;
+    }
+
+    /* Share modal - TV optimized */
+    .share-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(10px);
+      z-index: 10001;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+    }
+
+    .share-content {
+      background: rgba(30, 30, 30, 0.95);
+      border-radius: 20px;
+      padding: 50px;
+      max-width: 600px;
+      width: 100%;
+      text-align: center;
+      border: 2px solid rgba(255,255,255,0.1);
+    }
+
+    .share-title {
+      font-size: 28px;
+      font-weight: 600;
+      margin: 0 0 30px 0;
+      color: #fff;
+    }
+
+    .share-url {
+      background: rgba(255,255,255,0.1);
+      border: 2px solid rgba(255,255,255,0.2);
+      border-radius: 12px;
+      padding: 20px;
+      width: 100%;
+      color: #fff;
+      font-size: 16px;
+      margin-bottom: 30px;
+      outline: none;
+      text-align: center;
+    }
+
+    .share-url:focus {
+      border-color: #4ecdc4;
+      box-shadow: 0 0 20px rgba(78, 205, 196, 0.3);
+    }
+
+    .share-actions {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+    }
+
+    .copy-btn, .open-btn, .close-btn {
+      background: #4ecdc4;
+      border: none;
+      border-radius: 12px;
+      padding: 15px 30px;
+      color: white;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      min-width: 120px;
+    }
+
+    .copy-btn:hover, .copy-btn:focus,
+    .open-btn:hover, .open-btn:focus {
+      background: #45b7d1;
+      transform: scale(1.1);
+    }
+
+    .close-btn {
+      background: rgba(255,255,255,0.2);
+    }
+
+    .close-btn:hover,
+    .close-btn:focus {
+      background: rgba(255,255,255,0.3);
+      transform: scale(1.1);
+    }
+
+    /* TV Instructions Overlay */
+    .tv-instructions {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      background: rgba(0,0,0,0.8);
+      padding: 15px 20px;
+      border-radius: 12px;
+      font-size: 14px;
+      color: rgba(255,255,255,0.8);
+      z-index: 200;
+      border: 1px solid rgba(255,255,255,0.2);
+      opacity: 1;
+      transition: opacity 0.3s ease;
+    }
+
+    .tv-instructions.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .instruction-line {
+      margin: 2px 0;
+    }
+
+    /* Hide scrollbars for TV */
+    ::-webkit-scrollbar {
+      display: none;
+    }
+
+    * {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    /* TV-specific responsive adjustments */
+    @media (min-width: 1920px) {
+      .nav-container, .video-info, .related-section {
+        max-width: 1600px;
+        padding-left: 60px;
+        padding-right: 60px;
+      }
+      
+      .video-title {
+        font-size: 42px;
+      }
+      
+      .related-grid {
+        grid-template-columns: repeat(5, 1fr);
+        gap: 35px;
+      }
+    }
+
+    /* Cast detection */
+    .cast-available {
+      color: #4ecdc4 !important;
+    }
+
+    /* Hide elements when needed */
+    .hidden {
+      display: none !important;
+    }
+
+    /* Focus ring animation */
+    @keyframes focusRing {
+      0% { box-shadow: 0 0 0 rgba(78, 205, 196, 0.4); }
+      50% { box-shadow: 0 0 25px rgba(78, 205, 196, 0.6); }
+      100% { box-shadow: 0 0 0 rgba(78, 205, 196, 0.4); }
+    }
+
+    .focusable:focus,
+    .focusable.focused {
+      animation: focusRing 2s infinite;
+    }
+  </style>
+</head>
+<body>
+  <!-- TV Instructions -->
+  <div class="tv-instructions" id="tvInstructions">
+    <div class="instruction-line"><strong>TV Controls:</strong></div>
+    <div class="instruction-line">↑↓←→ Navigate • OK/Enter Select • Back Return</div>
+    <div class="instruction-line">Menu Show/Hide Instructions</div>
+  </div>
+
+  <!-- Top Navigation -->
+  <nav class="top-nav">
+    <div class="nav-container">
+      <button class="back-btn focusable" id="backBtn" tabindex="1">
+        <i class="fas fa-arrow-left"></i>
+        <span>Back</span>
+      </button>
+      
+      <div class="nav-actions">
+        <button class="nav-btn reload-btn focusable" id="reloadBtn" title="Reload Page" tabindex="2">
+          <i class="fas fa-sync-alt"></i>
+        </button>
+        <button class="nav-btn cast-btn focusable" id="castBtn" title="Open Link" tabindex="3">
+          <i class="fa-solid fa-globe"></i>
+        </button>
+        <button class="nav-btn share-btn focusable" id="shareBtn" title="Share Video" tabindex="4">
+          <i class="fas fa-share-alt"></i>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Player Section -->
+  <section class="player-section">
+    <div class="player-container focusable" id="playerContainer" tabindex="5">
+      <div class="player-loading" id="playerLoading">
+        <div class="loading"></div>
+      </div>
+      
+      <iframe id="playerIframe" class="player-iframe" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"></iframe>
+      
+      <div class="player-error" id="playerError">
+        <i class="fas fa-exclamation-triangle error-icon"></i>
+        <h3 class="error-title">Unable to Load Video</h3>
+        <p class="error-message">This video cannot be embedded. You can watch it on the original platform.</p>
+        <div class="error-actions">
+          <button class="error-btn focusable" tabindex="6" onclick="retryLoad()">Try Again</button>
+          <a href="#" class="error-btn external focusable" id="externalLink" target="_blank" tabindex="7">Watch on Platform</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Video Info -->
+  <section class="video-info">
+    <h1 class="video-title" id="videoTitle">Loading...</h1>
+    
+    <div class="video-meta">
+      <div class="meta-left">
+        <div class="channel-info">
+          <div class="channel-badge" id="channelName">Loading...</div>
+        </div>
+        <div class="video-date" id="videoDate">Loading...</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Related Videos -->
+  <section class="related-section">
+    <h2 class="section-title" id="relatedTitle">More from Channel</h2>
+    <div class="related-grid" id="relatedGrid">
+      <!-- Related videos will be populated here -->
+    </div>
+  </section>
+
+  <!-- Share Modal -->
+  <div class="share-modal" id="shareModal">
+    <div class="share-content">
+      <h3 class="share-title">Share Video</h3>
+      <input type="text" class="share-url focusable" id="shareUrl" readonly tabindex="100">
+      <div class="share-actions">
+        <button class="copy-btn focusable" id="copyBtn" tabindex="101">Copy Link</button>
+        <button class="close-btn focusable" id="closeShareBtn" tabindex="102">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    class TVVideoPlayer {
+      constructor() {
+        this.currentVideo = null;
+        this.allVideos = [];
+        this.relatedVideos = [];
+        this.retryCount = 0;
+        this.maxRetries = 3;
+        this.focusIndex = 0;
+        this.focusableElements = [];
+        this.isTV = this.detectTV();
+        this.instructionsVisible = true;
+        
+        this.elements = {
+          playerIframe: document.getElementById('playerIframe'),
+          playerLoading: document.getElementById('playerLoading'),
+          playerError: document.getElementById('playerError'),
+          playerContainer: document.getElementById('playerContainer'),
+          videoTitle: document.getElementById('videoTitle'),
+          channelName: document.getElementById('channelName'),
+          videoDate: document.getElementById('videoDate'),
+          relatedTitle: document.getElementById('relatedTitle'),
+          relatedGrid: document.getElementById('relatedGrid'),
+          shareModal: document.getElementById('shareModal'),
+          shareUrl: document.getElementById('shareUrl'),
+          copyBtn: document.getElementById('copyBtn'),
+          closeShareBtn: document.getElementById('closeShareBtn'),
+          castBtn: document.getElementById('castBtn'),
+          shareBtn: document.getElementById('shareBtn'),
+          externalLink: document.getElementById('externalLink'),
+          backBtn: document.getElementById('backBtn'),
+          reloadBtn: document.getElementById('reloadBtn'),
+          tvInstructions: document.getElementById('tvInstructions')
+        };
+
+        this.init();
+      }
+
+      detectTV() {
+        const userAgent = navigator.userAgent.toLowerCase();
+        return (
+          userAgent.includes('tv') ||
+          userAgent.includes('roku') ||
+          userAgent.includes('webos') ||
+          userAgent.includes('tizen') ||
+          userAgent.includes('android tv') ||
+          userAgent.includes('googletv') ||
+          window.innerWidth >= 1280 // Assume TV for larger screens
+        );
+      }
+
+      async init() {
+        this.loadVideoData();
+        this.setupEventListeners();
+        this.setupTVNavigation();
+        this.setupMobileOrientationHandler();
+        this.detectCastDevices();
+        this.initCast();
+        this.loadVideo();
+        
+        // Auto-hide instructions after 10 seconds
+        setTimeout(() => {
+          this.hideInstructions();
+        }, 10000);
+      }
+
+      setupTVNavigation() {
+        // Initialize focusable elements
+        this.updateFocusableElements();
+        
+        // Set initial focus
+        setTimeout(() => {
+          this.focusElement(0);
+        }, 500);
+
+        // TV navigation event listeners
+        document.addEventListener('keydown', (e) => this.handleTVKeyPress(e));
+        
+        // Update focusable elements when DOM changes
+        const observer = new MutationObserver(() => {
+          this.updateFocusableElements();
+        });
+        
+        observer.observe(document.body, {
+          childList: true,
+          subtree: true
+        });
+
+        // Handle focus events
+        document.addEventListener('focusin', (e) => {
+          this.handleFocusIn(e);
+        });
+      }
+
+      updateFocusableElements() {
+        // Get all focusable elements in the correct order
+        const selectors = [
+          '.focusable:not(.hidden):not([disabled])',
+          '.related-card:not(.hidden)',
+          'button:not(.hidden):not([disabled])',
+          'a:not(.hidden)',
+          'input:not(.hidden):not([disabled])'
+        ];
+
+        this.focusableElements = [];
+        
+        selectors.forEach(selector => {
+          const elements = document.querySelectorAll(selector);
+          elements.forEach(el => {
+            if (this.isVisible(el) && !this.focusableElements.includes(el)) {
+              this.focusableElements.push(el);
+            }
+          });
+        });
+
+        // Sort by tabindex and document order
+        this.focusableElements.sort((a, b) => {
+          const aTabIndex = parseInt(a.getAttribute('tabindex')) || 0;
+          const bTabIndex = parseInt(b.getAttribute('tabindex')) || 0;
+          
+          if (aTabIndex !== bTabIndex) {
+            return aTabIndex - bTabIndex;
+          }
+          
+          return a.compareDocumentPosition(b) & Node.DOCUMENT_POSITION_FOLLOWING ? -1 : 1;
+        });
+      }
+
+      isVisible(element) {
+        const rect = element.getBoundingClientRect();
+        const style = window.getComputedStyle(element);
+        
+        return (
+          rect.width > 0 &&
+          rect.height > 0 &&
+          style.display !== 'none' &&
+          style.visibility !== 'hidden' &&
+          style.opacity !== '0'
+        );
+      }
+
+      handleTVKeyPress(e) {
+        const isModal = this.elements.shareModal.style.display === 'flex';
+        
+        switch(e.key) {
+          case 'ArrowUp':
+            e.preventDefault();
+            this.navigateFocus('up');
+            break;
+            
+          case 'ArrowDown':
+            e.preventDefault();
+            this.navigateFocus('down');
+            break;
+            
+          case 'ArrowLeft':
+            e.preventDefault();
+            this.navigateFocus('left');
+            break;
+            
+          case 'ArrowRight':
+            e.preventDefault();
+            this.navigateFocus('right');
+            break;
+            
+          case 'Enter':
+          case ' ':
+            e.preventDefault();
+            this.activateCurrentElement();
+            break;
+            
+          case 'Escape':
+          case 'Backspace':
+            e.preventDefault();
+            if (isModal) {
+              this.closeShareModal();
+            } else {
+              this.goBack();
+            }
+            break;
+            
+          case 'Menu':
+            e.preventDefault();
+            this.toggleInstructions();
+            break;
+            
+          case 'MediaPlayPause':
+            e.preventDefault();
+            this.togglePlayPause();
+            break;
+            
+          case 'f':
+          case 'F':
+            if (!isModal) {
+              e.preventDefault();
+              this.toggleFullscreen();
+            }
+            break;
+        }
+      }
+
+      navigateFocus(direction) {
+        this.updateFocusableElements();
+        
+        if (this.focusableElements.length === 0) return;
+
+        const currentElement = document.activeElement;
+        let currentIndex = this.focusableElements.indexOf(currentElement);
+        
+        if (currentIndex === -1) {
+          currentIndex = 0;
+        }
+
+        let nextIndex;
+        const isInModal = this.elements.shareModal.style.display === 'flex';
+        
+        if (isInModal) {
+          // Modal navigation
+          const modalElements = this.focusableElements.filter(el => 
+            this.elements.shareModal.contains(el)
+          );
+          const modalIndex = modalElements.indexOf(currentElement);
+          
+          switch(direction) {
+            case 'up':
+            case 'left':
+              nextIndex = modalIndex > 0 ? modalIndex - 1 : modalElements.length - 1;
+              break;
+            case 'down':
+            case 'right':
+              nextIndex = modalIndex < modalElements.length - 1 ? modalIndex + 1 : 0;
+              break;
+          }
+          
+          if (modalElements[nextIndex]) {
+            this.focusElement(this.focusableElements.indexOf(modalElements[nextIndex]));
+          }
+        } else {
+          // Grid navigation for related videos
+          const relatedCards = document.querySelectorAll('.related-card');
+          const currentCard = Array.from(relatedCards).find(card => card === currentElement);
+          
+          if (currentCard && direction !== 'up' && direction !== 'down') {
+            // Horizontal navigation in grid
+            const cardIndex = Array.from(relatedCards).indexOf(currentCard);
+            const columns = this.getGridColumns();
+            
+            switch(direction) {
+              case 'left':
+                nextIndex = cardIndex > 0 ? 
+                  this.focusableElements.indexOf(relatedCards[cardIndex - 1]) : 
+                  currentIndex;
+                break;
+              case 'right':
+                nextIndex = cardIndex < relatedCards.length - 1 ? 
+                  this.focusableElements.indexOf(relatedCards[cardIndex + 1]) : 
+                  currentIndex;
+                break;
+            }
+          } else if (currentCard && (direction === 'up' || direction === 'down')) {
+            // Vertical navigation in grid
+            const cardIndex = Array.from(relatedCards).indexOf(currentCard);
+            const columns = this.getGridColumns();
+            
+            switch(direction) {
+              case 'up':
+                const upIndex = cardIndex - columns;
+                if (upIndex >= 0) {
+                  nextIndex = this.focusableElements.indexOf(relatedCards[upIndex]);
+                } else {
+                  // Go to navigation
+                  nextIndex = 0;
+                }
+                break;
+              case 'down':
+                const downIndex = cardIndex + columns;
+                if (downIndex < relatedCards.length) {
+                  nextIndex = this.focusableElements.indexOf(relatedCards[downIndex]);
+                } else {
+                  nextIndex = currentIndex;
+                }
+                break;
+            }
+          } else {
+            // Regular navigation
+            switch(direction) {
+              case 'up':
+                nextIndex = currentIndex > 0 ? currentIndex - 1 : this.focusableElements.length - 1;
+                break;
+              case 'down':
+                nextIndex = currentIndex < this.focusableElements.length - 1 ? currentIndex + 1 : 0;
+                break;
+              case 'left':
+                nextIndex = currentIndex > 0 ? currentIndex - 1 : this.focusableElements.length - 1;
+                break;
+              case 'right':
+                nextIndex = currentIndex < this.focusableElements.length - 1 ? currentIndex + 1 : 0;
+                break;
+            }
+          }
+
+          this.focusElement(nextIndex !== undefined ? nextIndex : currentIndex);
+        }
+      }
+
+      getGridColumns() {
+        const width = window.innerWidth;
+        if (width >= 1920) return 5;
+        if (width >= 1280) return 4;
+        return 3;
+      }
+
+      focusElement(index) {
+        if (index < 0 || index >= this.focusableElements.length) return;
+        
+        const element = this.focusableElements[index];
+        if (element) {
+          element.focus();
+          element.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'center',
+            inline: 'center'
+          });
+          
+          // Add visual focus class
+          document.querySelectorAll('.focused').forEach(el => el.classList.remove('focused'));
+          element.classList.add('focused');
+          
+          this.focusIndex = index;
+        }
+      }
+
+      handleFocusIn(e) {
+        const element = e.target;
+        if (this.focusableElements.includes(element)) {
+          this.focusIndex = this.focusableElements.indexOf(element);
+          
+          // Add visual focus class
+          document.querySelectorAll('.focused').forEach(el => el.classList.remove('focused'));
+          element.classList.add('focused');
+        }
+      }
+
+      activateCurrentElement() {
+        const currentElement = document.activeElement;
+        
+        if (currentElement) {
+          if (currentElement.tagName === 'BUTTON') {
+            currentElement.click();
+          } else if (currentElement.tagName === 'A') {
+            currentElement.click();
+          } else if (currentElement.classList.contains('related-card')) {
+            currentElement.click();
+          } else if (currentElement === this.elements.playerContainer) {
+            this.toggleFullscreen();
+          }
+        }
+      }
+
+      toggleInstructions() {
+        if (this.instructionsVisible) {
+          this.hideInstructions();
+        } else {
+          this.showInstructions();
+        }
+      }
+
+      showInstructions() {
+        this.elements.tvInstructions.classList.remove('hidden');
+        this.instructionsVisible = true;
+        
+        // Auto-hide after 5 seconds
+        setTimeout(() => {
+          this.hideInstructions();
+        }, 5000);
+      }
+
+      hideInstructions() {
+        this.elements.tvInstructions.classList.add('hidden');
+        this.instructionsVisible = false;
+      }
+
+      goBack() {
+        window.location.href = 'tv.html';
+      }
+
+      togglePlayPause() {
+        // Send message to iframe if possible
+        try {
+          const iframe = this.elements.playerIframe;
+          if (iframe && iframe.contentWindow) {
+            iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+          }
+        } catch (e) {
+          console.log('Cannot control iframe player');
+        }
+      }
+
+      initCast() {
+        if (!window.chrome || !window.chrome.cast) {
+          console.log('Cast API not available');
+          return;
+        }
+
+        window['__onGCastApiAvailable'] = (isAvailable) => {
+          if (isAvailable) {
+            try {
+              const context = cast.framework.CastContext.getInstance();
+              context.setOptions({
+                receiverApplicationId: chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID,
+                autoJoinPolicy: chrome.cast.AutoJoinPolicy.TAB_AND_ORIGIN_SCOPED
+              });
+              
+              context.addEventListener(
+                cast.framework.CastContextEventType.SESSION_STATE_CHANGED,
+                (event) => this.handleCastSessionChange(event)
+              );
+              
+              console.log("Cast initialized successfully");
+              this.updateCastButton();
+            } catch (error) {
+              console.error('Cast initialization failed:', error);
+            }
+          }
+        };
+      }
+
+      setupMobileOrientationHandler() {
+        const handleFullscreenChange = async () => {
+          const isFullscreen = !!(document.fullscreenElement || 
+                                 document.webkitFullscreenElement || 
+                                 document.mozFullScreenElement);
+
+          const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+                          (window.innerWidth <= 768 && !this.isTV);
+
+          if (isFullscreen && isMobile) {
+            if (screen.orientation && screen.orientation.lock) {
+              try {
+                await screen.orientation.lock('landscape-primary');
+              } catch (error) {
+                try {
+                  await screen.orientation.lock('landscape');
+                } catch (altError) {
+                  console.log('Orientation lock not supported:', altError);
+                }
+              }
+            }
+          } else if (!isFullscreen && isMobile) {
+            if (screen.orientation && screen.orientation.unlock) {
+              screen.orientation.unlock();
+            }
+          }
+        };
+
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+        document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+        document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+      }
+
+      loadVideoData() {
+        const videoData = sessionStorage.getItem('currentVideo');
+        const allVideosData = sessionStorage.getItem('allVideos');
+
+        if (!videoData) {
+          window.location.href = 'tv.html';
+          return;
+        }
+
+        this.currentVideo = JSON.parse(videoData);
+        this.allVideos = allVideosData ? JSON.parse(allVideosData) : [];
+        
+        this.relatedVideos = this.allVideos
+          .filter(v => v.channel === this.currentVideo.channel && v.id !== this.currentVideo.id)
+          .sort((a, b) => new Date(b.date) - new Date(a.date))
+          .slice(0, 8);
+
+        this.updateUI();
+      }
+
+      updateUI() {
+        const { title, channel, date } = this.currentVideo;
+        
+        this.elements.videoTitle.textContent = title;
+        this.elements.channelName.textContent = channel;
+        this.elements.videoDate.textContent = this.formatDate(date);
+        this.elements.relatedTitle.textContent = `More from ${channel}`;
+
+        document.title = `${title} - YouDai Player TV`;
+
+        this.elements.shareUrl.value = this.getDirectVideoLink();
+        this.updateExternalLink();
+        this.renderRelatedVideos();
+      }
+
+      getDirectVideoLink() {
+        const { platform, id } = this.currentVideo;
+        switch(platform) {
+          case 'youtube': return `https://www.youtube.com/watch?v=${id}`;
+          case 'dailymotion': return `https://www.dailymotion.com/video/${id}`;
+          case 'ok': return `https://ok.ru/video/${id}`;
+          case 'yupptv': return `https://www.yupptv.com/yupptvnew/channels/${id}/live`;
+          default: return window.location.href;
+        }
+      }
+
+      updateExternalLink() {
+        const { platform, id } = this.currentVideo;
+        let url = '#';
+        
+        switch(platform) {
+          case 'youtube':
+            url = `https://www.youtube.com/watch?v=${id}`;
+            break;
+          case 'dailymotion':
+            url = `https://www.dailymotion.com/video/${id}`;
+            break;
+          case 'ok':
+            url = `https://ok.ru/video/${id}`;
+            break;
+          case 'yupptv':
+            url = `https://www.yupptv.com/yupptvnew/channels/${id}/live`;
+            break;
+        }
+        
+        this.elements.externalLink.href = url;
+        this.elements.externalLink.textContent = `Watch on ${platform.charAt(0).toUpperCase() + platform.slice(1)}`;
+      }
+
+      formatDate(dateString) {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-IN', { 
+          day: 'numeric', 
+          month: 'short',
+          year: 'numeric'
+        });
+      }
+
+      getOptimalThumbnail(video) {
+        return window.innerWidth < 768 ? video.mthumb : video.dthumb;
+      }
+
+      renderRelatedVideos() {
+        if (this.relatedVideos.length === 0) {
+          this.elements.relatedGrid.innerHTML = `
+            <div style="grid-column: 1 / -1; text-align: center; padding: 60px; color: rgba(255,255,255,0.6);">
+              <i class="fas fa-video" style="font-size: 72px; margin-bottom: 20px; opacity: 0.5;"></i>
+              <p style="font-size: 20px;">No related videos found</p>
+            </div>
+          `;
+          return;
+        }
+
+        this.elements.relatedGrid.innerHTML = this.relatedVideos.map((video, index) => `
+          <div class="related-card focusable" data-platform="${video.platform}" data-id="${video.id}" tabindex="${50 + index}">
+            <div class="related-thumbnail">
+              <img src="${this.getOptimalThumbnail(video)}" alt="${video.title}" loading="lazy" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIwIiBoZWlnaHQ9IjE4MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMzMzIi8+CiAgPHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk5vIEltYWdlPC90ZXh0Pgo8L3N2Zz4K'">
+              <div class="play-icon">
+                <i class="fas fa-play"></i>
+              </div>
+            </div>
+            <div class="related-content">
+              <h3 class="related-title">${video.title}</h3>
+              <p class="related-date">${this.formatDate(video.date)}</p>
+            </div>
+          </div>
+        `).join('');
+
+        setTimeout(() => {
+          const relatedCards = this.elements.relatedGrid.querySelectorAll('.related-card');
+          relatedCards.forEach(card => {
+            card.addEventListener('click', () => {
+              const platform = card.dataset.platform;
+              const id = card.dataset.id;
+              const video = this.allVideos.find(v => v.platform === platform && v.id === id);
+              
+              if (video) {
+                this.playRelatedVideo(video);
+              }
+            });
+          });
+          
+          // Update focusable elements after adding cards
+          this.updateFocusableElements();
+        }, 100);
+      }
+
+      playRelatedVideo(video) {
+        this.currentVideo = video;
+        sessionStorage.setItem('currentVideo', JSON.stringify(video));
+        
+        this.relatedVideos = this.allVideos
+          .filter(v => v.channel === video.channel && v.id !== video.id)
+          .sort((a, b) => new Date(b.date) - new Date(a.date))
+          .slice(0, 8);
+
+        this.retryCount = 0;
+        this.updateUI();
+        this.loadVideo();
+        
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        
+        // Refocus on player
+        setTimeout(() => {
+          this.focusElement(0);
+        }, 500);
+      }
+
+loadVideo() {
+  this.showLoading();
+  this.hideError();
+  
+  const { platform, id } = this.currentVideo;
+  let embedUrl = this.getEmbedUrl(platform, id);
+
+  const iframe = this.elements.playerIframe;
+  iframe.src = embedUrl;
+  iframe.allow = "autoplay; encrypted-media; fullscreen";
+  iframe.setAttribute("allowfullscreen", true);
+
+  const loadTimeout = setTimeout(() => {
+    this.handleLoadError();
+  }, 8000);
+
+  iframe.onload = () => {
+    clearTimeout(loadTimeout);
+    this.hideLoading();
+    console.log('Video loaded successfully');
+
+    // 🔊 Unmute logic
+    if (platform === "youtube") {
+      iframe.contentWindow.postMessage(
+        '{"event":"command","func":"unMute","args":""}',
+        "*"
+      );
+      iframe.contentWindow.postMessage(
+        '{"event":"command","func":"setVolume","args":[100]}',
+        "*"
+      );
+    } else if (platform === "dailymotion") {
+      iframe.contentWindow.postMessage(
+        { method: "setVolume", value: 1 },
+        "*"
+      );
+    }
+    // ok.ru & yupptv → autoplay with sound if mute flag not set
+  };
+
+  iframe.onerror = () => {
+    clearTimeout(loadTimeout);
+    this.handleLoadError();
+  };
+}
+
+
+getEmbedUrl(platform, id, retryAttempt = 0) {
+  switch(platform) {
+    case 'youtube':
+      const ytUrls = [
+        `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&modestbranding=1&controls=1&enablejsapi=1`,
+        `https://www.youtube.com/embed/${id}?autoplay=1&rel=0&modestbranding=1&controls=1&enablejsapi=1`,
+        `https://www.youtube-nocookie.com/embed/${id}?rel=0&controls=1&enablejsapi=1`
+      ];
+      return ytUrls[retryAttempt] || ytUrls[0];
+      
+    case 'dailymotion':
+      return `https://www.dailymotion.com/embed/video/${id}?autoplay=1&ui-logo=0&controls=1`;
+      
+    case 'ok':
+      return `https://ok.ru/videoembed/${id}?autoplay=1`;
+      
+    case 'yupptv':
+      return `https://www.yupptv.com/yupptvnew/channels/${id}/live/embed?autoplay=1`;
+      
+    default:
+      return '';
+  }
+}
+
+
+      showLoading() {
+        this.elements.playerLoading.style.display = 'flex';
+        this.elements.playerError.style.display = 'none';
+      }
+
+      hideLoading() {
+        this.elements.playerLoading.style.display = 'none';
+      }
+
+      showError() {
+        this.elements.playerError.style.display = 'flex';
+        this.elements.playerLoading.style.display = 'none';
+      }
+
+      hideError() {
+        this.elements.playerError.style.display = 'none';
+      }
+
+      handleLoadError() {
+        if (this.retryCount < this.maxRetries) {
+          this.retryCount++;
+          console.log(`Retry attempt ${this.retryCount} of ${this.maxRetries}`);
+          
+          setTimeout(() => {
+            const { platform, id } = this.currentVideo;
+            const embedUrl = this.getEmbedUrl(platform, id, this.retryCount - 1);
+            this.elements.playerIframe.src = embedUrl;
+            
+            const retryTimeout = setTimeout(() => {
+              this.handleLoadError();
+            }, 5000 * this.retryCount);
+            
+            this.elements.playerIframe.onload = () => {
+              clearTimeout(retryTimeout);
+              this.hideLoading();
+              console.log(`Successfully loaded on retry ${this.retryCount}`);
+            };
+          }, 1000 * this.retryCount);
+        } else {
+          this.showError();
+        }
+      }
+
+      setupEventListeners() {
+        this.elements.shareBtn.addEventListener('click', () => this.openShareModal());
+        this.elements.copyBtn.addEventListener('click', () => this.copyShareUrl());
+        this.elements.closeShareBtn.addEventListener('click', () => this.closeShareModal());
+        this.elements.shareModal.addEventListener('click', (e) => {
+          if (e.target === this.elements.shareModal) this.closeShareModal();
+        });
+
+        this.elements.castBtn.addEventListener('click', () => this.handleCast());
+        this.elements.backBtn.addEventListener('click', () => this.goBack());
+        this.elements.reloadBtn.addEventListener('click', () => location.reload());
+        
+        // Player container click for fullscreen
+        this.elements.playerContainer.addEventListener('click', () => {
+          if (this.elements.playerLoading.style.display === 'none' && 
+              this.elements.playerError.style.display === 'none') {
+            this.toggleFullscreen();
+          }
+        });
+      }
+
+      openShareModal() {
+        this.elements.shareModal.style.display = 'flex';
+        this.updateFocusableElements();
+        
+        // Focus on share URL input
+        setTimeout(() => {
+          const shareUrlIndex = this.focusableElements.indexOf(this.elements.shareUrl);
+          if (shareUrlIndex !== -1) {
+            this.focusElement(shareUrlIndex);
+            this.elements.shareUrl.select();
+          }
+        }, 100);
+      }
+
+      closeShareModal() {
+        this.elements.shareModal.style.display = 'none';
+        this.updateFocusableElements();
+        
+        // Return focus to share button
+        setTimeout(() => {
+          const shareButtonIndex = this.focusableElements.indexOf(this.elements.shareBtn);
+          if (shareButtonIndex !== -1) {
+            this.focusElement(shareButtonIndex);
+          }
+        }, 100);
+      }
+
+      async copyShareUrl() {
+        try {
+          await navigator.clipboard.writeText(this.elements.shareUrl.value);
+          this.elements.copyBtn.textContent = 'Copied!';
+          this.elements.copyBtn.style.background = '#4ecdc4';
+          
+          setTimeout(() => {
+            this.elements.copyBtn.textContent = 'Copy Link';
+            this.elements.copyBtn.style.background = '#4ecdc4';
+          }, 2000);
+        } catch (err) {
+          this.elements.shareUrl.select();
+          document.execCommand('copy');
+          this.elements.copyBtn.textContent = 'Copied!';
+          
+          setTimeout(() => {
+            this.elements.copyBtn.textContent = 'Copy Link';
+          }, 2000);
+        }
+      }
+
+      detectCastDevices() {
+        if (window.chrome && window.chrome.cast) {
+          this.elements.castBtn.classList.add('cast-available');
+        }
+
+        if (navigator.mediaDevices && navigator.mediaDevices.getDisplayMedia) {
+          this.elements.castBtn.style.opacity = '1';
+        }
+      }
+
+      handleCast() {
+        const { platform, id } = this.currentVideo;
+
+        if (platform === "dailymotion") {
+          fetch(`https://www.dailymotion.com/player/metadata/video/${id}`)
+            .then(res => res.json())
+            .then(data => {
+              const hls = data.qualities.auto?.[0]?.url;
+              if (hls) {
+                const mediaInfo = new chrome.cast.media.MediaInfo(hls, 'application/x-mpegURL');
+                const request = new chrome.cast.media.LoadRequest(mediaInfo);
+
+                cast.framework.CastContext.getInstance().requestSession()
+                  .then(session => {
+                    session.loadMedia(request).then(
+                      () => console.log("Casting started"),
+                      (err) => console.error("Load error", err)
+                    );
+                  })
+                  .catch(err => console.error("Cast session error", err));
+              } else {
+                window.open(`https://www.dailymotion.com/video/${id}`, "_blank");
+              }
+            })
+            .catch(err => {
+              console.error("Metadata fetch error", err);
+              window.open(`https://www.dailymotion.com/video/${id}`, "_blank");
+            });
+        } else {
+          window.open(this.getDirectVideoLink(), "_blank");
+        }
+      }
+
+      toggleFullscreen() {
+        if (!document.fullscreenElement) {
+          this.elements.playerContainer.requestFullscreen().catch(err => {
+            console.log('Fullscreen error:', err);
+          });
+        } else {
+          document.exitFullscreen();
+        }
+      }
+
+      retryLoad() {
+        this.retryCount = 0;
+        this.loadVideo();
+      }
+    }
+
+    // Initialize TV player when DOM is ready
+    let player;
+    
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => {
+        player = new TVVideoPlayer();
+      });
+    } else {
+      player = new TVVideoPlayer();
+    }
+
+    // Make retry function globally accessible
+    window.retryLoad = () => {
+      if (player) {
+        player.retryLoad();
+      }
+    };
+
+    // Handle offline/online status
+    window.addEventListener('online', () => {
+      console.log('Connection restored');
+      if (player && document.getElementById('playerError').style.display === 'flex') {
+        player.retryLoad();
+      }
+    });
+
+    window.addEventListener('offline', () => {
+      console.log('Connection lost');
+    });
+  </script>
+</body>
+</html>

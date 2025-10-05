@@ -1,0 +1,1768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <title>YouDai Player</title>
+  
+  <!-- <script src="Dev-shield.js"></script> -->
+
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="icon" type="image/png" href="/icons/icon-192.png">
+  
+  <script type="text/javascript"
+  src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework">
+</script>
+
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+	
+	html, body {
+	  touch-action: manipulation;
+	}
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #0c0c0c 0%, #1a1a1a 100%);
+      color: #ffffff;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Top navigation bar */
+    .top-nav {
+      background: rgba(30, 30, 30, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 15px 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .nav-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 15px;
+    }
+
+    .back-btn {
+      background: rgba(255,255,255,0.1);
+      border: none;
+      border-radius: 8px;
+      padding: 10px 15px;
+      color: #fff;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+
+    .back-btn:hover {
+      background: #4ecdc4;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(78, 205, 196, 0.3);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav-btn {
+      background: rgba(255,255,255,0.1);
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      color: #fff;
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .nav-btn:hover {
+      background: #4ecdc4;
+      transform: scale(1.1);
+      box-shadow: 0 4px 15px rgba(78, 205, 196, 0.3);
+    }
+
+    .nav-btn.cast-btn:hover {
+      background: #ff6b6b;
+      box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+    }
+
+    .nav-btn.share-btn:hover {
+      background: #45b7d1;
+      box-shadow: 0 4px 15px rgba(69, 183, 209, 0.3);
+    }
+
+    /* Player section */
+    .player-section {
+      background: #000;
+      position: relative;
+    }
+
+    .player-container {
+      position: relative;
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      aspect-ratio: 16 / 9;
+      background: #000;
+    }
+
+    .player-iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    .player-loading {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #4ecdc4;
+    }
+
+    .loading {
+      display: inline-block;
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(78, 205, 196, 0.3);
+      border-radius: 50%;
+      border-top-color: #4ecdc4;
+      animation: spin 1s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .player-error {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      display: none;
+    }
+
+    .error-icon {
+      font-size: 48px;
+      margin-bottom: 20px;
+      color: #ff6b6b;
+    }
+
+    .error-title {
+      font-size: 20px;
+      margin: 0 0 10px 0;
+      font-weight: 600;
+    }
+
+    .error-message {
+      margin: 0 0 20px 0;
+      max-width: 400px;
+      line-height: 1.5;
+      opacity: 0.8;
+    }
+
+    .error-actions {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .error-btn {
+      background: #4ecdc4;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      color: white;
+      cursor: pointer;
+      font-size: 14px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .error-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(78, 205, 196, 0.3);
+    }
+
+    .error-btn.external {
+      background: #ff6b6b;
+    }
+
+    .error-btn.external:hover {
+      box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+    }
+
+    /* Video info section */
+    .video-info {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px 15px;
+    }
+
+    .video-title {
+      font-size: clamp(18px, 4vw, 28px);
+      font-weight: 700;
+      line-height: 1.3;
+      margin: 0 0 15px 0;
+      color: #fff;
+    }
+
+    .video-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .meta-left {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .channel-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .channel-badge {
+      background: linear-gradient(135deg, #4ecdc4, #45b7d1);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .video-date {
+      color: rgba(255,255,255,0.7);
+      font-size: 14px;
+    }
+
+    .video-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .action-btn {
+      background: rgba(255,255,255,0.1);
+      border: none;
+      border-radius: 20px;
+      padding: 8px 16px;
+      color: #fff;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+
+    .action-btn:hover {
+      background: rgba(255,255,255,0.2);
+      transform: translateY(-2px);
+    }
+
+    .action-btn.cast:hover {
+      background: #ff6b6b;
+      color: white;
+    }
+
+    .action-btn.share:hover {
+      background: #45b7d1;
+      color: white;
+    }
+
+    /* Related videos section */
+    .related-section {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 40px 15px;
+    }
+
+    .section-title {
+      font-size: clamp(20px, 3vw, 24px);
+      font-weight: 700;
+      margin: 0 0 25px 0;
+      color: #fff;
+    }
+
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 15px;
+    }
+
+    @media (min-width: 768px) {
+      .related-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .related-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 25px;
+      }
+    }
+
+    .related-card {
+      background: rgba(255,255,255,0.05);
+      border-radius: 12px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .related-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+      border-color: rgba(78, 205, 196, 0.5);
+    }
+
+    .related-thumbnail {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+    }
+
+    .related-thumbnail img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    .related-card:hover .related-thumbnail img {
+      transform: scale(1.05);
+    }
+
+    .play-icon {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0,0,0,0.7);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #4ecdc4;
+      font-size: 16px;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+
+    .related-card:hover .play-icon {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1.1);
+    }
+
+    .related-content {
+      padding: 12px;
+    }
+
+    .related-title {
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.3;
+      margin: 0 0 8px 0;
+      color: #fff;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .related-date {
+      font-size: 12px;
+      color: rgba(255,255,255,0.6);
+      margin: 0;
+    }
+
+    /* Fullscreen styles - MINIMAL CHANGES ONLY */
+    .fullscreen-player {
+      position: fixed !important;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 10000;
+      max-width: none;
+    }
+
+    /* Mobile optimizations */
+    @media (max-width: 768px) {
+      .nav-container {
+        padding: 0 10px;
+      }
+
+      .video-info {
+        padding: 15px 10px;
+      }
+
+      .video-meta {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .meta-left {
+        width: 100%;
+      }
+
+      .video-actions {
+        width: 100%;
+        justify-content: flex-start;
+      }
+
+      .related-section {
+        padding: 30px 10px;
+      }
+    }
+
+    /* Share modal */
+    .share-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(10px);
+      z-index: 10001;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .share-content {
+      background: rgba(30, 30, 30, 0.95);
+      border-radius: 16px;
+      padding: 30px;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .share-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin: 0 0 20px 0;
+      color: #fff;
+    }
+
+    .share-url {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 8px;
+      padding: 12px;
+      width: 100%;
+      color: #fff;
+      font-size: 14px;
+      margin-bottom: 20px;
+      outline: none;
+    }
+
+    .share-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .copy-btn, .mx-btn, .open-btn, .close-btn {
+      background: #4ecdc4;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 20px;
+      color: white;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .copy-btn:hover, .open-btn:hover {
+      background: #45b7d1;
+      transform: translateY(-2px);
+    }
+
+    .mx-btn {
+      background: #ff6b6b;
+    }
+
+    .mx-btn:hover {
+      background: #ff5252;
+      transform: translateY(-2px);
+    }
+
+    .close-btn {
+      background: rgba(255,255,255,0.2);
+    }
+
+    .close-btn:hover {
+      background: rgba(255,255,255,0.3);
+    }
+
+    .loading-spinner {
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top: 2px solid #4ecdc4;
+      border-radius: 50%;
+      width: 16px;
+      height: 16px;
+      animation: spin 1s linear infinite;
+    }
+
+    /* Cast detection */
+    .cast-available {
+      color: #4ecdc4 !important;
+    }
+
+    /* Responsive design */
+    @media (max-width: 480px) {
+      .nav-container {
+        padding: 0 10px;
+      }
+
+      .nav-actions {
+        gap: 8px;
+      }
+
+      .nav-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 14px;
+      }
+
+      .share-content {
+        padding: 20px;
+        margin: 10px;
+      }
+
+      .share-actions {
+        flex-direction: column;
+      }
+
+      .copy-btn, .mx-btn, .close-btn {
+        width: 100%;
+      }
+    }
+
+    /* Hide elements when needed */
+    .hidden {
+      display: none !important;
+    }
+	
+/* Fullscreen player container */
+.fullscreen-player {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 10000;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Default fit mode */
+.fullscreen-player iframe {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* works for <video>, ignored for iframe */
+  transition: transform 0.3s ease;
+}
+
+/* Zoom fill mode */
+.fullscreen-player.zoom-fill iframe {
+  transform: scale(1.2); /* zoom in */
+}
+
+/* Overlay for pinch gestures */
+.gesture-overlay {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 5;              /* sits above iframe */
+  background: transparent;
+  touch-action: none;      /* allow pinch gestures */
+  pointer-events: auto;    /* capture touches */
+}
+
+/* Custom fullscreen button */
+.custom-fs-btn {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  width: 40px;
+  height: 40px;
+  border-radius: 2px;
+  background: rgba(28, 28, 28, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10; /* above iframe */
+  color: #fff;
+  font-size: 18px;
+  transition: background 0.2s ease;
+}
+
+.custom-fs-btn:hover {
+  background: rgba(40, 40, 40, 0.95);
+}
+
+.hidden { display: none !important; }
+
+
+  </style>
+</head>
+<body>
+  <!-- Top Navigation -->
+  <nav class="top-nav">
+    <div class="nav-container">
+      <button class="back-btn" id="backBtn">
+        <i class="fas fa-arrow-left"></i>
+        <span>Back</span>
+      </button>
+      
+      <div class="nav-actions">
+		<button class="nav-btn reload-btn" id="reloadBtn" title="Reload Page" onclick="location.reload()">
+          <i class="fas fa-sync-alt"></i>
+        </button>
+        <button class="nav-btn cast-btn" id="castBtn" title="Open Link">
+          <i class="fa-solid fa-globe"></i>
+        </button>
+        <button class="nav-btn share-btn" id="shareBtn" title="Share Video">
+          <i class="fas fa-share-alt"></i>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Player Section -->
+  <section class="player-section">
+    <div class="player-container" id="playerContainer">
+      <div class="player-loading" id="playerLoading">
+        <div class="loading"></div>
+      </div>
+	  
+<div class="custom-fs-btn" id="customFsBtn">
+  <i class="fas fa-expand"></i>
+</div>
+      
+      <iframe id="playerIframe" class="player-iframe" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"></iframe>
+      
+      <div class="player-error" id="playerError">
+        <i class="fas fa-exclamation-triangle error-icon"></i>
+        <h3 class="error-title">Unable to Load Video</h3>
+        <p class="error-message">This video cannot be embedded. You can watch it on the original platform.</p>
+        <div class="error-actions">
+          <button class="error-btn" onclick="retryLoad()">Try Again</button>
+          <a href="#" class="error-btn external" id="externalLink" target="_blank">Watch on Platform</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Video Info -->
+  <section class="video-info">
+    <h1 class="video-title" id="videoTitle">Loading...</h1>
+    
+    <div class="video-meta">
+      <div class="meta-left">
+        <div class="channel-info">
+          <div class="channel-badge" id="channelName">Loading...</div>
+        </div>
+        <div class="video-date" id="videoDate">Loading...</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Related Videos -->
+  <section class="related-section">
+    <h2 class="section-title" id="relatedTitle">More from Channel</h2>
+    <div class="related-grid" id="relatedGrid">
+      <!-- Related videos will be populated here -->
+    </div>
+  </section>
+
+<!-- Share Modal -->
+<div class="share-modal" id="shareModal">
+  <div class="share-content">
+    <h3 class="share-title">Share Video</h3>
+    <input type="text" class="share-url" id="shareUrl" readonly>
+    <div class="share-actions">
+      <button class="copy-btn" id="copyBtn">
+        <i class="fas fa-copy"></i>
+        <span>Copy Link</span>
+      </button>
+      <button class="mx-btn" id="mxBtn" style="display: none;">
+        <i class="fas fa-external-link-alt"></i>
+        <span>Open in MX Player</span>
+      </button>
+
+      <!-- new Download button -->
+      <button class="mx-btn" id="downloadBtn" style="display: none;">
+        <i class="fas fa-download"></i>
+        <span>Download</span>
+      </button>
+
+      <button class="close-btn" id="closeShareBtn">
+        <i class="fas fa-times"></i>
+        <span>Close</span>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script disable-devtool-auto='true'
+src='https://cdn.jsdelivr.net/npm/disable-devtool'
+clear-log='true'
+disable-select='true' 
+disable-copy='true'
+disable-cut='true' 
+disable-paste='false'>
+</script>
+
+  <script>
+    class VideoPlayer {
+      constructor() {
+        this.currentVideo = null;
+        this.allVideos = [];
+        this.relatedVideos = [];
+        this.retryCount = 0;
+        this.maxRetries = 3;
+        this.m3u8Url = null;
+		this.currentBlobUrl = null;
+        this.workerUrl = 'https://dm.porus-in2012.workers.dev';
+        
+        this.elements = {
+          playerIframe: document.getElementById('playerIframe'),
+          playerLoading: document.getElementById('playerLoading'),
+          playerError: document.getElementById('playerError'),
+          playerContainer: document.getElementById('playerContainer'),
+          videoTitle: document.getElementById('videoTitle'),
+          channelName: document.getElementById('channelName'),
+          videoDate: document.getElementById('videoDate'),
+          relatedTitle: document.getElementById('relatedTitle'),
+          relatedGrid: document.getElementById('relatedGrid'),
+          shareModal: document.getElementById('shareModal'),
+          shareUrl: document.getElementById('shareUrl'),
+          copyBtn: document.getElementById('copyBtn'),
+          mxBtn: document.getElementById('mxBtn'),
+		  downloadBtn: document.getElementById('downloadBtn'),
+          closeShareBtn: document.getElementById('closeShareBtn'),
+          castBtn: document.getElementById('castBtn'),
+          shareBtn: document.getElementById('shareBtn'),
+          externalLink: document.getElementById('externalLink')
+        };
+
+        this.init();
+      }
+
+      async init() {
+        this.loadVideoData();
+        this.setupEventListeners();
+        this.setupMobileOrientationHandler();
+        this.detectCastDevices();
+        this.initCast();
+        this.loadVideo();
+        
+        // Extract M3U8 if Dailymotion video
+// Extract M3U8 if Dailymotion video or set direct URL for GCS
+if (this.currentVideo && this.currentVideo.platform === 'dailymotion') {
+  await this.extractM3U8();
+} else if (this.currentVideo && this.currentVideo.platform === 'gcs') {
+  this.m3u8Url = `https://storage.googleapis.com/mrpangu/${this.currentVideo.id}`;
+}
+      }
+
+async extractM3U8() {
+  try {
+    const metaRes = await fetch(`${this.workerUrl}/meta?id=${this.currentVideo.id}`);
+    const data = await metaRes.json();
+    
+    const m3u8Url = data?.qualities?.auto?.[0]?.url;
+    if (m3u8Url) {
+      const title = encodeURIComponent(this.currentVideo.title || data.title || "playlist");
+      const created = encodeURIComponent(data.created_time || "");
+      this.m3u8Url = `${this.workerUrl}/proxy?u=${encodeURIComponent(m3u8Url)}&title=${title}&created=${created}`;
+      console.log("M3U8 extracted:", this.m3u8Url);
+    }
+  } catch (error) {
+    console.error("Failed to extract M3U8:", error);
+  }
+}
+
+      isAndroid() {
+        return /Android/i.test(navigator.userAgent);
+      }
+
+openInMXPlayer() {
+  if (!this.m3u8Url) {
+    alert('M3U8 URL not available');
+    return;
+  }
+
+  if (this.isAndroid()) {
+    this.elements.mxBtn.innerHTML = `
+      <div class="loading-spinner"></div>
+      <span>Opening...</span>
+    `;
+
+    // Method 1: Direct schemes
+    const directSchemes = [
+      `mxplayer://video?url=${encodeURIComponent(this.m3u8Url)}`,
+      `mxplayerpro://video?url=${encodeURIComponent(this.m3u8Url)}`,
+      `vlc://${this.m3u8Url}`,
+      `potplayer://${this.m3u8Url}`
+    ];
+
+    let schemeIndex = 0;
+    const tryDirectScheme = () => {
+      if (schemeIndex < directSchemes.length) {
+        const iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        iframe.src = directSchemes[schemeIndex];
+        document.body.appendChild(iframe);
+
+        setTimeout(() => {
+          document.body.removeChild(iframe);
+          schemeIndex++;
+          tryDirectScheme();
+        }, 1000);
+      } else {
+        // Method 2: Corrected intent method
+        tryIntentMethod();
+      }
+    };
+
+    // Correct Intent method
+    const tryIntentMethod = () => {
+      const cleanUrl = this.m3u8Url.replace(/^https?:\/\//, '');
+      const scheme = this.m3u8Url.startsWith('https') ? 'https' : 'http';
+
+      const intentUrl = `intent://${cleanUrl}#Intent;scheme=${scheme};type=video/*;package=com.mxtech.videoplayer.ad;end`;
+
+      const link = document.createElement('a');
+      link.href = intentUrl;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      setTimeout(() => this.showMXPlayerOptions(), 2000);
+    };
+
+    // Start with direct schemes
+    tryDirectScheme();
+
+    // Reset button after attempts
+    setTimeout(() => {
+      this.elements.mxBtn.innerHTML = `
+        <i class="fas fa-external-link-alt"></i>
+        <span>Open in MX Player</span>
+      `;
+    }, 8000);
+
+  } else {
+    window.open(this.m3u8Url, '_blank');
+  }
+}
+
+      showMXPlayerOptions() {
+        // Create a custom modal for manual instructions
+        const manualModal = document.createElement('div');
+        manualModal.className = 'share-modal';
+        manualModal.style.display = 'flex';
+        manualModal.innerHTML = `
+          <div class="share-content">
+            <h3 class="share-title">Open in MX Player</h3>
+            <p style="margin-bottom: 20px; color: rgba(255,255,255,0.8); line-height: 1.5;">
+              Choose how to open the video:
+            </p>
+            <div class="share-actions" style="flex-direction: column; gap: 15px;">
+              <button class="copy-btn" id="manualCopyBtn" style="width: 100%;">
+                <i class="fas fa-copy"></i>
+                <span>Copy M3U8 Link</span>
+              </button>
+              <a href="${this.m3u8Url}" target="_blank" style="text-decoration: none; width: 100%;">
+                <button class="mx-btn" style="width: 100%;">
+                  <i class="fas fa-external-link-alt"></i>
+                  <span>Open in Browser</span>
+                </button>
+              </a>
+              <div style="padding: 15px; background: rgba(255,255,255,0.1); border-radius: 8px; font-size: 13px; color: rgba(255,255,255,0.7);">
+                <strong>Manual Steps:</strong><br>
+                1. Copy the M3U8 link above<br>
+                2. Open MX Player<br>
+                3. Tap "Network/URL Stream" or "+"<br>
+                4. Paste the link and play
+              </div>
+              <button class="close-btn" id="manualCloseBtn" style="width: 100%;">
+                <i class="fas fa-times"></i>
+                <span>Close</span>
+              </button>
+            </div>
+          </div>
+        `;
+        
+        document.body.appendChild(manualModal);
+        
+        // Add event listeners
+        document.getElementById('manualCopyBtn').addEventListener('click', async () => {
+          try {
+            await navigator.clipboard.writeText(this.m3u8Url);
+            document.getElementById('manualCopyBtn').innerHTML = `
+              <i class="fas fa-check"></i>
+              <span>Copied!</span>
+            `;
+            setTimeout(() => {
+              document.getElementById('manualCopyBtn').innerHTML = `
+                <i class="fas fa-copy"></i>
+                <span>Copy M3U8 Link</span>
+              `;
+            }, 2000);
+          } catch (err) {
+            alert('Copy failed. Please copy manually.');
+          }
+        });
+        
+        document.getElementById('manualCloseBtn').addEventListener('click', () => {
+          document.body.removeChild(manualModal);
+        });
+        
+        manualModal.addEventListener('click', (e) => {
+          if (e.target === manualModal) {
+            document.body.removeChild(manualModal);
+          }
+        });
+      }
+	  
+initCast() {
+  if (!window.chrome || !window.chrome.cast) {
+    console.log('Cast API not available');
+    return;
+  }
+
+  // Wait for Cast API to be ready
+  const initializeCastApi = () => {
+    try {
+      cast.framework.CastContext.getInstance().setOptions({
+        receiverApplicationId: chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID,
+        autoJoinPolicy: chrome.cast.AutoJoinPolicy.ORIGIN_SCOPED
+      });
+      
+      // Listen for session state changes
+      const context = cast.framework.CastContext.getInstance();
+      context.addEventListener(
+        cast.framework.CastContextEventType.SESSION_STATE_CHANGED,
+        (event) => this.handleCastSessionChange(event)
+      );
+      
+      console.log("Cast initialized successfully");
+      this.updateCastButton();
+    } catch (error) {
+      console.error('Cast initialization failed:', error);
+    }
+  };
+
+  // Check if Cast API is already loaded
+  if (window.cast && window.cast.framework) {
+    initializeCastApi();
+  } else {
+    // Wait for Cast API to load
+    window['__onGCastApiAvailable'] = (isAvailable) => {
+      if (isAvailable) {
+        initializeCastApi();
+      }
+    };
+  }
+}
+
+      // MINIMAL ADDITION - Only handle mobile orientation in fullscreen
+      setupMobileOrientationHandler() {
+        // Handle fullscreen changes to manage orientation on mobile
+        const handleFullscreenChange = async () => {
+          const isFullscreen = !!(document.fullscreenElement || 
+                                 document.webkitFullscreenElement || 
+                                 document.mozFullScreenElement);
+
+          // Only attempt orientation lock on mobile devices
+          const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+                          window.innerWidth <= 768;
+
+          if (isFullscreen && isMobile) {
+            // Try to lock to landscape when entering fullscreen on mobile
+            if (screen.orientation && screen.orientation.lock) {
+              try {
+                await screen.orientation.lock('landscape-primary');
+              } catch (error) {
+                // Fallback: try alternative landscape orientation
+                try {
+                  await screen.orientation.lock('landscape');
+                } catch (altError) {
+                  console.log('Orientation lock not supported:', altError);
+                }
+              }
+            }
+          } else if (!isFullscreen && isMobile) {
+            // Unlock orientation when exiting fullscreen
+            if (screen.orientation && screen.orientation.unlock) {
+              screen.orientation.unlock();
+            }
+          }
+        };
+
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+        document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+        document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+      }
+
+      loadVideoData() {
+        // Get video data from sessionStorage
+        const videoData = sessionStorage.getItem('currentVideo');
+        const allVideosData = sessionStorage.getItem('allVideos');
+
+        if (!videoData) {
+          // Redirect back if no video data
+          window.location.href = 'index.html';
+          return;
+        }
+
+        this.currentVideo = JSON.parse(videoData);
+        this.allVideos = allVideosData ? JSON.parse(allVideosData) : [];
+        
+        // Get related videos from same channel
+        this.relatedVideos = this.allVideos
+          .filter(v => v.channel === this.currentVideo.channel && v.id !== this.currentVideo.id)
+          .sort((a, b) => new Date(b.date) - new Date(a.date))
+          .slice(0, 8); // Show max 8 related videos
+
+        this.updateUI();
+      }
+
+      updateUI() {
+        const { title, channel, date } = this.currentVideo;
+        
+        this.elements.videoTitle.textContent = title;
+        this.elements.channelName.textContent = channel;
+        this.elements.videoDate.textContent = this.formatDate(date);
+        this.elements.relatedTitle.textContent = `More from ${channel}`;
+
+        document.title = `${title} - YouDai Player`;
+
+        // Use direct video link instead of page URL
+        this.elements.shareUrl.value = this.getDirectVideoLink();
+
+        // External platform link
+        this.updateExternalLink();
+		
+// Show overlay and fullscreen button only for YouTube on mobile
+const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) 
+                 || window.innerWidth <= 768;
+
+if (this.currentVideo.platform === 'youtube' && isMobile) {
+  document.getElementById('customFsBtn').style.display = 'flex';
+} else {
+  document.getElementById('customFsBtn').style.display = 'none';
+}
+
+        this.renderRelatedVideos();
+      }
+
+      getDirectVideoLink() {
+        const { platform, id } = this.currentVideo;
+        switch(platform) {
+          case 'youtube': return `https://www.youtube.com/watch?v=${id}`;
+          case 'dailymotion': return `https://www.dailymotion.com/video/${id}`;
+          case 'ok': return `https://ok.ru/video/${id}`;
+          case 'yupptv': return `https://www.yupptv.com/yupptvnew/channels/${id}/live`;
+case 'gcs':
+  return `https://storage.googleapis.com/mrpangu/${id}`;		  
+          default: return window.location.href;
+        }
+      }
+
+      updateExternalLink() {
+        const { platform, id } = this.currentVideo;
+        let url = '#';
+        
+        switch(platform) {
+          case 'youtube':
+            url = `https://www.youtube.com/watch?v=${id}`;
+            break;
+          case 'dailymotion':
+            url = `https://www.dailymotion.com/video/${id}`;
+            break;
+          case 'ok':
+            url = `https://ok.ru/video/${id}`;
+            break;
+          case 'yupptv':
+            url = `https://www.yupptv.com/yupptvnew/channels/${id}/live`;
+            break;
+case 'gcs':
+  url = `https://storage.googleapis.com/mrpangu/${id}`;
+  break;			
+        }
+        
+        this.elements.externalLink.href = url;
+        this.elements.externalLink.textContent = `Watch on ${platform.charAt(0).toUpperCase() + platform.slice(1)}`;
+      }
+
+      formatDate(dateString) {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-IN', { 
+          day: 'numeric', 
+          month: 'short',
+          year: 'numeric'
+        });
+      }
+
+      getOptimalThumbnail(video) {
+        return window.innerWidth < 768 ? video.mthumb : video.dthumb;
+      }
+
+      renderRelatedVideos() {
+        if (this.relatedVideos.length === 0) {
+          this.elements.relatedGrid.innerHTML = `
+            <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: rgba(255,255,255,0.6);">
+              <i class="fas fa-video" style="font-size: 48px; margin-bottom: 15px; opacity: 0.5;"></i>
+              <p>No related videos found</p>
+            </div>
+          `;
+          return;
+        }
+
+        this.elements.relatedGrid.innerHTML = this.relatedVideos.map(video => `
+          <div class="related-card" data-platform="${video.platform}" data-id="${video.id}">
+            <div class="related-thumbnail">
+              <img src="${this.getOptimalThumbnail(video)}" alt="${video.title}" loading="lazy" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQwIiBoZWlnaHQ9IjE4MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMzMzIi8+CiAgPHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk5vIEltYWdlPC90ZXh0Pgo8L3N2Zz4K'">
+              <div class="play-icon">
+                <i class="fas fa-play"></i>
+              </div>
+            </div>
+            <div class="related-content">
+              <h3 class="related-title">${video.title}</h3>
+              <p class="related-date">${this.formatDate(video.date)}</p>
+            </div>
+          </div>
+        `).join('');
+
+        // Add click listeners to related videos
+        setTimeout(() => {
+          const relatedCards = this.elements.relatedGrid.querySelectorAll('.related-card');
+          relatedCards.forEach(card => {
+            card.addEventListener('click', () => {
+              const platform = card.dataset.platform;
+              const id = card.dataset.id;
+              const video = this.allVideos.find(v => v.platform === platform && v.id === id);
+              
+              if (video) {
+                this.playRelatedVideo(video);
+              }
+            });
+          });
+        }, 100);
+      }
+
+      async playRelatedVideo(video) {
+        // Update current video data
+        this.currentVideo = video;
+        sessionStorage.setItem('currentVideo', JSON.stringify(video));
+        
+        // Update related videos
+        this.relatedVideos = this.allVideos
+          .filter(v => v.channel === video.channel && v.id !== video.id)
+          .sort((a, b) => new Date(b.date) - new Date(a.date))
+          .slice(0, 8);
+
+        // Reset retry count and M3U8
+        this.retryCount = 0;
+        this.m3u8Url = null;
+        
+        // Update UI and load new video
+        this.updateUI();
+        this.loadVideo();
+        
+        // Extract M3U8 if Dailymotion video
+        if (video.platform === 'dailymotion') {
+          await this.extractM3U8();
+        }
+        
+        // Scroll to top
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+
+      loadVideo() {
+	  
+  // Clean up any previous blob URLs
+  if (this.currentBlobUrl) {
+    URL.revokeObjectURL(this.currentBlobUrl);
+    this.currentBlobUrl = null;
+  }	  
+        this.showLoading();
+        this.hideError();
+        
+        const { platform, id } = this.currentVideo;
+        let embedUrl = this.getEmbedUrl(platform, id);
+        
+        this.elements.playerIframe.src = embedUrl;
+        
+        // Set loading timeout
+        const loadTimeout = setTimeout(() => {
+          this.handleLoadError();
+        }, 8000);
+
+        // Handle successful load
+        this.elements.playerIframe.onload = () => {
+          clearTimeout(loadTimeout);
+          this.hideLoading();
+          console.log('Video loaded successfully');
+        };
+
+        // Handle load errors
+        this.elements.playerIframe.onerror = () => {
+          clearTimeout(loadTimeout);
+          this.handleLoadError();
+        };
+      }
+
+      getEmbedUrl(platform, id, retryAttempt = 0) {
+        switch(platform) {
+		  case 'youtube':
+			// detect PC vs mobile
+			const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) 
+                       || window.innerWidth <= 768;
+
+			// fs=1 (enable YouTube fullscreen button) on PC; fs=0 (hide) on mobile
+			const fsParam = isMobile ? 0 : 1;
+
+			const ytUrls = [
+			 `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&modestbranding=1&controls=1&fs=${fsParam}`,
+			 `https://www.youtube.com/embed/${id}?autoplay=1&rel=0&modestbranding=1&controls=1&fs=${fsParam}`,
+			 `https://www.youtube-nocookie.com/embed/${id}?rel=0&controls=1&fs=${fsParam}`
+			];
+		  return ytUrls[retryAttempt] || ytUrls[0];
+            
+          case 'dailymotion':
+            return `https://www.dailymotion.com/embed/video/${id}?autoplay=1&ui-logo=0&controls=1`;
+            
+          case 'ok':
+            return `https://ok.ru/videoembed/${id}?autoplay=1`;
+			
+          case 'yupptv':
+            return `https://www.yupptv.com/yupptvnew/channels/${id}/live/embed`;
+			
+case 'gcs': 
+  // For GCS, we'll load the MP4 directly in the iframe using a blob URL approach
+  const fullUrl = `https://storage.googleapis.com/mrpangu/${id}`;
+  return this.createVideoIframe(fullUrl);		
+            
+          default:
+            return '';
+        }
+      }
+
+createVideoIframe(videoUrl) {
+  // Create a simple HTML5 video player
+  const videoHtml = `
+    <html>
+      <head>
+        <style>
+          body { margin:0; padding:0; background:#000; }
+          video { width:100%; height:100vh; object-fit:contain; }
+        </style>
+      </head>
+      <body>
+        <video controls autoplay>
+          <source src="${videoUrl}" type="video/mp4">
+        </video>
+      </body>
+    </html>
+  `;
+  
+  const blob = new Blob([videoHtml], { type: 'text/html' });
+  return URL.createObjectURL(blob);
+}
+
+handleCastSessionChange(event) {
+  const context = cast.framework.CastContext.getInstance();
+  const session = context.getCurrentSession();
+  
+  if (session) {
+    console.log('Cast session started');
+    this.elements.castBtn.innerHTML = '<i class="fas fa-cast-connected"></i>';
+    this.elements.castBtn.style.color = '#4ecdc4';
+  } else {
+    console.log('Cast session ended');
+    this.elements.castBtn.innerHTML = '<i class="fa-solid fa-globe"></i>';
+    this.elements.castBtn.style.color = '';
+  }
+}
+
+updateCastButton() {
+  const context = cast.framework.CastContext.getInstance();
+  const castState = context.getCastState();
+  
+  if (castState === cast.framework.CastState.NO_DEVICES_AVAILABLE) {
+    this.elements.castBtn.style.opacity = '0.5';
+    this.elements.castBtn.title = 'No cast devices available';
+  } else {
+    this.elements.castBtn.style.opacity = '1';
+    this.elements.castBtn.classList.add('cast-available');
+    this.elements.castBtn.title = 'Cast to device';
+  }
+}  
+
+      showLoading() {
+        this.elements.playerLoading.style.display = 'flex';
+        this.elements.playerError.style.display = 'none';
+      }
+
+      hideLoading() {
+        this.elements.playerLoading.style.display = 'none';
+      }
+
+      showError() {
+        this.elements.playerError.style.display = 'flex';
+        this.elements.playerLoading.style.display = 'none';
+      }
+
+      hideError() {
+        this.elements.playerError.style.display = 'none';
+      }
+
+      handleLoadError() {
+        if (this.retryCount < this.maxRetries) {
+          this.retryCount++;
+          console.log(`Retry attempt ${this.retryCount} of ${this.maxRetries}`);
+          
+          setTimeout(() => {
+            const { platform, id } = this.currentVideo;
+            const embedUrl = this.getEmbedUrl(platform, id, this.retryCount - 1);
+            this.elements.playerIframe.src = embedUrl;
+            
+            const retryTimeout = setTimeout(() => {
+              this.handleLoadError();
+            }, 5000 * this.retryCount); // Increasing timeout
+            
+            this.elements.playerIframe.onload = () => {
+              clearTimeout(retryTimeout);
+              this.hideLoading();
+              console.log(`Successfully loaded on retry ${this.retryCount}`);
+            };
+          }, 1000 * this.retryCount);
+        } else {
+          this.showError();
+        }
+      }
+
+      setupEventListeners() {
+        // Share button
+        this.elements.shareBtn.addEventListener('click', () => this.openShareModal());
+
+        // Share modal
+        this.elements.copyBtn.addEventListener('click', () => this.copyShareUrl());
+        this.elements.mxBtn.addEventListener('click', () => this.openInMXPlayer());
+        this.elements.closeShareBtn.addEventListener('click', () => this.closeShareModal());
+        this.elements.shareModal.addEventListener('click', (e) => {
+          if (e.target === this.elements.shareModal) this.closeShareModal();
+        });
+		this.elements.downloadBtn = document.getElementById('downloadBtn');
+		this.elements.downloadBtn.addEventListener('click', () => {
+			if (this.currentVideo.platform === 'gcs') {
+				// Direct download for GCS MP4 videos
+				this.downloadGCSVideo();
+			} else {
+				// Go to stream.html for other platforms (like Dailymotion)
+				window.location.href = 'stream.html';
+			}
+		});
+		
+this.elements.customFsBtn = document.getElementById("customFsBtn");
+
+const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) 
+                 || window.innerWidth <= 768;
+
+let pressTimer;
+let longPressTriggered = false;
+
+if (isMobile) {
+  this.elements.customFsBtn.addEventListener('touchstart', (e) => {
+    longPressTriggered = false;
+    pressTimer = setTimeout(() => {
+      // long press action → toggle zoom-fill
+      if (document.fullscreenElement) {
+        this.elements.playerContainer.classList.toggle('zoom-fill');
+      }
+      longPressTriggered = true; // mark that long-press was done
+    }, 500); // hold 500ms
+  }, {passive: true});
+
+  this.elements.customFsBtn.addEventListener('touchend', (e) => {
+    clearTimeout(pressTimer);
+    // only do normal fullscreen toggle if long press did NOT fire
+    if (!longPressTriggered) {
+      this.toggleFullscreen();
+    }
+  });
+
+  this.elements.customFsBtn.addEventListener('touchmove', () => clearTimeout(pressTimer));
+} else {
+  // on PC just normal click
+  this.elements.customFsBtn.addEventListener('click', () => {
+    this.toggleFullscreen();
+  });
+}
+
+document.addEventListener("fullscreenchange", () => {
+  if (document.fullscreenElement) {
+    this.elements.customFsBtn.innerHTML = '<i class="fas fa-compress"></i>'; // exit fs
+  } else {
+    this.elements.customFsBtn.innerHTML = '<i class="fas fa-expand"></i>'; // enter fs
+  }
+});
+
+        // Cast button
+        this.elements.castBtn.addEventListener('click', () => this.handleCast());
+        
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+          switch(e.key) {
+            case 'Escape':
+              if (this.elements.shareModal.style.display === 'flex') {
+                this.closeShareModal();
+              }
+              break;
+            case 'f':
+            case 'F':
+              if (document.activeElement !== document.querySelector('input')) {
+                e.preventDefault();
+                this.toggleFullscreen();
+              }
+              break;
+          }
+        });
+
+		// Back button
+		this.elements.backBtn = document.getElementById('backBtn');
+		this.elements.backBtn.addEventListener("click", () => {
+			window.location.href = "index.html";
+		});
+      }
+	  
+	  downloadGCSVideo() {
+    const { id, title } = this.currentVideo;
+    const videoUrl = `https://storage.googleapis.com/mrpangu/${id}`;
+    
+    // Create download link
+    const link = document.createElement('a');
+    link.href = videoUrl;
+    link.download = `${title || 'video'}.mp4`;
+    link.style.display = 'none';
+    
+    // Add to DOM, click, and remove
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    // Show feedback
+    const originalHtml = this.elements.downloadBtn.innerHTML;
+    this.elements.downloadBtn.innerHTML = `
+        <i class="fas fa-check"></i>
+        <span>Downloading...</span>
+    `;
+    
+    setTimeout(() => {
+        this.elements.downloadBtn.innerHTML = originalHtml;
+    }, 3000);
+}
+
+openShareModal() {
+  this.elements.shareModal.style.display = 'flex';
+
+  // default direct link
+  this.elements.shareUrl.value = this.getDirectVideoLink();
+
+// Show MX and Download buttons only for videos we can download
+if ((this.currentVideo.platform === 'dailymotion' || 
+     this.currentVideo.platform === 'gcs') && this.m3u8Url) {
+    this.elements.shareUrl.value = this.m3u8Url;
+    this.elements.mxBtn.style.display = 'flex';
+    this.elements.downloadBtn.style.display = 'flex';
+} else if (this.currentVideo.platform === 'gcs') {
+    // For GCS without m3u8, show direct link and enable casting
+    this.elements.shareUrl.value = this.getDirectVideoLink();
+    this.elements.downloadBtn.style.display = 'flex';
+    this.elements.mxBtn.style.display = 'none';
+} else {
+    this.elements.mxBtn.style.display = 'none';
+    this.elements.downloadBtn.style.display = 'flex';
+}
+
+  this.elements.shareUrl.select();
+}
+
+      closeShareModal() {
+        this.elements.shareModal.style.display = 'none';
+      }
+
+      async copyShareUrl() {
+        try {
+          await navigator.clipboard.writeText(this.elements.shareUrl.value);
+          this.elements.copyBtn.innerHTML = `
+            <i class="fas fa-check"></i>
+            <span>Copied!</span>
+          `;
+          this.elements.copyBtn.style.background = '#4ecdc4';
+          
+          setTimeout(() => {
+            this.elements.copyBtn.innerHTML = `
+              <i class="fas fa-copy"></i>
+              <span>Copy Link</span>
+            `;
+            this.elements.copyBtn.style.background = '#4ecdc4';
+          }, 2000);
+        } catch (err) {
+          // Fallback for older browsers
+          this.elements.shareUrl.select();
+          document.execCommand('copy');
+          this.elements.copyBtn.innerHTML = `
+            <i class="fas fa-check"></i>
+            <span>Copied!</span>
+          `;
+          
+          setTimeout(() => {
+            this.elements.copyBtn.innerHTML = `
+              <i class="fas fa-copy"></i>
+              <span>Copy Link</span>
+            `;
+          }, 2000);
+        }
+      }
+
+detectCastDevices() {
+  // Initially hide cast button
+  //this.elements.castBtn.style.display = 'none';
+  
+  if (!window.chrome || !window.chrome.cast) {
+    console.log('Cast API not available');
+    return;
+  }
+
+  // Wait for cast API and check for devices
+  const checkCastDevices = () => {
+    try {
+      const context = cast.framework.CastContext.getInstance();
+      const castState = context.getCastState();
+      
+      if (castState === cast.framework.CastState.NO_DEVICES_AVAILABLE) {
+        this.elements.castBtn.style.display = 'none';
+        console.log('No cast devices available');
+      } else {
+        this.elements.castBtn.style.display = 'flex';
+        this.elements.castBtn.classList.add('cast-available');
+        console.log('Cast devices available');
+      }
+    } catch (error) {
+      this.elements.castBtn.style.display = 'none';
+      console.log('Cast state check failed:', error);
+    }
+  };
+
+  // Listen for cast state changes
+  if (window.cast && window.cast.framework) {
+    const context = cast.framework.CastContext.getInstance();
+    context.addEventListener(
+      cast.framework.CastContextEventType.CAST_STATE_CHANGED,
+      checkCastDevices
+    );
+    checkCastDevices(); // Initial check
+  }
+}
+
+handleCast() {
+  const { platform, id, title } = this.currentVideo;
+
+  // Only handle GCS casting as requested
+  if (platform === "gcs") {
+    const fullUrl = `https://storage.googleapis.com/mrpangu/${id}`;
+    
+    const mediaInfo = new chrome.cast.media.MediaInfo(fullUrl, 'video/mp4');
+    mediaInfo.metadata = new chrome.cast.media.GenericMediaMetadata();
+    mediaInfo.metadata.metadataType = chrome.cast.media.MetadataType.GENERIC;
+    mediaInfo.metadata.title = title || 'Video';
+    
+    const request = new chrome.cast.media.LoadRequest(mediaInfo);
+    request.autoplay = true;
+
+    const context = cast.framework.CastContext.getInstance();
+    
+    context.requestSession().then(session => {
+      session.loadMedia(request).then(
+        () => {
+          console.log("GCS video casting started successfully");
+          // Optional: Show success message
+          this.showCastSuccess();
+        },
+        (error) => {
+          console.error("Failed to load media on cast device:", error);
+          this.showCastError("Failed to start casting");
+        }
+      );
+    }).catch(error => {
+      console.error("Failed to start cast session:", error);
+      if (error.code === 'cancel') {
+        console.log("User cancelled cast session");
+      } else {
+        this.showCastError("Could not connect to cast device");
+      }
+    });
+  } else {
+    // For non-GCS platforms, just open the external link
+    window.open(this.getDirectVideoLink(), "_blank");
+  }
+}
+
+showCastSuccess() {
+  const originalHtml = this.elements.castBtn.innerHTML;
+  this.elements.castBtn.innerHTML = '<i class="fas fa-check"></i>';
+  this.elements.castBtn.style.color = '#4ecdc4';
+  
+  setTimeout(() => {
+    this.elements.castBtn.innerHTML = '<i class="fas fa-cast-connected"></i>';
+  }, 2000);
+}
+
+showCastError(message) {
+  console.error("Cast error:", message);
+  const originalHtml = this.elements.castBtn.innerHTML;
+  this.elements.castBtn.innerHTML = '<i class="fas fa-exclamation-triangle"></i>';
+  this.elements.castBtn.style.color = '#ff6b6b';
+  
+  setTimeout(() => {
+    this.elements.castBtn.innerHTML = originalHtml;
+    this.elements.castBtn.style.color = '';
+  }, 3000);
+}
+
+toggleFullscreen() {
+  if (!document.fullscreenElement) {
+    this.elements.playerContainer.classList.add("fullscreen-player");
+    this.elements.playerContainer.requestFullscreen().catch(err => {
+      console.log('Fullscreen error:', err);
+    });
+  } else {
+    document.exitFullscreen().then(() => {
+      this.elements.playerContainer.classList.remove("fullscreen-player", "zoom-fill");
+    });
+  }
+}
+
+      // Global retry function
+      retryLoad() {
+        this.retryCount = 0;
+        this.loadVideo();
+      }
+    }
+
+    // Initialize player when DOM is ready
+    let player;
+    
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => {
+        player = new VideoPlayer();
+      });
+    } else {
+      player = new VideoPlayer();
+    }
+
+    // Make retry function globally accessible
+    window.retryLoad = () => {
+      if (player) {
+        player.retryLoad();
+      }
+    };
+
+    // Handle offline/online status
+    window.addEventListener('online', () => {
+      console.log('Connection restored');
+      if (player && document.getElementById('playerError').style.display === 'flex') {
+        player.retryLoad();
+      }
+    });
+
+    window.addEventListener('offline', () => {
+      console.log('Connection lost');
+    });
+
+    // Service Worker registration (optional for PWA)
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        // navigator.serviceWorker.register('/sw.js')
+        //   .then(registration => console.log('SW registered'))
+        //   .catch(error => console.log('SW registration failed'));
+      });
+    }
+  </script>
+</body>
+</html>

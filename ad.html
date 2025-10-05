@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YouDai Ads</title>
+  
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3552979279092523"
+     crossorigin="anonymous"></script>
+	 
+  <style>
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      background: #111;
+      color: #fff;
+      font-family: sans-serif;
+      text-align: center;
+      padding: 20px;
+    }
+    .ad-box {
+      margin: 15px 0;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #222;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #adTop {
+      width: 300px;
+      height: 250px;
+    }
+    #adBottom {
+      width: 320px;
+      height: 50px;
+    }
+    #timer {
+      font-size: 18px;
+      margin: 15px 0;
+    }
+    #continueBtn {
+      padding: 12px 24px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      background: #4ecdc4;
+      color: white;
+      cursor: pointer;
+      display: none;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body>
+  <!-- 🔹 Top Ad (300x250) -->
+  <div class="ad-box" id="adTop"></div>
+
+  <!-- Timer -->
+  <div id="timer">Please wait 15s...</div>
+
+  <!-- 🔹 Bottom Ad (320x50) -->
+  <div class="ad-box" id="adBottom"></div>
+
+  <!-- Continue Button -->
+  <button id="continueBtn">Continue to Video</button>
+
+  <script>
+    function loadAd(containerId, key, width, height) {
+      const adBox = document.getElementById(containerId);
+      adBox.innerHTML = "";
+
+      // Create wrapper iframe for isolation
+      const iframe = document.createElement("iframe");
+      iframe.width = width;
+      iframe.height = height;
+      iframe.style.border = "0";
+      iframe.scrolling = "no";
+      adBox.appendChild(iframe);
+
+      const doc = iframe.contentWindow.document;
+      doc.open();
+      doc.write(`
+        <html><body style="margin:0;padding:0;overflow:hidden;">
+          <script type="text/javascript">
+            atOptions = {
+              'key' : '${key}',
+              'format' : 'iframe',
+              'height' : ${height},
+              'width' : ${width},
+              'params' : {}
+            };
+          <\/script>
+          <script type="text/javascript" src="https://www.highperformanceformat.com/${key}/invoke.js"><\/script>
+        </body></html>
+      `);
+      doc.close();
+    }
+
+    // Load ads independently
+    loadAd("adTop", "abe4f108c9f269206a6458c95d0ed435", 300, 250);
+    loadAd("adBottom", "798426b77894364363c49a9c8bd62c1d", 320, 50);
+
+    // Countdown
+    let countdown = 15;
+    const timerEl = document.getElementById('timer');
+    const btn = document.getElementById('continueBtn');
+
+    const interval = setInterval(() => {
+      countdown--;
+      if (countdown > 0) {
+        timerEl.textContent = `Please wait ${countdown}s...`;
+      } else {
+        clearInterval(interval);
+        timerEl.style.display = "none";
+        btn.style.display = "inline-block";
+      }
+    }, 1000);
+
+    btn.addEventListener("click", () => {
+      const videoData = sessionStorage.getItem("currentVideo");
+      if (videoData) {
+        window.location.href = "player.html";
+      } else {
+        window.location.href = "index.html";
+      }
+    });
+  </script>
+</body>
+</html>
