@@ -1,5 +1,23 @@
 [
   {
+    "platform": "twitch",
+    "id": "pikixa9683",
+    "title": "Bigg Boss Tamil S9 Live",
+    "mthumb": "https://img10.hotstar.com/image/upload/f_auto,q_90,w_556/sources/r1/cms/prod/6690/1759685236690-h",
+    "dthumb": "https://img10.hotstar.com/image/upload/f_auto,q_90,w_556/sources/r1/cms/prod/6690/1759685236690-h",
+    "channel": "VIJAY TV",
+    "date": "2025-10-11"
+  },
+  {
+    "platform": "dailymotion",
+    "id": "k6I1DmVrA7kgPfE0F8C",
+    "title": "Sandhya Raagam",
+    "mthumb": "https://img1.imageride.net/images/2025/09/11/sr1.jpg",
+    "dthumb": "https://img1.imageride.net/images/2025/09/11/sr1.jpg",
+    "channel": "ZEETAMIL TV",
+    "date": "2025-10-11"
+  },  
+  {
     "platform": "dailymotion",
     "id": "k3QirhjHq1Ml0LE0Eyi",
     "title": "Karthigai Deepam",
@@ -217,7 +235,7 @@
   },
   {
     "platform": "youtube",
-    "id": "HFWAqqQ-8yU",
+    "id": "b48p860wOdw",
     "title": "Tenali Raman",
     "mthumb": "https://img.youtube.com/vi/HFWAqqQ-8yU/mqdefault.jpg",
     "dthumb": "https://img.youtube.com/vi/HFWAqqQ-8yU/hqdefault.jpg",
@@ -226,7 +244,7 @@
   },
   {
     "platform": "youtube",
-    "id": "HFWAqqQ-8yU",
+    "id": "Onf8OoDBavc",
     "title": "Rani Agalya",
     "mthumb": "https://img.youtube.com/vi/HFWAqqQ-8yU/mqdefault.jpg",
     "dthumb": "https://img.youtube.com/vi/HFWAqqQ-8yU/hqdefault.jpg",

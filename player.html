@@ -834,6 +834,8 @@ if (this.currentVideo && this.currentVideo.platform === 'dailymotion') {
 } else if (this.currentVideo && this.currentVideo.platform === 'gcs') {
   this.m3u8Url = `https://storage.googleapis.com/mrpangu/${this.currentVideo.id}`;
 }
+
+  // Note: Twitch doesn't need M3U8 extraction as it uses iframe embed
       }
 
 async extractM3U8() {
@@ -1137,7 +1139,12 @@ if (this.currentVideo.platform === 'youtube' && isMobile) {
           case 'ok': return `https://ok.ru/video/${id}`;
           case 'yupptv': return `https://www.yupptv.com/yupptvnew/channels/${id}/live`;
 case 'gcs':
-  return `https://storage.googleapis.com/mrpangu/${id}`;		  
+  return `https://storage.googleapis.com/mrpangu/${id}`;	
+    case 'twitch':
+      // Extract channel name from id
+      const channelMatch = id.match(/channel=([^&]+)/);
+      const channel = channelMatch ? channelMatch[1] : id;
+      return `https://www.twitch.tv/${channel}`;  
           default: return window.location.href;
         }
       }
@@ -1161,7 +1168,12 @@ case 'gcs':
             break;
 case 'gcs':
   url = `https://storage.googleapis.com/mrpangu/${id}`;
-  break;			
+  break;	
+    case 'twitch':
+      const channelMatch = id.match(/channel=([^&]+)/);
+      const channel = channelMatch ? channelMatch[1] : id;
+      url = `https://www.twitch.tv/${channel}`;
+      break;  
         }
         
         this.elements.externalLink.href = url;
@@ -1315,7 +1327,13 @@ case 'gcs':
 case 'gcs': 
   // For GCS, we'll load the MP4 directly in the iframe using a blob URL approach
   const fullUrl = `https://storage.googleapis.com/mrpangu/${id}`;
-  return this.createVideoIframe(fullUrl);		
+  return this.createVideoIframe(fullUrl);
+
+case 'twitch':
+  const channelMatch = id.match(/channel=([^&]+)/);
+  const channel = channelMatch ? channelMatch[1] : id;
+  const parent = window.location.hostname; // Will be 'www.udai.panguplay.in'
+  return `https://player.twitch.tv/?channel=${channel}&parent=${parent}&autoplay=true&muted=false`; 
             
           default:
             return '';
