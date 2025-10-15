@@ -1144,7 +1144,11 @@ case 'gcs':
       // Extract channel name from id
       const channelMatch = id.match(/channel=([^&]+)/);
       const channel = channelMatch ? channelMatch[1] : id;
-      return `https://www.twitch.tv/${channel}`;  
+      return `https://www.twitch.tv/${channel}`;
+
+case 'vimeo':
+  return `https://vimeo.com/${id}`;
+  
           default: return window.location.href;
         }
       }
@@ -1174,6 +1178,9 @@ case 'gcs':
       const channel = channelMatch ? channelMatch[1] : id;
       url = `https://www.twitch.tv/${channel}`;
       break;  
+case 'vimeo':
+  url = `https://vimeo.com/${id}`;
+  break;	  
         }
         
         this.elements.externalLink.href = url;
@@ -1333,7 +1340,10 @@ case 'twitch':
   const channelMatch = id.match(/channel=([^&]+)/);
   const channel = channelMatch ? channelMatch[1] : id;
   const parent = window.location.hostname; // Will be 'www.udai.panguplay.in'
-  return `https://player.twitch.tv/?channel=${channel}&parent=${parent}&autoplay=true&muted=false`; 
+  return `https://player.twitch.tv/?channel=${channel}&parent=${parent}&autoplay=true&muted=false`;
+
+case 'vimeo':
+  return `https://player.vimeo.com/video/${id}?autoplay=1&title=0&byline=0&portrait=0`;  
             
           default:
             return '';
