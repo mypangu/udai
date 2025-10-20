@@ -56277,6 +56277,114 @@
     "date": "2025-07-06"
   },
   {
+    "platform": "hls",
+    "id": "https://stream.galaxyott.live/live/anandhamtv/tracks-v1a1/mono.m3u8",
+    "title": "Anandham TV",
+    "channel": "Live TV",
+    "date": "2025-10-20",
+    "dthumb": "https://img1.imageride.net/images/2025/10/20/anantham-tv.jpg",
+    "mthumb": "https://img1.imageride.net/images/2025/10/20/anantham-tv.jpg"
+  },
+  {
+    "platform": "hls",
+    "id": "https://ipcloud.live/udhayamtv/live/tracks-v1a1/mono.m3u8",
+    "title": "Udhayam TV",
+    "channel": "Live TV",
+    "date": "2025-10-20",
+    "dthumb": "https://img.imageride.net/images/2025/10/20/udhayam-tv.jpg",
+    "mthumb": "https://img.imageride.net/images/2025/10/20/udhayam-tv.jpg"
+  },
+  {
+    "platform": "hls",
+    "id": "https://stream.galaxyott.live/live/subintv/tracks-v1a1/mono.m3u8",
+    "title": "Subin TV",
+    "channel": "Live TV",
+    "date": "2025-10-20",
+    "dthumb": "https://img.imageride.net/images/2025/10/20/subin-tv.jpg",
+    "mthumb": "https://img.imageride.net/images/2025/10/20/subin-tv.jpg"
+  },
+  {
+    "platform": "hls",
+    "id": "https://stream.galaxyott.live/live/utv/tracks-v1a1/mono.m3u8",
+    "title": "UTV HD",
+    "channel": "Live TV",
+    "date": "2025-10-20",
+    "dthumb": "https://img1.imageride.net/images/2025/10/20/utv.jpg",
+    "mthumb": "https://img1.imageride.net/images/2025/10/20/utv.jpg"
+  },
+  {
+    "platform": "hls",
+    "id": "https://mntv.livebox.co.in/musichls/live.m3u8",
+    "title": "MN TV Music Tamil",
+    "channel": "Live TV",
+    "date": "2025-10-20",
+    "dthumb": "https://img1.imageride.net/images/2025/10/20/mn-music.jpg",
+    "mthumb": "https://img1.imageride.net/images/2025/10/20/mn-music.jpg"
+  },
+  {
+    "platform": "hls",
+    "id": "https://yuppmedtaorire.akamaized.net/v1/manifest/a0d007312bfd99c47f76b77ae26b1ccdaae76cb1/siripoli_nim_https/c4e6500f-ea05-4226-810e-2833ee0075ff/0.m3u8",
+    "title": "Kalaignar Sirippoli",
+    "channel": "Live TV",
+    "date": "2025-10-20",
+    "dthumb": "https://img.imageride.net/images/2025/10/20/Kalaignar-Sirippoli.jpg",
+    "mthumb": "https://img.imageride.net/images/2025/10/20/Kalaignar-Sirippoli.jpg"
+  },
+  {
+    "platform": "hls",
+    "id": "https://6n3yope4d9ok-hls-live.5centscdn.com/vaanavil/TV.stream/chunks.m3u8",
+    "title": "Vaanavil TV",
+    "channel": "Live TV",
+    "date": "2025-10-20",
+    "dthumb": "https://img1.imageride.net/images/2025/10/20/Vaanavil.jpg",
+    "mthumb": "https://img1.imageride.net/images/2025/10/20/Vaanavil.jpg"
+  },
+  {
+    "platform": "hls",
+    "id": "https://galaxyott.live/hls/sanatv.m3u8",
+    "title": "Sana TV",
+    "channel": "Live TV",
+    "date": "2025-10-20",
+    "dthumb": "https://img1.imageride.net/images/2025/10/20/sana-tv.jpg",
+    "mthumb": "https://img1.imageride.net/images/2025/10/20/sana-tv.jpg"
+  },
+  {
+    "platform": "hls",
+    "id": "https://live.streamjo.com/eetlive/eettv.m3u8",
+    "title": "EET TV Tamil",
+    "channel": "Live TV",
+    "date": "2025-10-20",
+    "dthumb": "https://img.imageride.net/images/2025/10/20/EETV.jpg",
+    "mthumb": "https://img.imageride.net/images/2025/10/20/EETV.jpg"
+  },
+  {
+    "platform": "hls",
+    "id": "https://mntv.livebox.co.in/mntvhls/live.m3u8",
+    "title": "MN TV HD",
+    "channel": "Live TV",
+    "date": "2025-10-20",
+    "dthumb": "https://img1.imageride.net/images/2025/10/20/Marutam.jpg",
+    "mthumb": "https://img1.imageride.net/images/2025/10/20/Marutam.jpg"
+  },
+  {
+    "platform": "hls",
+    "id": "https://live.skystream.in/live/no1tv/index.m3u8",
+    "title": "No 1 TV Tamil",
+    "channel": "Live TV",
+    "date": "2025-10-20",
+    "dthumb": "https://img1.imageride.net/images/2025/10/20/1tv.jpg",
+    "mthumb": "https://img1.imageride.net/images/2025/10/20/1tv.jpg"
+  },
+  {
+    "platform": "hls",
+    "id": "https://ipcloud.live/thendralmdu/madurai/tracks-v1a1/mono.m3u8",
+    "title": "Thendral TV",
+    "channel": "Live TV",
+    "date": "2025-10-20",
+    "dthumb": "https://img.imageride.net/images/2025/10/20/thendral-tv.jpg",
+    "mthumb": "https://img.imageride.net/images/2025/10/20/thendral-tv.jpg"
+  },  
+  {
     "platform": "yupptv",
     "id": "polimer-news",
     "title": "Polimer News",
@@ -56316,20 +56424,29 @@
     "platform": "youtube",
     "id": "9M02G5c6x6w",
     "title": "Sun News",
-    "mthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/YuppTV_TV.jpg",
-    "dthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/YuppTV_TV.jpg",
+    "mthumb": "https://img1.imageride.net/images/2025/10/20/sun_news-1.png",
+    "dthumb": "https://img1.imageride.net/images/2025/10/20/sun_news-1.png",
     "channel": "Live TV",
-    "date": "2025-08-29"
+    "date": "2025-10-20"
   },
   {
     "platform": "youtube",
     "id": "dUJx4aDoIQo",
     "title": "News18 Tamilnadu",
-    "mthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/YuppTV_TV.jpg",
-    "dthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/YuppTV_TV.jpg",
+    "mthumb": "https://img.imageride.net/images/2025/10/20/news18_tamil-1.png",
+    "dthumb": "https://img.imageride.net/images/2025/10/20/news18_tamil-1.png",
     "channel": "Live TV",
-    "date": "2025-08-29"
+    "date": "2025-10-20"
   },
+  {
+    "platform": "youtube",
+    "id": "gynWNinqmjw",
+    "title": "NewsTamil 24X7",
+    "mthumb": "https://img1.imageride.net/images/2025/10/20/NewsTamil-24X7.jpg",
+    "dthumb": "https://img1.imageride.net/images/2025/10/20/NewsTamil-24X7.jpg",
+    "channel": "Live TV",
+    "date": "2025-10-20"
+  },  
   {
     "platform": "yupptv",
     "id": "peppers-tv",
