@@ -1376,59 +1376,143 @@ if (isDualStream) {
       <script src="https://cdn.jsdelivr.net/npm/hls.js@1.4.12/dist/hls.min.js"><\/script>
       <style>
         * { margin: 0; padding: 0; }
-        body { background: #000; width: 100vw; height: 100vh; display: flex; position: relative; }
-        video { width: 100%; height: 100%; object-fit: fill; }
+        body { background: #000; width: 100vw; height: 100vh; display: flex; position: relative; overflow: hidden; }
+        video { width: 100%; height: 100%; object-fit: contain; background: #000; }
+        #debug { position: absolute; top: 10px; left: 10px; color: #0f0; font-size: 12px; z-index: 1000; background: rgba(0,0,0,0.8); padding: 10px; display: none; }
       </style>
     </head>
     <body>
-      <video id="video" controls autoplay playsinline muted crossorigin="anonymous"><\/video>
-      <div id="playOverlay" style="position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);display:none;align-items:center;justify-content:center;z-index:999;">
-        <button id="playBtn" style="background:#4ecdc4;border:none;padding:20px 40px;font-size:18px;color:white;border-radius:50px;cursor:pointer;">
+      <div id="debug"></div>
+      <video id="video" controls playsinline webkit-playsinline crossorigin="anonymous"><\/video>
+      <div id="playOverlay" style="position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;">
+        <button id="playBtn" style="background:#4ecdc4;border:none;padding:20px 40px;font-size:18px;color:white;border-radius:50px;cursor:pointer;margin-bottom:10px;">
           ▶ Play Stream
         </button>
+        <div style="color:#fff;font-size:12px;margin-top:10px;">Tap to start video and audio</div>
       </div>
       <script>
         const video = document.getElementById('video');
+        const debug = document.getElementById('debug');
         const videoUrl = '${videoUrl}';
         const audioUrl = '${audioUrl}';
         
+        // Debug logger
+        function log(msg) {
+          console.log(msg);
+          debug.innerHTML += msg + '<br>';
+          debug.style.display = 'block';
+        }
+        
         if (Hls.isSupported()) {
-          const videoHls = new Hls();
-          const audioHls = new Hls();
+          const videoHls = new Hls({
+            enableWorker: true,
+            lowLatencyMode: false,
+            backBufferLength: 30,
+            maxBufferLength: 30
+          });
+          const audioHls = new Hls({
+            enableWorker: true,
+            lowLatencyMode: false,
+            backBufferLength: 30,
+            maxBufferLength: 30
+          });
+          
           const audio = new Audio();
           audio.crossOrigin = "anonymous";
           
           const playOverlay = document.getElementById('playOverlay');
           const playBtn = document.getElementById('playBtn');
           
-          videoHls.loadSource(videoUrl);
-          videoHls.attachMedia(video);
-          audioHls.loadSource(audioUrl);
-          audioHls.attachMedia(audio);
-          
-          // Sync audio with video - optimized for mobile
+          let videoReady = false;
+          let audioReady = false;
           let isUserSeeking = false;
           
+          // Load video stream
+          videoHls.loadSource(videoUrl);
+          videoHls.attachMedia(video);
+          log('Video loading...');
+          
+          // Load audio stream
+          audioHls.loadSource(audioUrl);
+          audioHls.attachMedia(audio);
+          log('Audio loading...');
+          
+          // Video manifest loaded
+          videoHls.on(Hls.Events.MANIFEST_PARSED, () => {
+            videoReady = true;
+            log('Video manifest ready');
+            tryAutoplay();
+          });
+          
+          // Audio manifest loaded
+          audioHls.on(Hls.Events.MANIFEST_PARSED, () => {
+            audioReady = true;
+            log('Audio manifest ready');
+            tryAutoplay();
+          });
+          
+          // Try autoplay when both are ready
+          function tryAutoplay() {
+            if (videoReady && audioReady) {
+              log('Both streams ready, attempting play...');
+              video.muted = true;
+              video.play().then(() => {
+                log('Video playing (muted)');
+                // Don't unmute automatically on mobile
+                setTimeout(() => {
+                  playOverlay.style.display = 'flex';
+                  playBtn.textContent = '🔊 Enable Audio';
+                }, 500);
+              }).catch(e => {
+                log('Autoplay blocked: ' + e.message);
+                playOverlay.style.display = 'flex';
+              });
+            }
+          }
+          
+          // Manual play button - THIS IS CRITICAL FOR MOBILE
+          playBtn.addEventListener('click', () => {
+            log('User clicked play');
+            video.muted = false;
+            
+            // Force both to play with user gesture
+            const playPromises = [
+              video.play(),
+              audio.play()
+            ];
+            
+            Promise.all(playPromises).then(() => {
+              log('Both playing successfully');
+              playOverlay.style.display = 'none';
+              setTimeout(() => { debug.style.display = 'none'; }, 3000);
+            }).catch(e => {
+              log('Play error: ' + e.message);
+              // Retry without audio
+              video.play().then(() => {
+                log('Video playing without audio');
+                playOverlay.style.display = 'none';
+              });
+            });
+          });
+          
+          // Sync events
           video.addEventListener('play', () => {
-            if (audio.paused) {
-              audio.play().catch(e => console.log('Audio sync failed:', e));
+            log('Video play event');
+            if (audio.paused && !video.muted) {
+              audio.play().catch(e => log('Audio sync failed: ' + e.message));
             }
           });
           
           video.addEventListener('pause', () => {
-            if (!audio.paused) {
-              audio.pause();
-            }
+            if (!audio.paused) audio.pause();
           });
           
-          video.addEventListener('seeking', () => {
-            isUserSeeking = true;
-          });
+          video.addEventListener('seeking', () => { isUserSeeking = true; });
           
           video.addEventListener('seeked', () => {
             audio.currentTime = video.currentTime;
             if (!video.paused) {
-              audio.play().catch(e => console.log('Audio resume failed:', e));
+              audio.play().catch(e => log('Seek audio failed'));
             }
             isUserSeeking = false;
           });
@@ -1442,57 +1526,42 @@ if (isDualStream) {
             }
           });
           
-          videoHls.on(Hls.Events.MANIFEST_PARSED, () => {
-            video.muted = true;
-            video.play().then(() => {
-              console.log('Video started');
-              video.addEventListener('playing', function unmute() {
-                setTimeout(() => {
-                  video.muted = false;
-                  audio.play().catch(e => console.log('Audio play failed:', e));
-                }, 500);
-                video.removeEventListener('playing', unmute);
-              }, { once: true });
-            }).catch(e => {
-              console.log('Autoplay failed, showing play button');
-              playOverlay.style.display = 'flex';
-            });
-          });
-          
-          // Manual play button for mobile
-          playBtn.addEventListener('click', () => {
-            video.muted = false;
-            video.play().then(() => {
-              audio.play();
-              playOverlay.style.display = 'none';
-            });
-          });
-          
-          // Show overlay if autoplay fails after 1 second
-          setTimeout(() => {
-            if (video.paused) {
-              playOverlay.style.display = 'flex';
-            }
-          }, 1000);
-          
+          // Error handling
           videoHls.on(Hls.Events.ERROR, (event, data) => {
+            log('Video error: ' + data.type + ' - ' + data.details);
             if (data.fatal) {
               switch(data.type) {
                 case Hls.ErrorTypes.NETWORK_ERROR:
+                  log('Network error, retrying...');
                   setTimeout(() => videoHls.startLoad(), 1000);
                   break;
                 case Hls.ErrorTypes.MEDIA_ERROR:
+                  log('Media error, recovering...');
                   videoHls.recoverMediaError();
+                  break;
+                default:
+                  log('Fatal error, cannot recover');
                   break;
               }
             }
           });
           
           audioHls.on(Hls.Events.ERROR, (event, data) => {
+            log('Audio error: ' + data.type + ' - ' + data.details);
             if (data.fatal) {
-              console.log('Audio stream error:', data);
+              log('Audio stream failed');
             }
           });
+          
+          // Show button after delay
+          setTimeout(() => {
+            if (video.paused || video.muted) {
+              playOverlay.style.display = 'flex';
+            }
+          }, 1500);
+          
+        } else {
+          log('HLS not supported');
         }
       <\/script>
     </body>
