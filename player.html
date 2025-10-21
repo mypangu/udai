@@ -1378,191 +1378,226 @@ if (isDualStream) {
         * { margin: 0; padding: 0; }
         body { background: #000; width: 100vw; height: 100vh; display: flex; position: relative; overflow: hidden; }
         video { width: 100%; height: 100%; object-fit: contain; background: #000; }
-        #debug { position: absolute; top: 10px; left: 10px; color: #0f0; font-size: 12px; z-index: 1000; background: rgba(0,0,0,0.8); padding: 10px; display: none; }
       </style>
     </head>
     <body>
-      <div id="debug"></div>
       <video id="video" controls playsinline webkit-playsinline crossorigin="anonymous"><\/video>
-      <div id="playOverlay" style="position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;">
-        <button id="playBtn" style="background:#4ecdc4;border:none;padding:20px 40px;font-size:18px;color:white;border-radius:50px;cursor:pointer;margin-bottom:10px;">
-          ▶ Play Stream
+      <div id="playOverlay" style="position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.9);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:999;">
+        <button id="playBtn" style="background:#4ecdc4;border:none;padding:20px 40px;font-size:18px;color:white;border-radius:50px;cursor:pointer;box-shadow:0 4px 15px rgba(78,205,196,0.4);">
+          ▶️ Play Stream
         </button>
-        <div style="color:#fff;font-size:12px;margin-top:10px;">Tap to start video and audio</div>
+        <div style="color:#fff;font-size:13px;margin-top:15px;opacity:0.7;">Tap to start video with audio</div>
       </div>
       <script>
         const video = document.getElementById('video');
-        const debug = document.getElementById('debug');
+        const playOverlay = document.getElementById('playOverlay');
+        const playBtn = document.getElementById('playBtn');
         const videoUrl = '${videoUrl}';
         const audioUrl = '${audioUrl}';
         
-        // Debug logger
-        function log(msg) {
-          console.log(msg);
-          debug.innerHTML += msg + '<br>';
-          debug.style.display = 'block';
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+        const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        const audio = new Audio();
+        audio.crossOrigin = "anonymous";
+        
+        let isUserSeeking = false;
+        let syncInterval;
+        let videoHls, audioHls;
+        
+        // Check for native HLS support (iPad/Safari)
+        const canPlayHLS = video.canPlayType('application/vnd.apple.mpegurl');
+        
+        function initPlayer() {
+          if (canPlayHLS && isIOS) {
+            // Native HLS for iPad/iPhone/Safari
+            console.log('Using native HLS player');
+            video.src = videoUrl;
+            audio.src = audioUrl;
+            
+            video.load();
+            audio.load();
+            
+            // Show play button after loading
+            video.addEventListener('loadedmetadata', () => {
+              console.log('Video metadata loaded');
+            });
+            
+          } else if (Hls.isSupported()) {
+            // hls.js for other browsers
+            console.log('Using hls.js player');
+            
+            videoHls = new Hls({
+              enableWorker: true,
+              maxBufferLength: 30,
+              maxMaxBufferLength: 60,
+              lowLatencyMode: false,
+              backBufferLength: 30
+            });
+            
+            audioHls = new Hls({
+              enableWorker: true,
+              maxBufferLength: 30,
+              maxMaxBufferLength: 60,
+              lowLatencyMode: false,
+              backBufferLength: 30
+            });
+            
+            videoHls.loadSource(videoUrl);
+            videoHls.attachMedia(video);
+            
+            audioHls.loadSource(audioUrl);
+            audioHls.attachMedia(audio);
+            
+            // Video HLS events
+            videoHls.on(Hls.Events.MANIFEST_PARSED, () => {
+              console.log('Video manifest parsed');
+            });
+            
+            videoHls.on(Hls.Events.ERROR, (event, data) => {
+              console.error('Video HLS Error:', data.type, data.details);
+              if (data.fatal) {
+                switch(data.type) {
+                  case Hls.ErrorTypes.NETWORK_ERROR:
+                    console.log('Network error, retrying...');
+                    setTimeout(() => videoHls.startLoad(), 1000);
+                    break;
+                  case Hls.ErrorTypes.MEDIA_ERROR:
+                    console.log('Media error, recovering...');
+                    videoHls.recoverMediaError();
+                    break;
+                  default:
+                    console.error('Fatal error, cannot recover');
+                    break;
+                }
+              }
+            });
+            
+            // Audio HLS events
+            audioHls.on(Hls.Events.MANIFEST_PARSED, () => {
+              console.log('Audio manifest parsed');
+            });
+            
+            audioHls.on(Hls.Events.ERROR, (event, data) => {
+              console.error('Audio HLS Error:', data.type, data.details);
+              if (data.fatal) {
+                console.log('Audio stream failed, continuing video-only');
+              }
+            });
+          } else {
+            console.error('HLS not supported');
+            playBtn.textContent = 'Browser not supported';
+            playBtn.disabled = true;
+          }
         }
         
-        if (Hls.isSupported()) {
-          const videoHls = new Hls({
-            enableWorker: true,
-            lowLatencyMode: false,
-            backBufferLength: 30,
-            maxBufferLength: 30
-          });
-          const audioHls = new Hls({
-            enableWorker: true,
-            lowLatencyMode: false,
-            backBufferLength: 30,
-            maxBufferLength: 30
-          });
+        // Initialize player
+        initPlayer();
+        
+        // Play button handler - CRITICAL FOR MOBILE
+        playBtn.addEventListener('click', async () => {
+          console.log('Play button clicked');
+          playBtn.disabled = true;
+          playBtn.textContent = 'Loading...';
+          playBtn.style.background = '#45b7d1';
           
-          const audio = new Audio();
-          audio.crossOrigin = "anonymous";
-          
-          const playOverlay = document.getElementById('playOverlay');
-          const playBtn = document.getElementById('playBtn');
-          
-          let videoReady = false;
-          let audioReady = false;
-          let isUserSeeking = false;
-          
-          // Load video stream
-          videoHls.loadSource(videoUrl);
-          videoHls.attachMedia(video);
-          log('Video loading...');
-          
-          // Load audio stream
-          audioHls.loadSource(audioUrl);
-          audioHls.attachMedia(audio);
-          log('Audio loading...');
-          
-          // Video manifest loaded
-          videoHls.on(Hls.Events.MANIFEST_PARSED, () => {
-            videoReady = true;
-            log('Video manifest ready');
-            tryAutoplay();
-          });
-          
-          // Audio manifest loaded
-          audioHls.on(Hls.Events.MANIFEST_PARSED, () => {
-            audioReady = true;
-            log('Audio manifest ready');
-            tryAutoplay();
-          });
-          
-          // Try autoplay when both are ready
-          function tryAutoplay() {
-            if (videoReady && audioReady) {
-              log('Both streams ready, attempting play...');
-              video.muted = true;
-              video.play().then(() => {
-                log('Video playing (muted)');
-                // Don't unmute automatically on mobile
-                setTimeout(() => {
-                  playOverlay.style.display = 'flex';
-                  playBtn.textContent = '🔊 Enable Audio';
-                }, 500);
-              }).catch(e => {
-                log('Autoplay blocked: ' + e.message);
-                playOverlay.style.display = 'flex';
-              });
-            }
-          }
-          
-          // Manual play button - THIS IS CRITICAL FOR MOBILE
-          playBtn.addEventListener('click', () => {
-            log('User clicked play');
+          try {
+            // IMPORTANT: Unmute video for mobile
             video.muted = false;
             
-            // Force both to play with user gesture
-            const playPromises = [
-              video.play(),
-              audio.play()
-            ];
+            // Start video first
+            await video.play();
+            console.log('Video playing');
             
-            Promise.all(playPromises).then(() => {
-              log('Both playing successfully');
-              playOverlay.style.display = 'none';
-              setTimeout(() => { debug.style.display = 'none'; }, 3000);
-            }).catch(e => {
-              log('Play error: ' + e.message);
-              // Retry without audio
-              video.play().then(() => {
-                log('Video playing without audio');
+            // Wait a bit, then start audio
+            setTimeout(async () => {
+              try {
+                await audio.play();
+                console.log('Audio playing');
                 playOverlay.style.display = 'none';
-              });
-            });
-          });
+                startSync();
+              } catch (audioError) {
+                console.log('Audio failed, continuing video-only:', audioError);
+                playOverlay.style.display = 'none';
+                // Continue with video only
+              }
+            }, 300); // Increased delay for mobile
+            
+          } catch (error) {
+            console.error('Playback failed:', error);
+            playBtn.disabled = false;
+            playBtn.textContent = '⚠️ Try Again';
+            playBtn.style.background = '#ff6b6b';
+          }
+        });
+        
+        // Sync function - runs periodically instead of on every event
+        function startSync() {
+          // Clear any existing interval
+          if (syncInterval) clearInterval(syncInterval);
           
-          // Sync events
-          video.addEventListener('play', () => {
-            log('Video play event');
-            if (audio.paused && !video.muted) {
-              audio.play().catch(e => log('Audio sync failed: ' + e.message));
-            }
-          });
-          
-          video.addEventListener('pause', () => {
-            if (!audio.paused) audio.pause();
-          });
-          
-          video.addEventListener('seeking', () => { isUserSeeking = true; });
-          
-          video.addEventListener('seeked', () => {
-            audio.currentTime = video.currentTime;
-            if (!video.paused) {
-              audio.play().catch(e => log('Seek audio failed'));
-            }
-            isUserSeeking = false;
-          });
-          
-          video.addEventListener('timeupdate', () => {
-            if (!isUserSeeking) {
+          syncInterval = setInterval(() => {
+            if (!video.paused && !isUserSeeking && !audio.paused) {
               const diff = Math.abs(video.currentTime - audio.currentTime);
+              
               if (diff > 0.5) {
+                console.log('Syncing audio: diff =', diff.toFixed(2));
                 audio.currentTime = video.currentTime;
               }
             }
-          });
-          
-          // Error handling
-          videoHls.on(Hls.Events.ERROR, (event, data) => {
-            log('Video error: ' + data.type + ' - ' + data.details);
-            if (data.fatal) {
-              switch(data.type) {
-                case Hls.ErrorTypes.NETWORK_ERROR:
-                  log('Network error, retrying...');
-                  setTimeout(() => videoHls.startLoad(), 1000);
-                  break;
-                case Hls.ErrorTypes.MEDIA_ERROR:
-                  log('Media error, recovering...');
-                  videoHls.recoverMediaError();
-                  break;
-                default:
-                  log('Fatal error, cannot recover');
-                  break;
-              }
-            }
-          });
-          
-          audioHls.on(Hls.Events.ERROR, (event, data) => {
-            log('Audio error: ' + data.type + ' - ' + data.details);
-            if (data.fatal) {
-              log('Audio stream failed');
-            }
-          });
-          
-          // Show button after delay
-          setTimeout(() => {
-            if (video.paused || video.muted) {
-              playOverlay.style.display = 'flex';
-            }
-          }, 1500);
-          
-        } else {
-          log('HLS not supported');
+          }, 1000); // Check sync every 1 second, not every frame
         }
+        
+        // Video control event handlers
+        video.addEventListener('pause', () => {
+          console.log('Video paused');
+          if (!audio.paused) {
+            audio.pause();
+          }
+        });
+        
+        video.addEventListener('play', () => {
+          console.log('Video playing');
+          // Only restart audio if it's not already playing
+          if (audio.paused && playOverlay.style.display === 'none') {
+            audio.play().catch(e => console.log('Audio restart failed:', e));
+          }
+        });
+        
+        video.addEventListener('seeking', () => {
+          console.log('Video seeking');
+          isUserSeeking = true;
+        });
+        
+        video.addEventListener('seeked', () => {
+          console.log('Video seeked to:', video.currentTime);
+          audio.currentTime = video.currentTime;
+          isUserSeeking = false;
+          
+          // Restart audio after seek if video is playing
+          if (!video.paused) {
+            audio.play().catch(e => console.log('Audio play after seek failed:', e));
+          }
+        });
+        
+        // Volume sync
+        video.addEventListener('volumechange', () => {
+          audio.volume = video.volume;
+          audio.muted = video.muted;
+        });
+        
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', () => {
+          if (syncInterval) clearInterval(syncInterval);
+          if (videoHls) videoHls.destroy();
+          if (audioHls) audioHls.destroy();
+        });
+        
+        // Auto-show play button if autoplay is blocked
+        setTimeout(() => {
+          if (video.paused) {
+            playOverlay.style.display = 'flex';
+          }
+        }, 1000);
       <\/script>
     </body>
     </html>
