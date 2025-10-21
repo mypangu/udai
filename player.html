@@ -134,6 +134,7 @@
       width: 100%;
       height: 100%;
       border: none;
+	  object-fit: fill !important;
     }
 
     .player-loading {
@@ -672,7 +673,6 @@
 
 .hidden { display: none !important; }
 
-
   </style>
 </head>
 <body>
@@ -794,6 +794,14 @@ disable-paste='false'>
         this.m3u8Url = null;
 		this.currentBlobUrl = null;
         this.workerUrl = 'https://dm.porus-in2012.workers.dev';
+		
+this.stretchMode = localStorage.getItem('stretchMode') || 'fill'; // Default to stretch/fill
+this.stretchModes = ['contain', 'cover', 'fill'];
+this.stretchModeNames = {
+  'contain': 'Fit',
+  'cover': 'Zoom',
+  'fill': 'Stretch'
+};
         
         this.elements = {
           playerIframe: document.getElementById('playerIframe'),
@@ -1130,6 +1138,12 @@ if (this.currentVideo.platform === 'youtube' && isMobile) {
 
         this.renderRelatedVideos();
       }
+	  
+applyStretchMode() {
+  // Always use fill mode
+  this.elements.playerIframe.classList.remove('fit-contain', 'fit-cover');
+  this.elements.playerIframe.classList.add('fit-fill');
+}	  
 
       getDirectVideoLink() {
         const { platform, id } = this.currentVideo;
@@ -1359,7 +1373,7 @@ case 'hls':
       <style>
         * { margin: 0; padding: 0; }
         body { background: #000; width: 100vw; height: 100vh; display: flex; }
-        video { width: 100%; height: 100%; object-fit: contain; }
+        video { width: 100%; height: 100%; object-fit: fill; }
       </style>
     </head>
     <body>
@@ -1486,7 +1500,7 @@ createVideoIframe(videoUrl) {
       <head>
         <style>
           body { margin:0; padding:0; background:#000; }
-          video { width:100%; height:100vh; object-fit:contain; }
+          video { width:100%; height:100vh; object-fit:fill; }
         </style>
       </head>
       <body>
@@ -1536,8 +1550,10 @@ updateCastButton() {
       }
 
       hideLoading() {
-        this.elements.playerLoading.style.display = 'none';
-      }
+		this.elements.playerLoading.style.display = 'none';
+		// Apply stretch mode after video loads
+		setTimeout(() => this.applyStretchMode(), 500);
+	  }
 
       showError() {
         this.elements.playerError.style.display = 'flex';
