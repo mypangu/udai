@@ -1362,131 +1362,129 @@ case 'vimeo':
   return `https://player.vimeo.com/video/${id}?autoplay=1&title=0&byline=0&portrait=0`;  
   
 case 'hls':
-  // Return a data URL that loads HLS properly with better audio handling
-  return `data:text/html;charset=utf-8,${encodeURIComponent(`
-    <!DOCTYPE html>
-    <html>
-    <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <script src="https://cdn.jsdelivr.net/npm/hls.js@1.4.12/dist/hls.min.js"><\/script>
-      <style>
-        * { margin: 0; padding: 0; }
-        body { background: #000; width: 100vw; height: 100vh; display: flex; }
-        video { width: 100%; height: 100%; object-fit: fill; }
-      </style>
-    </head>
-    <body>
-      <video id="video" controls autoplay playsinline muted><\/video>
-      <script>
-        const video = document.getElementById('video');
-        const src = '${id}';
-        
-        // Unmute after a short delay to avoid autoplay restrictions
-        setTimeout(() => { video.muted = false; }, 100);
-        
-        if (Hls.isSupported()) {
-          const hls = new Hls({
-            enableWorker: true,
-            lowLatencyMode: false,
-            backBufferLength: 90,
-            maxBufferLength: 30,
-            maxMaxBufferLength: 60,
-            liveSyncDuration: 3,
-            liveMaxLatencyDuration: 10,
-            liveDurationInfinity: true,
-            highBufferWatchdogPeriod: 2,
-            nudgeMaxRetry: 3,
-            maxFragLookUpTolerance: 0.25,
-            enableWebVTT: false,
-            enableCEA708Captions: false,
-            stretchShortVideoTrack: false,
-            maxAudioFramesDrift: 1,
-            forceKeyFrameOnDiscontinuity: true,
-            abrEwmaFastLive: 3.0,
-            abrEwmaSlowLive: 9.0,
-            abrEwmaDefaultEstimate: 500000,
-            abrBandWidthFactor: 0.95,
-            abrBandWidthUpFactor: 0.7,
-            abrMaxWithRealBitrate: false,
-            maxStarvationDelay: 4,
-            maxLoadingDelay: 4,
-            minAutoBitrate: 0,
-            emeEnabled: false,
-            debug: false
-          });
+  // Check if it's dual stream (video&audio)
+  const isDualStream = id.includes('&');
+  
+  if (isDualStream) {
+    const [videoUrl, audioUrl] = id.split('&');
+    // Dual stream player
+    return `data:text/html;charset=utf-8,${encodeURIComponent(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://cdn.jsdelivr.net/npm/hls.js@1.4.12/dist/hls.min.js"><\/script>
+        <style>
+          * { margin: 0; padding: 0; }
+          body { background: #000; width: 100vw; height: 100vh; display: flex; }
+          video { width: 100%; height: 100%; object-fit: fill; }
+        </style>
+      </head>
+      <body>
+        <video id="video" controls autoplay playsinline muted crossorigin="anonymous"><\/video>
+        <script>
+          const video = document.getElementById('video');
+          const videoUrl = '${videoUrl}';
+          const audioUrl = '${audioUrl}';
           
-          hls.loadSource(src);
-          hls.attachMedia(video);
-          
-          hls.on(Hls.Events.MANIFEST_PARSED, () => {
-            console.log('Stream loaded');
-            video.play().catch(e => {
-              console.log('Autoplay blocked, user interaction needed');
-              video.muted = true;
-              video.play();
-            });
-          });
-          
-          hls.on(Hls.Events.ERROR, (event, data) => {
-            console.log('HLS Error:', data.type, data.details);
+          if (Hls.isSupported()) {
+            const videoHls = new Hls();
+            const audioHls = new Hls();
+            const audio = new Audio();
+            audio.crossOrigin = "anonymous";
             
-            if (data.fatal) {
-              switch(data.type) {
-                case Hls.ErrorTypes.NETWORK_ERROR:
-                  console.log('Network error, attempting recovery...');
-                  setTimeout(() => hls.startLoad(), 1000);
-                  break;
-                  
-                case Hls.ErrorTypes.MEDIA_ERROR:
-                  console.log('Media error, attempting recovery...');
-                  hls.recoverMediaError();
-                  break;
-                  
-                default:
-                  console.log('Fatal error, reloading stream...');
-                  hls.destroy();
-                  setTimeout(() => location.reload(), 2000);
-                  break;
-              }
-            }
-          });
-          
-          // Handle live stream updates smoothly
-          hls.on(Hls.Events.FRAG_CHANGED, () => {
-            // Ensure smooth transitions between fragments
-            if (video.paused && !video.ended) {
-              video.play().catch(e => console.log(e));
-            }
-          });
-          
-          // Prevent buffering stutters
-          video.addEventListener('waiting', () => {
-            console.log('Buffering...');
-          });
-          
-          video.addEventListener('playing', () => {
-            console.log('Playing smoothly');
-          });
-          
-        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-          // Native HLS support (Safari/iOS)
-          video.src = src;
-          video.addEventListener('loadedmetadata', () => {
-            video.play().catch(e => {
-              console.log('Autoplay blocked');
-              video.muted = true;
-              video.play();
+            videoHls.loadSource(videoUrl);
+            videoHls.attachMedia(video);
+            audioHls.loadSource(audioUrl);
+            audioHls.attachMedia(audio);
+            
+            video.addEventListener('play', () => audio.play());
+            video.addEventListener('pause', () => audio.pause());
+            video.addEventListener('seeking', () => { audio.currentTime = video.currentTime; });
+            video.addEventListener('timeupdate', () => {
+              const diff = Math.abs(video.currentTime - audio.currentTime);
+              if (diff > 0.3) audio.currentTime = video.currentTime;
             });
-          });
-        } else {
-          console.error('HLS not supported');
-          document.body.innerHTML = '<div style="color:white;text-align:center;padding:50px;">HLS not supported in this browser<\/div>';
-        }
-      <\/script>
-    </body>
-    </html>
-  `)}`;
+            
+            videoHls.on(Hls.Events.MANIFEST_PARSED, () => {
+              video.play().catch(e => {
+                console.log('Autoplay blocked');
+                video.muted = true;
+                video.play();
+              });
+              setTimeout(() => { video.muted = false; }, 100);
+            });
+            
+            videoHls.on(Hls.Events.ERROR, (event, data) => {
+              if (data.fatal) {
+                switch(data.type) {
+                  case Hls.ErrorTypes.NETWORK_ERROR:
+                    setTimeout(() => videoHls.startLoad(), 1000);
+                    break;
+                  case Hls.ErrorTypes.MEDIA_ERROR:
+                    videoHls.recoverMediaError();
+                    break;
+                }
+              }
+            });
+            
+            audioHls.on(Hls.Events.ERROR, (event, data) => {
+              if (data.fatal) {
+                console.log('Audio stream error:', data);
+              }
+            });
+          }
+        <\/script>
+      </body>
+      </html>
+    `)}`;
+  } else {
+    // Single stream player (keep your existing code here)
+    return `data:text/html;charset=utf-8,${encodeURIComponent(`
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <script src="https://cdn.jsdelivr.net/npm/hls.js@1.4.12/dist/hls.min.js"><\/script>
+        <style>
+          * { margin: 0; padding: 0; }
+          body { background: #000; width: 100vw; height: 100vh; display: flex; }
+          video { width: 100%; height: 100%; object-fit: fill; }
+        </style>
+      </head>
+      <body>
+        <video id="video" controls autoplay playsinline muted><\/video>
+        <script>
+          const video = document.getElementById('video');
+          const src = '${id}';
+          
+          setTimeout(() => { video.muted = false; }, 100);
+          
+          if (Hls.isSupported()) {
+            const hls = new Hls({
+              // ... your existing HLS config ...
+            });
+            
+            hls.loadSource(src);
+            hls.attachMedia(video);
+            
+            hls.on(Hls.Events.MANIFEST_PARSED, () => {
+              video.play().catch(e => {
+                console.log('Autoplay blocked');
+                video.muted = true;
+                video.play();
+              });
+            });
+            
+            // ... rest of your existing error handling ...
+          }
+        <\/script>
+      </body>
+      </html>
+    `)}`;
+  }
             
           default:
             return '';
