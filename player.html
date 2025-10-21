@@ -826,9 +826,53 @@ this.stretchModeNames = {
 
         this.init();
       }
+	  
+async getVideoFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  const platform = params.get('platform');
+  const id = params.get('id');
+  const title = params.get('title');
+  
+  if (!platform || (!id && !title)) {
+    return null;
+  }
+  
+  // Try sessionStorage first
+  let allVideosData = sessionStorage.getItem('allVideos');
+  let videos = [];
+  
+  if (allVideosData) {
+    videos = JSON.parse(allVideosData);
+  } else {
+    // Fetch videos.json directly if sessionStorage is empty
+    try {
+      const response = await fetch('videos.json');
+      if (response.ok) {
+        videos = await response.json();
+        // Save to sessionStorage for future use
+        sessionStorage.setItem('allVideos', JSON.stringify(videos));
+      }
+    } catch (error) {
+      console.error('Failed to load videos.json:', error);
+      return null;
+    }
+  }
+  
+  // For HLS streams, use title as identifier
+  if (platform === 'hls' && title) {
+    return videos.find(v => v.platform === 'hls' && v.title === decodeURIComponent(title));
+  }
+  
+  // For other platforms, use id
+  if (id) {
+    return videos.find(v => v.platform === platform && v.id === id);
+  }
+  
+  return null;
+}	  
 
       async init() {
-        this.loadVideoData();
+        await this.loadVideoData();
         this.setupEventListeners();
         this.setupMobileOrientationHandler();
         this.detectCastDevices();
@@ -1087,28 +1131,41 @@ initCast() {
         document.addEventListener('mozfullscreenchange', handleFullscreenChange);
       }
 
-      loadVideoData() {
-        // Get video data from sessionStorage
-        const videoData = sessionStorage.getItem('currentVideo');
-        const allVideosData = sessionStorage.getItem('allVideos');
+async loadVideoData() {
+  // First, try to get video from URL parameters
+  const urlVideo = await this.getVideoFromUrl();
+  
+if (urlVideo) {
+  // Video loaded from URL
+  this.currentVideo = urlVideo;
+  sessionStorage.setItem('currentVideo', JSON.stringify(urlVideo));
+  
+  // Load all videos for related section
+  const allVideosData = sessionStorage.getItem('allVideos');
+  this.allVideos = allVideosData ? JSON.parse(allVideosData) : [];
+} else {
+    // Fallback to sessionStorage (existing behavior)
+    const videoData = sessionStorage.getItem('currentVideo');
+    const allVideosData = sessionStorage.getItem('allVideos');
 
-        if (!videoData) {
-          // Redirect back if no video data
-          window.location.href = 'index.html';
-          return;
-        }
+    if (!videoData) {
+      // Redirect back if no video data
+      window.location.href = 'index.html';
+      return;
+    }
 
-        this.currentVideo = JSON.parse(videoData);
-        this.allVideos = allVideosData ? JSON.parse(allVideosData) : [];
-        
-        // Get related videos from same channel
-        this.relatedVideos = this.allVideos
-          .filter(v => v.channel === this.currentVideo.channel && v.id !== this.currentVideo.id)
-          .sort((a, b) => new Date(b.date) - new Date(a.date))
-          .slice(0, 8); // Show max 8 related videos
+    this.currentVideo = JSON.parse(videoData);
+    this.allVideos = allVideosData ? JSON.parse(allVideosData) : [];
+  }
+  
+  // Get related videos from same channel
+  this.relatedVideos = this.allVideos
+    .filter(v => v.channel === this.currentVideo.channel && v.id !== this.currentVideo.id)
+    .sort((a, b) => new Date(b.date) - new Date(a.date))
+    .slice(0, 8);
 
-        this.updateUI();
-      }
+  this.updateUI();
+}
 
       updateUI() {
         const { title, channel, date } = this.currentVideo;
@@ -1121,7 +1178,7 @@ initCast() {
         document.title = `${title} - YouDai Player`;
 
         // Use direct video link instead of page URL
-        this.elements.shareUrl.value = this.getDirectVideoLink();
+        this.elements.shareUrl.value = this.getShareableUrl();
 
         // External platform link
         this.updateExternalLink();
@@ -1137,6 +1194,12 @@ if (this.currentVideo.platform === 'youtube' && isMobile) {
 }
 
         this.renderRelatedVideos();
+// Update browser URL without reload
+const shareableUrl = this.getShareableUrl();
+if (window.history.pushState) {
+  window.history.pushState({ video: this.currentVideo }, document.title, shareableUrl);
+}		
+		
       }
 	  
 applyStretchMode() {
@@ -1169,6 +1232,19 @@ case 'hls':
           default: return window.location.href;
         }
       }
+	  
+getShareableUrl() {
+  const { platform, id, title } = this.currentVideo;
+  const baseUrl = window.location.origin + window.location.pathname;
+  
+  // For HLS streams, use title as parameter
+  if (platform === 'hls') {
+    return `${baseUrl}?platform=${platform}&title=${encodeURIComponent(title)}`;
+  }
+  
+  // For other platforms, use id
+  return `${baseUrl}?platform=${platform}&id=${encodeURIComponent(id)}`;
+}	  
 
       updateExternalLink() {
         const { platform, id } = this.currentVideo;
@@ -1291,6 +1367,11 @@ case 'hls':
         
         // Scroll to top
         window.scrollTo({ top: 0, behavior: 'smooth' });
+// Update URL
+const shareableUrl = this.getShareableUrl();
+if (window.history.pushState) {
+  window.history.pushState({ video: this.currentVideo }, document.title, shareableUrl);
+}		
       }
 
 loadVideo() {
@@ -1836,15 +1917,15 @@ updateCastButton() {
           if (e.target === this.elements.shareModal) this.closeShareModal();
         });
 		this.elements.downloadBtn = document.getElementById('downloadBtn');
-		this.elements.downloadBtn.addEventListener('click', () => {
-			if (this.currentVideo.platform === 'gcs') {
-				// Direct download for GCS MP4 videos
-				this.downloadGCSVideo();
-			} else {
-				// Go to stream.html for other platforms (like Dailymotion)
-				window.location.href = 'stream.html';
-			}
-		});
+this.elements.downloadBtn.addEventListener('click', () => {
+  if (this.currentVideo.platform === 'gcs') {
+    // Direct download for GCS MP4 videos
+    this.downloadGCSVideo();
+  } else if (this.currentVideo.platform === 'dailymotion') {
+    // Store M3U8 data and redirect to stream.html
+    this.redirectToDownload();
+  }
+});
 		
 this.elements.customFsBtn = document.getElementById("customFsBtn");
 
@@ -1945,27 +2026,55 @@ document.addEventListener("fullscreenchange", () => {
     }, 3000);
 }
 
+redirectToDownload() {
+  if (!this.m3u8Url) {
+    alert('Download URL not available. Please wait for video to load.');
+    return;
+  }
+
+  // Store download data in sessionStorage
+  const downloadData = {
+    url: this.m3u8Url,
+    title: this.currentVideo.title,
+    platform: this.currentVideo.platform,
+    timestamp: Date.now()
+  };
+
+  sessionStorage.setItem('downloadData', JSON.stringify(downloadData));
+
+  // Show feedback
+  const originalHtml = this.elements.downloadBtn.innerHTML;
+  this.elements.downloadBtn.innerHTML = `
+    <div class="loading-spinner"></div>
+    <span>Opening...</span>
+  `;
+
+  // Redirect to stream.html
+  setTimeout(() => {
+    window.location.href = 'stream.html';
+  }, 500);
+}
+
 openShareModal() {
   this.elements.shareModal.style.display = 'flex';
 
-  // default direct link
-  this.elements.shareUrl.value = this.getDirectVideoLink();
+  // Always use the page URL for sharing
+  this.elements.shareUrl.value = this.getShareableUrl();
 
-// Show MX and Download buttons only for videos we can download
-if ((this.currentVideo.platform === 'dailymotion' || 
-     this.currentVideo.platform === 'gcs') && this.m3u8Url) {
-    this.elements.shareUrl.value = this.m3u8Url;
+  // Show MX and Download buttons based on platform
+  if (this.currentVideo.platform === 'dailymotion' && this.m3u8Url) {
+    // Dailymotion: Show both MX and Download
     this.elements.mxBtn.style.display = 'flex';
     this.elements.downloadBtn.style.display = 'flex';
-} else if (this.currentVideo.platform === 'gcs') {
-    // For GCS without m3u8, show direct link and enable casting
-    this.elements.shareUrl.value = this.getDirectVideoLink();
+  } else if (this.currentVideo.platform === 'gcs') {
+    // GCS: Show only Download (direct download)
     this.elements.downloadBtn.style.display = 'flex';
     this.elements.mxBtn.style.display = 'none';
-} else {
+  } else {
+    // All other platforms: Hide both buttons
     this.elements.mxBtn.style.display = 'none';
-    this.elements.downloadBtn.style.display = 'flex';
-}
+    this.elements.downloadBtn.style.display = 'none';
+  }
 
   this.elements.shareUrl.select();
 }

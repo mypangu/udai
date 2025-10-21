@@ -320,6 +320,42 @@
     </div>
 
     <script>
+	
+    // Auto-fill from player.html download data
+    window.addEventListener('DOMContentLoaded', () => {
+        const downloadData = sessionStorage.getItem('downloadData');
+        
+        if (downloadData) {
+            try {
+                const data = JSON.parse(downloadData);
+                
+                // Wait for input to be available
+                setTimeout(() => {
+                    const urlInput = document.getElementById('playlistUrl');
+                    if (urlInput && data.url) {
+                        urlInput.value = data.url;
+                        
+                        // Optional: Show notification
+                        console.log(`Loaded ${data.platform} download: ${data.title}`);
+                        
+                        // Optional: Auto-trigger extraction after a delay
+                         setTimeout(() => {
+                             document.getElementById('extractBtn').click();
+                         }, 100);
+                    }
+                    
+                    // Clean up sessionStorage
+                    sessionStorage.removeItem('downloadData');
+                }, 100);
+                
+            } catch (error) {
+                console.error('Failed to parse download data:', error);
+            }
+        }
+    });	
+	
+	
+	
         class HLSExtractor {
             constructor() {
                 this.extractBtn = document.getElementById('extractBtn');
