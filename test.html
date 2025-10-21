@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Live Stream Player</title>
+  <style>
+    body {
+      background-color: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      flex-direction: column;
+      color: white;
+      font-family: sans-serif;
+    }
+    video {
+      width: 80%;
+      max-width: 960px;
+      height: auto;
+      background: black;
+      border-radius: 12px;
+    }
+    input {
+      width: 80%;
+      max-width: 960px;
+      margin: 8px 0;
+      padding: 8px;
+      border-radius: 6px;
+      border: none;
+    }
+    button {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 6px;
+      background-color: #1db954;
+      color: white;
+      cursor: pointer;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <h2>Live Stream Player</h2>
+
+  <input id="videoUrl" type="text" placeholder="Enter Video .m3u8 URL" value="https://livestream10.sunnxt.com/DolbyVision/SunTV_HDR/SunTV_HDR_Endpoints/SunTV-HDR10-IN-index_video-1920x1080-4000000.m3u8">
+  <input id="audioUrl" type="text" placeholder="Enter Audio .m3u8 URL" value="https://livestream10.sunnxt.com/DolbyVision/SunTV_HDR/SunTV_HDR_Endpoints/SunTV-HDR10-IN-index_audio-1-und-128000.m3u8">
+  <button onclick="playStreams()">Play Stream</button>
+
+  <video id="video" controls autoplay></video>
+
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <script>
+    async function playStreams() {
+      const video = document.getElementById('video');
+      const videoUrl = document.getElementById('videoUrl').value.trim();
+      const audioUrl = document.getElementById('audioUrl').value.trim();
+
+      if (Hls.isSupported()) {
+        const videoHls = new Hls();
+        const audioHls = new Hls();
+
+        // Create an Audio element separately
+        const audio = new Audio();
+        audio.crossOrigin = "anonymous";
+        video.crossOrigin = "anonymous";
+
+        // Load video and audio sources
+        videoHls.loadSource(videoUrl);
+        videoHls.attachMedia(video);
+
+        audioHls.loadSource(audioUrl);
+        audioHls.attachMedia(audio);
+
+        // Sync audio with video
+        video.addEventListener('play', () => audio.play());
+        video.addEventListener('pause', () => audio.pause());
+        video.addEventListener('seeking', () => { audio.currentTime = video.currentTime; });
+        video.addEventListener('timeupdate', () => {
+          const diff = Math.abs(video.currentTime - audio.currentTime);
+          if (diff > 0.5) audio.currentTime = video.currentTime;
+        });
+
+        videoHls.on(Hls.Events.MANIFEST_PARSED, () => {
+          video.play();
+        });
+      } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        video.src = videoUrl;
+        video.play();
+      }
+    }
+  </script>
+</body>
+</html>
