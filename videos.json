@@ -1,7 +1,7 @@
 [
   {
     "platform": "hls",
-    "id": "https://livestream10.sunnxt.com/DolbyVision/SunTV_HDR/SunTV_HDR_Endpoints/SunTV-HDR10-IN-index_video-1920x1080-4000000.m3u8&https://livestream10.sunnxt.com/DolbyVision/SunTV_HDR/SunTV_HDR_Endpoints/SunTV-HDR10-IN-index_audio-1-und-128000.m3u8",
+    "id": "https://livestream10.sunnxt.com/DolbyVision/SunTV_HDR/SunTV_HDR_Endpoints/SunTV-HDR10-IN-index.m3u8",
     "title": "Sun TV",
     "channel": "Live TV",
     "date": "2025-10-21",
