@@ -773,7 +773,7 @@
     </div>
   </div>
 </div>
-
+<!--
 <script disable-devtool-auto='true'
 src='https://cdn.jsdelivr.net/npm/disable-devtool'
 clear-log='true'
@@ -781,7 +781,7 @@ disable-select='true'
 disable-copy='true'
 disable-cut='true' 
 disable-paste='false'>
-</script>
+</script>  -->
 
   <script>
     class VideoPlayer {
@@ -1365,81 +1365,140 @@ case 'hls':
   // Check if it's dual stream (video&audio)
   const isDualStream = id.includes('&');
   
-  if (isDualStream) {
-    const [videoUrl, audioUrl] = id.split('&');
-    // Dual stream player
-    return `data:text/html;charset=utf-8,${encodeURIComponent(`
-      <!DOCTYPE html>
-      <html>
-      <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <script src="https://cdn.jsdelivr.net/npm/hls.js@1.4.12/dist/hls.min.js"><\/script>
-        <style>
-          * { margin: 0; padding: 0; }
-          body { background: #000; width: 100vw; height: 100vh; display: flex; }
-          video { width: 100%; height: 100%; object-fit: fill; }
-        </style>
-      </head>
-      <body>
-        <video id="video" controls autoplay playsinline muted crossorigin="anonymous"><\/video>
-        <script>
-          const video = document.getElementById('video');
-          const videoUrl = '${videoUrl}';
-          const audioUrl = '${audioUrl}';
+if (isDualStream) {
+  const [videoUrl, audioUrl] = id.split('&');
+  return `data:text/html;charset=utf-8,${encodeURIComponent(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <script src="https://cdn.jsdelivr.net/npm/hls.js@1.4.12/dist/hls.min.js"><\/script>
+      <style>
+        * { margin: 0; padding: 0; }
+        body { background: #000; width: 100vw; height: 100vh; display: flex; position: relative; }
+        video { width: 100%; height: 100%; object-fit: fill; }
+      </style>
+    </head>
+    <body>
+      <video id="video" controls autoplay playsinline muted crossorigin="anonymous"><\/video>
+      <div id="playOverlay" style="position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);display:none;align-items:center;justify-content:center;z-index:999;">
+        <button id="playBtn" style="background:#4ecdc4;border:none;padding:20px 40px;font-size:18px;color:white;border-radius:50px;cursor:pointer;">
+          ▶ Play Stream
+        </button>
+      </div>
+      <script>
+        const video = document.getElementById('video');
+        const videoUrl = '${videoUrl}';
+        const audioUrl = '${audioUrl}';
+        
+        if (Hls.isSupported()) {
+          const videoHls = new Hls();
+          const audioHls = new Hls();
+          const audio = new Audio();
+          audio.crossOrigin = "anonymous";
           
-          if (Hls.isSupported()) {
-            const videoHls = new Hls();
-            const audioHls = new Hls();
-            const audio = new Audio();
-            audio.crossOrigin = "anonymous";
-            
-            videoHls.loadSource(videoUrl);
-            videoHls.attachMedia(video);
-            audioHls.loadSource(audioUrl);
-            audioHls.attachMedia(audio);
-            
-            video.addEventListener('play', () => audio.play());
-            video.addEventListener('pause', () => audio.pause());
-            video.addEventListener('seeking', () => { audio.currentTime = video.currentTime; });
-            video.addEventListener('timeupdate', () => {
+          const playOverlay = document.getElementById('playOverlay');
+          const playBtn = document.getElementById('playBtn');
+          
+          videoHls.loadSource(videoUrl);
+          videoHls.attachMedia(video);
+          audioHls.loadSource(audioUrl);
+          audioHls.attachMedia(audio);
+          
+          // Sync audio with video - optimized for mobile
+          let isUserSeeking = false;
+          
+          video.addEventListener('play', () => {
+            if (audio.paused) {
+              audio.play().catch(e => console.log('Audio sync failed:', e));
+            }
+          });
+          
+          video.addEventListener('pause', () => {
+            if (!audio.paused) {
+              audio.pause();
+            }
+          });
+          
+          video.addEventListener('seeking', () => {
+            isUserSeeking = true;
+          });
+          
+          video.addEventListener('seeked', () => {
+            audio.currentTime = video.currentTime;
+            if (!video.paused) {
+              audio.play().catch(e => console.log('Audio resume failed:', e));
+            }
+            isUserSeeking = false;
+          });
+          
+          video.addEventListener('timeupdate', () => {
+            if (!isUserSeeking) {
               const diff = Math.abs(video.currentTime - audio.currentTime);
-              if (diff > 0.3) audio.currentTime = video.currentTime;
-            });
-            
-            videoHls.on(Hls.Events.MANIFEST_PARSED, () => {
-              video.play().catch(e => {
-                console.log('Autoplay blocked');
-                video.muted = true;
-                video.play();
-              });
-              setTimeout(() => { video.muted = false; }, 100);
-            });
-            
-            videoHls.on(Hls.Events.ERROR, (event, data) => {
-              if (data.fatal) {
-                switch(data.type) {
-                  case Hls.ErrorTypes.NETWORK_ERROR:
-                    setTimeout(() => videoHls.startLoad(), 1000);
-                    break;
-                  case Hls.ErrorTypes.MEDIA_ERROR:
-                    videoHls.recoverMediaError();
-                    break;
-                }
+              if (diff > 0.5) {
+                audio.currentTime = video.currentTime;
               }
+            }
+          });
+          
+          videoHls.on(Hls.Events.MANIFEST_PARSED, () => {
+            video.muted = true;
+            video.play().then(() => {
+              console.log('Video started');
+              video.addEventListener('playing', function unmute() {
+                setTimeout(() => {
+                  video.muted = false;
+                  audio.play().catch(e => console.log('Audio play failed:', e));
+                }, 500);
+                video.removeEventListener('playing', unmute);
+              }, { once: true });
+            }).catch(e => {
+              console.log('Autoplay failed, showing play button');
+              playOverlay.style.display = 'flex';
             });
-            
-            audioHls.on(Hls.Events.ERROR, (event, data) => {
-              if (data.fatal) {
-                console.log('Audio stream error:', data);
+          });
+          
+          // Manual play button for mobile
+          playBtn.addEventListener('click', () => {
+            video.muted = false;
+            video.play().then(() => {
+              audio.play();
+              playOverlay.style.display = 'none';
+            });
+          });
+          
+          // Show overlay if autoplay fails after 1 second
+          setTimeout(() => {
+            if (video.paused) {
+              playOverlay.style.display = 'flex';
+            }
+          }, 1000);
+          
+          videoHls.on(Hls.Events.ERROR, (event, data) => {
+            if (data.fatal) {
+              switch(data.type) {
+                case Hls.ErrorTypes.NETWORK_ERROR:
+                  setTimeout(() => videoHls.startLoad(), 1000);
+                  break;
+                case Hls.ErrorTypes.MEDIA_ERROR:
+                  videoHls.recoverMediaError();
+                  break;
               }
-            });
-          }
-        <\/script>
-      </body>
-      </html>
-    `)}`;
-  } else {
+            }
+          });
+          
+          audioHls.on(Hls.Events.ERROR, (event, data) => {
+            if (data.fatal) {
+              console.log('Audio stream error:', data);
+            }
+          });
+        }
+      <\/script>
+    </body>
+    </html>
+  `)}`;
+} else {
     // Single stream player (keep your existing code here)
     return `data:text/html;charset=utf-8,${encodeURIComponent(`
       <!DOCTYPE html>
