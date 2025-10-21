@@ -1,7 +1,7 @@
 [
   {
     "platform": "hls",
-    "id": "https://livestream10.sunnxt.com/DolbyVision/SunTV_HDR/SunTV_HDR_Endpoints/SunTV-HDR10-IN-index.m3u8",
+    "id": "https://livestream10.sunnxt.com/DolbyVision/SunTV_HDR/SunTV_HDR_Endpoints/SunTV-HDR10-IN-index_video-1920x1080-4000000.m3u8&https://livestream10.sunnxt.com/DolbyVision/SunTV_HDR/SunTV_HDR_Endpoints/SunTV-HDR10-IN-index_audio-1-und-128000.m3u8",
     "title": "Sun TV",
     "channel": "Live TV",
     "date": "2025-10-21",
@@ -56770,5 +56770,50 @@
     "dthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/HOLY_GOD_TV.jpg",
     "channel": "Live TV",
     "date": "2025-08-29"
-  }
+  },
+  {
+    "platform": "hls",
+    "id": "https://sports-r3ct.onrender.com/?url=http://116.90.120.149:8000/play/a0cl/index.m3u8",
+    "title": "SPORT SELECT HD1",
+    "channel": "Live TV",
+    "date": "2025-08-29",
+    "dthumb": "https://img10.hotstar.com/image/upload/f_auto,q_90,w_384/sources/r1/cms/prod/7012/597012-h",
+    "mthumb": "https://img10.hotstar.com/image/upload/f_auto,q_90,w_384/sources/r1/cms/prod/7012/597012-h"
+  },
+  {
+    "platform": "hls",
+    "id": "https://sports-r3ct.onrender.com/?url=http://116.90.120.149:8000/play/a0cm/index.m3u8",
+    "title": "SPORTS SELECT HD2",
+    "channel": "Live TV",
+    "date": "2025-08-29",
+    "dthumb": "https://img10.hotstar.com/image/upload/f_auto,q_90,w_384/sources/r1/cms/prod/7076/597076-h",
+    "mthumb": "https://img10.hotstar.com/image/upload/f_auto,q_90,w_384/sources/r1/cms/prod/7076/597076-h"
+  },
+  {
+    "platform": "hls",
+    "id": "https://sports-r3ct.onrender.com/?url=http://116.90.120.149:8000/play/a0ba/index.m3u8",
+    "title": "STAR SPORTS 1 HD",
+    "channel": "Live TV",
+    "date": "2025-08-29",
+    "dthumb": "https://img10.hotstar.com/image/upload/f_auto,q_90,w_384/sources/r1/cms/prod/7074/597074-h",
+    "mthumb": "https://img10.hotstar.com/image/upload/f_auto,q_90,w_384/sources/r1/cms/prod/7074/597074-h"
+  },
+  {
+    "platform": "hls",
+    "id": "https://sports-r3ct.onrender.com/?url=http://116.90.120.149:8000/play/a0bv/index.m3u8",
+    "title": "STAR SPORTS 1 HINDI",
+    "channel": "Live TV",
+    "date": "2025-08-29",
+    "dthumb": "https://img10.hotstar.com/image/upload/f_auto,q_90,w_384/sources/r1/cms/prod/6998/596998-h",
+    "mthumb": "https://img10.hotstar.com/image/upload/f_auto,q_90,w_384/sources/r1/cms/prod/6998/596998-h"
+  },
+  {
+    "platform": "hls",
+    "id": "https://sports-r3ct.onrender.com/?url=http://116.90.120.149:8000/play/a0cs/index.m3u8",
+    "title": "STAR SPORTS HD2 HINDI",
+    "channel": "Live TV",
+    "date": "2025-08-29",
+    "dthumb": "https://jiotvimages.cdn.jio.com/dare_images/images/channel/186566b6e14d12ab38ec2f6fbfb717d6.png",
+    "mthumb": "https://jiotvimages.cdn.jio.com/dare_images/images/channel/186566b6e14d12ab38ec2f6fbfb717d6.png"
+  }  
 ]
