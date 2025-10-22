@@ -1,7 +1,7 @@
 [
   {
     "platform": "hls",
-    "id": "http://media.7starcloud.com:1935/live/7star/playlist.m3u8",
+    "id": "https://sports.porus-in2012.workers.dev/?url=http://media.7starcloud.com:1935/live/7star/playlist.m3u8",
     "title": "7Star TV",
     "channel": "Live TV",
     "date": "2025-09-30",
@@ -10,7 +10,7 @@
   },
   {
     "platform": "hls",
-    "id": "http://media.7starcloud.com:1935/erodekrishnatv/livestream/playlist.m3u8",
+    "id": "https://sports.porus-in2012.workers.dev/?url=http://media.7starcloud.com:1935/erodekrishnatv/livestream/playlist.m3u8",
     "title": "SRI KRISHNA TV",
     "channel": "Live TV",
     "date": "2025-09-30",
@@ -19,7 +19,7 @@
   },
   {
     "platform": "hls",
-    "id": "http://player.mslivestream.net/tamil/ac206e74d75b285755ee4924df87d951.sdp/index.m3u8",
+    "id": "https://sports.porus-in2012.workers.dev/?url=http://player.mslivestream.net/tamil/ac206e74d75b285755ee4924df87d951.sdp/index.m3u8",
     "title": "SVBC 2",
     "channel": "Live TV",
     "date": "2025-09-30",
@@ -28,7 +28,7 @@
   },
   {
     "platform": "hls",
-    "id": "http://rasinetworks.in:1935/rasitvhd/rasitvhd.stream_aac/playlist.m3u8",
+    "id": "https://sports.porus-in2012.workers.dev/?url=http://rasinetworks.in:1935/rasitvhd/rasitvhd.stream_aac/playlist.m3u8",
     "title": "Rasi TV",
     "channel": "Live TV",
     "date": "2025-09-30",
@@ -37,7 +37,7 @@
   },
   {
     "platform": "hls",
-    "id": "http://rasinetworks.in:1935/rasitamil/rasitamil.stream_aac/index.m3u8",
+    "id": "https://sports.porus-in2012.workers.dev/?url=http://rasinetworks.in:1935/rasitamil/rasitamil.stream_aac/index.m3u8",
     "title": "Rasi Tamil",
     "channel": "Live TV",
     "date": "2025-09-30",
@@ -46,7 +46,7 @@
   },
   {
     "platform": "hls",
-    "id": "http://rasinetworks.in:1935/rasimovies/rasimovies.stream_aac/index.m3u8",
+    "id": "https://sports.porus-in2012.workers.dev/?url=http://rasinetworks.in:1935/rasimovies/rasimovies.stream_aac/index.m3u8",
     "title": "Rasi Movies",
     "channel": "Live TV",
     "date": "2025-09-30",
@@ -55,7 +55,7 @@
   },
   {
     "platform": "hls",
-    "id": "http://rasinetworks.in:1935/rasimusic/rasimusic.stream_aac/index.m3u8",
+    "id": "https://sports.porus-in2012.workers.dev/?url=http://rasinetworks.in:1935/rasimusic/rasimusic.stream_aac/index.m3u8",
     "title": "Rasi Music",
     "channel": "Live TV",
     "date": "2025-09-30",
@@ -64,7 +64,7 @@
   },
   {
     "platform": "hls",
-    "id": "http://rasinetworks.in:1935/rasihollywood/rasihollywood.stream_aac/index.m3u8",
+    "id": "https://sports.porus-in2012.workers.dev/?url=http://rasinetworks.in:1935/rasihollywood/rasihollywood.stream_aac/index.m3u8",
     "title": "Rasi Hollywood",
     "channel": "Live TV",
     "date": "2025-09-30",
@@ -73,7 +73,7 @@
   },
   {
     "platform": "hls",
-    "id": "http://rasinetworks.in:1935/rasiclassic/rasiclassic.stream_aac/index.m3u8",
+    "id": "https://sports.porus-in2012.workers.dev/?url=http://rasinetworks.in:1935/rasiclassic/rasiclassic.stream_aac/index.m3u8",
     "title": "Rasi Classic",
     "channel": "Live TV",
     "date": "2025-09-30",
@@ -82,7 +82,7 @@
   },
   {
     "platform": "hls",
-    "id": "http://rasinetworks.in:1935/rasicomedy/rasicomedy.stream_aac/index.m3u8",
+    "id": "https://sports.porus-in2012.workers.dev/?url=http://rasinetworks.in:1935/rasicomedy/rasicomedy.stream_aac/index.m3u8",
     "title": "Rasi Comedy",
     "channel": "Live TV",
     "date": "2025-09-30",
