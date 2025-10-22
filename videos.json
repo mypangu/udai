@@ -1,5 +1,743 @@
 [
   {
+    "platform": "hls",
+    "id": "http://media.7starcloud.com:1935/live/7star/playlist.m3u8",
+    "title": "7Star TV",
+    "channel": "Live TV",
+    "date": "2025-09-30",
+    "dthumb": "https://i.imgur.com/EaHWWNl.jpeg",
+    "mthumb": "https://i.imgur.com/EaHWWNl.jpeg"
+  },
+  {
+    "platform": "hls",
+    "id": "http://media.7starcloud.com:1935/erodekrishnatv/livestream/playlist.m3u8",
+    "title": "SRI KRISHNA TV",
+    "channel": "Live TV",
+    "date": "2025-09-30",
+    "dthumb": "https://repowis2k23.blueinkcreations.com/wp-content/uploads/2022/03/New-Sri-Krishna-TV-logo-300x170.png",
+    "mthumb": "https://repowis2k23.blueinkcreations.com/wp-content/uploads/2022/03/New-Sri-Krishna-TV-logo-300x170.png"
+  },
+  {
+    "platform": "hls",
+    "id": "http://player.mslivestream.net/tamil/ac206e74d75b285755ee4924df87d951.sdp/index.m3u8",
+    "title": "SVBC 2",
+    "channel": "Live TV",
+    "date": "2025-09-30",
+    "dthumb": "https://i.imgur.com/NtmRt1A.png",
+    "mthumb": "https://i.imgur.com/NtmRt1A.png"
+  },
+  {
+    "platform": "hls",
+    "id": "http://rasinetworks.in:1935/rasitvhd/rasitvhd.stream_aac/playlist.m3u8",
+    "title": "Rasi TV",
+    "channel": "Live TV",
+    "date": "2025-09-30",
+    "dthumb": "https://raw.githubusercontent.com/codedbyakil/Rasi-TV-Network-IPTV/refs/heads/main/Logos/rasi_tv.png",
+    "mthumb": "https://raw.githubusercontent.com/codedbyakil/Rasi-TV-Network-IPTV/refs/heads/main/Logos/rasi_tv.png"
+  },
+  {
+    "platform": "hls",
+    "id": "http://rasinetworks.in:1935/rasitamil/rasitamil.stream_aac/index.m3u8",
+    "title": "Rasi Tamil",
+    "channel": "Live TV",
+    "date": "2025-09-30",
+    "dthumb": "https://raw.githubusercontent.com/codedbyakil/Rasi-TV-Network-IPTV/refs/heads/main/Logos/rasi_tamil.png",
+    "mthumb": "https://raw.githubusercontent.com/codedbyakil/Rasi-TV-Network-IPTV/refs/heads/main/Logos/rasi_tamil.png"
+  },
+  {
+    "platform": "hls",
+    "id": "http://rasinetworks.in:1935/rasimovies/rasimovies.stream_aac/index.m3u8",
+    "title": "Rasi Movies",
+    "channel": "Live TV",
+    "date": "2025-09-30",
+    "dthumb": "https://raw.githubusercontent.com/codedbyakil/Rasi-TV-Network-IPTV/refs/heads/main/Logos/rasi_movies.png",
+    "mthumb": "https://raw.githubusercontent.com/codedbyakil/Rasi-TV-Network-IPTV/refs/heads/main/Logos/rasi_movies.png"
+  },
+  {
+    "platform": "hls",
+    "id": "http://rasinetworks.in:1935/rasimusic/rasimusic.stream_aac/index.m3u8",
+    "title": "Rasi Music",
+    "channel": "Live TV",
+    "date": "2025-09-30",
+    "dthumb": "https://raw.githubusercontent.com/codedbyakil/Rasi-TV-Network-IPTV/refs/heads/main/Logos/rasi_music.png",
+    "mthumb": "https://raw.githubusercontent.com/codedbyakil/Rasi-TV-Network-IPTV/refs/heads/main/Logos/rasi_music.png"
+  },
+  {
+    "platform": "hls",
+    "id": "http://rasinetworks.in:1935/rasihollywood/rasihollywood.stream_aac/index.m3u8",
+    "title": "Rasi Hollywood",
+    "channel": "Live TV",
+    "date": "2025-09-30",
+    "dthumb": "https://raw.githubusercontent.com/codedbyakil/Rasi-TV-Network-IPTV/refs/heads/main/Logos/rasi_hollywood.png",
+    "mthumb": "https://raw.githubusercontent.com/codedbyakil/Rasi-TV-Network-IPTV/refs/heads/main/Logos/rasi_hollywood.png"
+  },
+  {
+    "platform": "hls",
+    "id": "http://rasinetworks.in:1935/rasiclassic/rasiclassic.stream_aac/index.m3u8",
+    "title": "Rasi Classic",
+    "channel": "Live TV",
+    "date": "2025-09-30",
+    "dthumb": "https://raw.githubusercontent.com/codedbyakil/Rasi-TV-Network-IPTV/refs/heads/main/Logos/rasi_classic.png",
+    "mthumb": "https://raw.githubusercontent.com/codedbyakil/Rasi-TV-Network-IPTV/refs/heads/main/Logos/rasi_classic.png"
+  },
+  {
+    "platform": "hls",
+    "id": "http://rasinetworks.in:1935/rasicomedy/rasicomedy.stream_aac/index.m3u8",
+    "title": "Rasi Comedy",
+    "channel": "Live TV",
+    "date": "2025-09-30",
+    "dthumb": "https://raw.githubusercontent.com/codedbyakil/Rasi-TV-Network-IPTV/refs/heads/main/Logos/rasi_comedy.png",
+    "mthumb": "https://raw.githubusercontent.com/codedbyakil/Rasi-TV-Network-IPTV/refs/heads/main/Logos/rasi_comedy.png"
+  },
+  {
+    "platform": "dailymotion",
+    "id": "k6TAC3vhhvXbNxE4nyg",
+    "title": "Bigg Boss Tamil S9",
+    "mthumb": "https://img10.hotstar.com/image/upload/f_auto,q_90,w_556/sources/r1/cms/prod/6690/1759685236690-h",
+    "dthumb": "https://img10.hotstar.com/image/upload/f_auto,q_90,w_556/sources/r1/cms/prod/6690/1759685236690-h",
+    "channel": "VIJAY TV",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "dailymotion",
+    "id": "kf8NNkTqN2phGQE497w",
+    "title": "Chinna Marumagal",
+    "mthumb": "https://img1.imageride.net/images/2025/09/11/chinna.jpg",
+    "dthumb": "https://img1.imageride.net/images/2025/09/11/chinna.jpg",
+    "channel": "VIJAY TV",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "dailymotion",
+    "id": "k20iQ1egKbZqxyE497y",
+    "title": "Ayyanar Thunai",
+    "mthumb": "https://img1.imageride.net/images/2025/09/11/ayy.jpg",
+    "dthumb": "https://img1.imageride.net/images/2025/09/11/ayy.jpg",
+    "channel": "VIJAY TV",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "dailymotion",
+    "id": "k4AU2n6OTk4nT8E49gA",
+    "title": "Mahanadhi",
+    "mthumb": "https://img.imageride.net/images/2025/09/11/maha.jpg",
+    "dthumb": "https://img.imageride.net/images/2025/09/11/maha.jpg",
+    "channel": "VIJAY TV",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "dailymotion",
+    "id": "k1BHBQ2D3KQRhpE49gC",
+    "title": "Pandian Stores S2",
+    "mthumb": "https://img.imageride.net/images/2025/09/11/pandian.jpg",
+    "dthumb": "https://img.imageride.net/images/2025/09/11/pandian.jpg",
+    "channel": "VIJAY TV",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "dailymotion",
+    "id": "k5OKfgJuN9IlzFE49gy",
+    "title": "Dhanam",
+    "mthumb": "https://img1.imageride.net/images/2025/09/11/dhana-1.jpg",
+    "dthumb": "https://img1.imageride.net/images/2025/09/11/dhana-1.jpg",
+    "channel": "VIJAY TV",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "dailymotion",
+    "id": "k4bCPyE2kQaX3jE49gE",
+    "title": "Poongatru Thirumbuma",
+    "mthumb": "https://img.imageride.net/images/2025/09/11/poong.jpg",
+    "dthumb": "https://img.imageride.net/images/2025/09/11/poong.jpg",
+    "channel": "VIJAY TV",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "dailymotion",
+    "id": "k6UMeBjG9zlfJdE49gG",
+    "title": "Sakthivel",
+    "mthumb": "https://img.imageride.net/images/2025/09/12/svel.jpg",
+    "dthumb": "https://img.imageride.net/images/2025/09/12/svel.jpg",
+    "channel": "VIJAY TV",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "dailymotion",
+    "id": "klDHp7ZxR5nJPXE49gu",
+    "title": "Magale En Marumagale",
+    "mthumb": "https://img1.imageride.net/images/2025/09/11/mem.jpg",
+    "dthumb": "https://img1.imageride.net/images/2025/09/11/mem.jpg",
+    "channel": "VIJAY TV",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "dailymotion",
+    "id": "kR8mZePcHNwJkBE49gI",
+    "title": "Sindhu Bairavi Kacheri Arambam",
+    "mthumb": "https://img.imageride.net/images/2025/09/11/shindhu-1.jpg",
+    "dthumb": "https://img.imageride.net/images/2025/09/11/shindhu-1.jpg",
+    "channel": "VIJAY TV",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "dailymotion",
+    "id": "k4bCPyE2kQaX3jE49gE",
+    "title": "Kanmani Anbudan",
+    "mthumb": "https://img.imageride.net/images/2025/09/12/ka.jpg",
+    "dthumb": "https://img.imageride.net/images/2025/09/12/ka.jpg",
+    "channel": "VIJAY TV",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "dailymotion",
+    "id": "k6hlDsgEZCPYtQE49ee",
+    "title": "Siragadikka Aasai",
+    "mthumb": "https://img1.imageride.net/images/2025/09/11/sirshu.jpg",
+    "dthumb": "https://img1.imageride.net/images/2025/09/11/sirshu.jpg",
+    "channel": "VIJAY TV",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "dailymotion",
+    "id": "k7Guyop11a5PcHE49ec",
+    "title": "Thendrale Mella Pesu",
+    "mthumb": "https://img.imageride.net/images/2025/09/11/TMP.jpg",
+    "dthumb": "https://img.imageride.net/images/2025/09/11/TMP.jpg",
+    "channel": "VIJAY TV",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "dailymotion",
+    "id": "k5uworaKMbaETXE48yc",
+    "title": "Idhayam",
+    "mthumb": "https://img1.imageride.net/images/2025/09/11/id1.jpg",
+    "dthumb": "https://img1.imageride.net/images/2025/09/11/id1.jpg",
+    "channel": "ZEETAMIL TV",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "dailymotion",
+    "id": "kaAA60IGJHSGziE48cY",
+    "title": "Varisu",
+    "mthumb": "https://img1.imageride.net/images/2025/09/11/vari.jpg",
+    "dthumb": "https://img1.imageride.net/images/2025/09/11/vari.jpg",
+    "channel": "ZEETAMIL TV",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "dailymotion",
+    "id": "k2NIadRLlkaUdWE46Z8",
+    "title": "Singappenne",
+    "mthumb": "https://img.imageride.net/images/2025/09/11/Singappenn.jpg",
+    "dthumb": "https://img.imageride.net/images/2025/09/11/Singappenn.jpg",
+    "channel": "SUN TV",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "dailymotion",
+    "id": "k7KyM4GOAVQRmSE46Z6",
+    "title": "Ethir Neechal Thodargirathu",
+    "mthumb": "https://img1.imageride.net/images/2025/09/11/Ethir.jpg",
+    "dthumb": "https://img1.imageride.net/images/2025/09/11/Ethir.jpg",
+    "channel": "SUN TV",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "dailymotion",
+    "id": "k7eSvsFB8epbObE46Za",
+    "title": "Moondru Mudichi",
+    "mthumb": "https://img1.imageride.net/images/2025/09/11/Moondru.jpg",
+    "dthumb": "https://img1.imageride.net/images/2025/09/11/Moondru.jpg",
+    "channel": "SUN TV",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "dailymotion",
+    "id": "k7yrtyusN7IcpvE46Zc",
+    "title": "Kayal",
+    "mthumb": "https://img.imageride.net/images/2025/09/11/Kayal.jpg",
+    "dthumb": "https://img.imageride.net/images/2025/09/11/Kayal.jpg",
+    "channel": "SUN TV",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "dailymotion",
+    "id": "k5bt2QmF5vEqcOE4nqk",
+    "title": "Puthu Vasantham",
+    "mthumb": "https://img1.imageride.net/images/2025/09/15/Puthu.jpg",
+    "dthumb": "https://img1.imageride.net/images/2025/09/15/Puthu.jpg",
+    "channel": "SUN TV",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "dailymotion",
+    "id": "kTJyx9MjYKnrF4E4nqq",
+    "title": "Poongodi",
+    "mthumb": "https://img1.imageride.net/images/2025/09/11/pk.jpg",
+    "dthumb": "https://img1.imageride.net/images/2025/09/11/pk.jpg",
+    "channel": "SUN TV",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "dailymotion",
+    "id": "k4KKzSav71eNI9E4npI",
+    "title": "Vinodhini",
+    "mthumb": "https://img1.imageride.net/images/2025/09/15/Vinodhi.jpg",
+    "dthumb": "https://img1.imageride.net/images/2025/09/15/Vinodhi.jpg",
+    "channel": "SUN TV",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "dailymotion",
+    "id": "k1ign2CiqLOBKxE4nqA",
+    "title": "Ilakkiya",
+    "mthumb": "https://img.imageride.net/images/2025/09/11/Ilakki.jpg",
+    "dthumb": "https://img.imageride.net/images/2025/09/11/Ilakki.jpg",
+    "channel": "SUN TV",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "dailymotion",
+    "id": "k7hykcKYBMgvyeE4nqs",
+    "title": "Punitha",
+    "mthumb": "https://img1.imageride.net/images/2025/09/11/Punitha.jpg",
+    "dthumb": "https://img1.imageride.net/images/2025/09/11/Punitha.jpg",
+    "channel": "SUN TV",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "dailymotion",
+    "id": "k3t2E6JwUwVXrPE4nqy",
+    "title": "Manamagale Vaa",
+    "mthumb": "https://img1.imageride.net/images/2025/09/11/ManamagaleVaa.jpg",
+    "dthumb": "https://img1.imageride.net/images/2025/09/11/ManamagaleVaa.jpg",
+    "channel": "SUN TV",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "dailymotion",
+    "id": "k1B6zM43P3F21IE4nqu",
+    "title": "Manasellam",
+    "mthumb": "https://img1.imageride.net/images/2025/09/11/me1.jpg",
+    "dthumb": "https://img1.imageride.net/images/2025/09/11/me1.jpg",
+    "channel": "ZEETAMIL TV",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "dailymotion",
+    "id": "k4hcNlPftmcBGxE4nqC",
+    "title": "Lakshmi",
+    "mthumb": "https://img.imageride.net/images/2025/09/11/Lakshmi.jpg",
+    "dthumb": "https://img.imageride.net/images/2025/09/11/Lakshmi.jpg",
+    "channel": "SUN TV",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "dailymotion",
+    "id": "k3UNrXYhN79DBjE4nqw",
+    "title": "Mounam Pesiyadhe",
+    "mthumb": "https://img1.imageride.net/images/2025/09/11/mp-2.jpg",
+    "dthumb": "https://img1.imageride.net/images/2025/09/11/mp-2.jpg",
+    "channel": "ZEETAMIL TV",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "dailymotion",
+    "id": "k6rWfCKVXHc1dEE4nqo",
+    "title": "Raja Chinna Roja",
+    "mthumb": "https://img.imageride.net/images/2025/09/24/raja-chinna-roja.jpg",
+    "dthumb": "https://img.imageride.net/images/2025/09/24/raja-chinna-roja.jpg",
+    "channel": "ZEETAMIL TV",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "dailymotion",
+    "id": "kuL4SBPBGwdZh2E4nqm",
+    "title": "Salangai Oli",
+    "mthumb": "https://img.imageride.net/images/2025/09/11/so.jpg",
+    "dthumb": "https://img.imageride.net/images/2025/09/11/so.jpg",
+    "channel": "ZEETAMIL TV",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "dailymotion",
+    "id": "k2LRj6BCJxQiniE4nAq",
+    "title": "Anandha Ragam",
+    "mthumb": "https://img.imageride.net/images/2025/09/11/Anandh.jpg",
+    "dthumb": "https://img.imageride.net/images/2025/09/11/Anandh.jpg",
+    "channel": "SUN TV",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "dailymotion",
+    "id": "k13oO1ceD7nRnhE4jO0",
+    "title": "Veera",
+    "mthumb": "https://img.imageride.net/images/2025/09/11/vee11.jpg",
+    "dthumb": "https://img.imageride.net/images/2025/09/11/vee11.jpg",
+    "channel": "ZEETAMIL TV",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "dailymotion",
+    "id": "k2QYJD4InYRkcvE4jNY",
+    "title": "Ayali",
+    "mthumb": "https://img1.imageride.net/images/2025/09/11/ayali1.jpg",
+    "dthumb": "https://img1.imageride.net/images/2025/09/11/ayali1.jpg",
+    "channel": "ZEETAMIL TV",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "dailymotion",
+    "id": "k6wXsQLSUcctEhE4km2",
+    "title": "Karthigai Deepam",
+    "mthumb": "https://img.imageride.net/images/2025/09/11/kd1.jpg",
+    "dthumb": "https://img.imageride.net/images/2025/09/11/kd1.jpg",
+    "channel": "ZEETAMIL TV",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "dailymotion",
+    "id": "k7CskgTd6KLoIRE4l1c",
+    "title": "Parijatham",
+    "mthumb": "https://img1.imageride.net/images/2025/09/11/pj1.jpg",
+    "dthumb": "https://img1.imageride.net/images/2025/09/11/pj1.jpg",
+    "channel": "ZEETAMIL TV",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "dailymotion",
+    "id": "k15vsNFra42dtEE4lbm",
+    "title": "Sandhya Raagam",
+    "mthumb": "https://img1.imageride.net/images/2025/09/11/sr1.jpg",
+    "dthumb": "https://img1.imageride.net/images/2025/09/11/sr1.jpg",
+    "channel": "ZEETAMIL TV",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "gcs",
+    "id": "Marumagal-22-10-2025.mp4",
+    "title": "Marumagal",
+    "mthumb": "https://img1.imageride.net/images/2025/09/11/Marumag.jpg",
+    "dthumb": "https://img1.imageride.net/images/2025/09/11/Marumag.jpg",
+    "channel": "SUN TV",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "gcs",
+    "id": "Anna-22-10-2025.mp4",
+    "title": "Anna",
+    "mthumb": "https://img.imageride.net/images/2025/09/11/ann1.jpg",
+    "dthumb": "https://img.imageride.net/images/2025/09/11/ann1.jpg",
+    "channel": "ZEETAMIL TV",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "gcs",
+    "id": "Aadukalam-22-10-2025.mp4",
+    "title": "Aadukalam",
+    "mthumb": "https://img.imageride.net/images/2025/09/11/Aadukalam.jpg",
+    "dthumb": "https://img.imageride.net/images/2025/09/11/Aadukalam.jpg",
+    "channel": "SUN TV",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "gcs",
+    "id": "Anuman-22-10-2025.mp4",
+    "title": "Anuman",
+    "mthumb": "https://img.imageride.net/images/2025/10/01/anu.jpg",
+    "dthumb": "https://img.imageride.net/images/2025/10/01/anu.jpg",
+    "channel": "SUN TV",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "gcs",
+    "id": "Annam-22-10-2025.mp4",
+    "title": "Annam",
+    "mthumb": "https://img1.imageride.net/images/2025/09/11/annam.jpg",
+    "dthumb": "https://img1.imageride.net/images/2025/09/11/annam.jpg",
+    "channel": "SUN TV",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "gcs",
+    "id": "Getti-Melam-22-10-2025.mp4",
+    "title": "Getti Melam",
+    "mthumb": "https://img1.imageride.net/images/2025/09/11/gm1.jpg",
+    "dthumb": "https://img1.imageride.net/images/2025/09/11/gm1.jpg",
+    "channel": "ZEETAMIL TV",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "gcs",
+    "id": "Chinna-Siru-Kiliye-22-10-2025.mp4",
+    "title": "Chinna Siru Kiliye",
+    "mthumb": "https://img.imageride.net/images/2025/09/11/csk.jpg",
+    "dthumb": "https://img.imageride.net/images/2025/09/11/csk.jpg",
+    "channel": "ZEETAMIL TV",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "gcs",
+    "id": "Malli-22-10-2025.mp4",
+    "title": "Malli",
+    "mthumb": "https://img1.imageride.net/images/2025/09/11/Malli.jpg",
+    "dthumb": "https://img1.imageride.net/images/2025/09/11/Malli.jpg",
+    "channel": "SUN TV",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "gcs",
+    "id": "Ninaithale-Innikkum-22-10-2025.mp4",
+    "title": "Ninaithale Innikkum",
+    "mthumb": "https://img.imageride.net/images/2025/09/11/ni1.jpg",
+    "dthumb": "https://img.imageride.net/images/2025/09/11/ni1.jpg",
+    "channel": "ZEETAMIL TV",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "gcs",
+    "id": "Maari-22-10-2025.mp4",
+    "title": "Maari",
+    "mthumb": "https://img1.imageride.net/images/2025/09/11/maari1.jpg",
+    "dthumb": "https://img1.imageride.net/images/2025/09/11/maari1.jpg",
+    "channel": "ZEETAMIL TV",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "gcs",
+    "id": "Lakshmi-Kalyanam-22-10-2025.mp4",
+    "title": "Lakshmi Kalyanam",
+    "mthumb": "https://img1.imageride.net/images/2025/09/11/lk1.jpg",
+    "dthumb": "https://img1.imageride.net/images/2025/09/11/lk1.jpg",
+    "channel": "ZEETAMIL TV",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "youtube",
+    "id": "cyMtnB17ev0",
+    "title": "Gauri",
+    "mthumb": "https://img.youtube.com/vi/cyMtnB17ev0/mqdefault.jpg",
+    "dthumb": "https://img.youtube.com/vi/cyMtnB17ev0/hqdefault.jpg",
+    "channel": "KALAIGNAR TV",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "youtube",
+    "id": "lJDj6M0s18Q",
+    "title": "Rudhra",
+    "mthumb": "https://img.youtube.com/vi/lJDj6M0s18Q/mqdefault.jpg",
+    "dthumb": "https://img.youtube.com/vi/lJDj6M0s18Q/hqdefault.jpg",
+    "channel": "KALAIGNAR TV",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "youtube",
+    "id": "lJDj6M0s18Q",
+    "title": "Kaathuvaakula Rendu Kaadhal",
+    "mthumb": "https://img.youtube.com/vi/lJDj6M0s18Q/mqdefault.jpg",
+    "dthumb": "https://img.youtube.com/vi/lJDj6M0s18Q/hqdefault.jpg",
+    "channel": "KALAIGNAR TV",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "youtube",
+    "id": "GjhIAXhAXys",
+    "title": "Unmai Vellum S2",
+    "mthumb": "https://img.youtube.com/vi/GjhIAXhAXys/mqdefault.jpg",
+    "dthumb": "https://img.youtube.com/vi/GjhIAXhAXys/hqdefault.jpg",
+    "channel": "KALAIGNAR TV",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "youtube",
+    "id": "J3XESiKDfXc",
+    "title": "Diwali Special",
+    "mthumb": "https://img.youtube.com/vi/J3XESiKDfXc/mqdefault.jpg",
+    "dthumb": "https://img.youtube.com/vi/J3XESiKDfXc/hqdefault.jpg",
+    "channel": "KALAIGNAR TV",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "youtube",
+    "id": "y2CgiS60wYg",
+    "title": "KAIRASI KUDUMBAM",
+    "mthumb": "https://img.youtube.com/vi/y2CgiS60wYg/mqdefault.jpg",
+    "dthumb": "https://img.youtube.com/vi/y2CgiS60wYg/hqdefault.jpg",
+    "channel": "JAYA TV",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "youtube",
+    "id": "2MdE5XggXJ0",
+    "title": "Jayam",
+    "mthumb": "https://img.youtube.com/vi/2MdE5XggXJ0/mqdefault.jpg",
+    "dthumb": "https://img.youtube.com/vi/2MdE5XggXJ0/hqdefault.jpg",
+    "channel": "JAYA TV",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "youtube",
+    "id": "2nahLFnucNo",
+    "title": "Sabash Meera",
+    "mthumb": "https://img.youtube.com/vi/2nahLFnucNo/mqdefault.jpg",
+    "dthumb": "https://img.youtube.com/vi/2nahLFnucNo/hqdefault.jpg",
+    "channel": "JAYA TV",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "youtube",
+    "id": "Rcnl7-7JLQQ",
+    "title": "Virundhinar Pakkam",
+    "mthumb": "https://img.youtube.com/vi/Rcnl7-7JLQQ/mqdefault.jpg",
+    "dthumb": "https://img.youtube.com/vi/Rcnl7-7JLQQ/hqdefault.jpg",
+    "channel": "JAYA TV",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "youtube",
+    "id": "APdsB4Jlu_I",
+    "title": "Innal Ponnal",
+    "mthumb": "https://img.youtube.com/vi/APdsB4Jlu_I/mqdefault.jpg",
+    "dthumb": "https://img.youtube.com/vi/APdsB4Jlu_I/hqdefault.jpg",
+    "channel": "JAYA TV",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "youtube",
+    "id": "SipTvoD4mbk",
+    "title": "Karnaa",
+    "mthumb": "https://img.youtube.com/vi/SipTvoD4mbk/mqdefault.jpg",
+    "dthumb": "https://img.youtube.com/vi/SipTvoD4mbk/hqdefault.jpg",
+    "channel": "THANTHI ONE",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "youtube",
+    "id": "qBmnyr6mTzM",
+    "title": "Tenali Raman",
+    "mthumb": "https://img.youtube.com/vi/qBmnyr6mTzM/mqdefault.jpg",
+    "dthumb": "https://img.youtube.com/vi/qBmnyr6mTzM/hqdefault.jpg",
+    "channel": "THANTHI ONE",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "youtube",
+    "id": "hCQ9PX7SjHw",
+    "title": "Rani Agalya",
+    "mthumb": "https://img.youtube.com/vi/hCQ9PX7SjHw/mqdefault.jpg",
+    "dthumb": "https://img.youtube.com/vi/hCQ9PX7SjHw/hqdefault.jpg",
+    "channel": "THANTHI ONE",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "youtube",
+    "id": "helIV0elXmQ",
+    "title": "Krishnathulasi",
+    "mthumb": "https://img.youtube.com/vi/helIV0elXmQ/mqdefault.jpg",
+    "dthumb": "https://img.youtube.com/vi/helIV0elXmQ/hqdefault.jpg",
+    "channel": "THANTHI ONE",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "youtube",
+    "id": "Y5MvH-_kdUw",
+    "title": "Koondukkili",
+    "mthumb": "https://img.youtube.com/vi/Y5MvH-_kdUw/mqdefault.jpg",
+    "dthumb": "https://img.youtube.com/vi/Y5MvH-_kdUw/hqdefault.jpg",
+    "channel": "THANTHI ONE",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "youtube",
+    "id": "wV0rcQtkaPs",
+    "title": "Gayathrii",
+    "mthumb": "https://img.youtube.com/vi/wV0rcQtkaPs/mqdefault.jpg",
+    "dthumb": "https://img.youtube.com/vi/wV0rcQtkaPs/hqdefault.jpg",
+    "channel": "THANTHI ONE",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "youtube",
+    "id": "GT5mupvGLx4",
+    "title": "Arasi",
+    "mthumb": "https://img.youtube.com/vi/GT5mupvGLx4/mqdefault.jpg",
+    "dthumb": "https://img.youtube.com/vi/GT5mupvGLx4/hqdefault.jpg",
+    "channel": "THANTHI ONE",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "youtube",
+    "id": "5ojQKUQtIeM",
+    "title": "Chithi",
+    "mthumb": "https://img.youtube.com/vi/5ojQKUQtIeM/mqdefault.jpg",
+    "dthumb": "https://img.youtube.com/vi/5ojQKUQtIeM/hqdefault.jpg",
+    "channel": "THANTHI ONE",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "youtube",
+    "id": "q98p7SoEVfQ",
+    "title": "Annamalai",
+    "mthumb": "https://img.youtube.com/vi/q98p7SoEVfQ/mqdefault.jpg",
+    "dthumb": "https://img.youtube.com/vi/q98p7SoEVfQ/hqdefault.jpg",
+    "channel": "THANTHI ONE",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "youtube",
+    "id": "b-GqmHpPCuw",
+    "title": "Vaanampadi",
+    "mthumb": "https://img.youtube.com/vi/b-GqmHpPCuw/mqdefault.jpg",
+    "dthumb": "https://img.youtube.com/vi/b-GqmHpPCuw/hqdefault.jpg",
+    "channel": "THANTHI ONE",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "youtube",
+    "id": "Udf9Rg7D0xU",
+    "title": "Bhagyajatakam",
+    "mthumb": "https://img.youtube.com/vi/Udf9Rg7D0xU/mqdefault.jpg",
+    "dthumb": "https://img.youtube.com/vi/Udf9Rg7D0xU/hqdefault.jpg",
+    "channel": "THANTHI ONE",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "youtube",
+    "id": "E4Sl98JG1EY",
+    "title": "Vaa Di Rasathi",
+    "mthumb": "https://img.youtube.com/vi/E4Sl98JG1EY/mqdefault.jpg",
+    "dthumb": "https://img.youtube.com/vi/E4Sl98JG1EY/hqdefault.jpg",
+    "channel": "THANTHI ONE",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "youtube",
+    "id": "byHGebFRDfg",
+    "title": "Veera Anjaneyaa",
+    "mthumb": "https://img.youtube.com/vi/byHGebFRDfg/mqdefault.jpg",
+    "dthumb": "https://img.youtube.com/vi/byHGebFRDfg/hqdefault.jpg",
+    "channel": "THANTHI ONE",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "youtube",
+    "id": "zDXVqH_KGeY",
+    "title": "Ganapathiye Vuravai",
+    "mthumb": "https://img.youtube.com/vi/zDXVqH_KGeY/mqdefault.jpg",
+    "dthumb": "https://img.youtube.com/vi/zDXVqH_KGeY/hqdefault.jpg",
+    "channel": "THANTHI ONE",
+    "date": "2025-10-22"
+  },
+  {
+    "platform": "youtube",
+    "id": "tVschVSuPLU",
+    "title": "Garudaa",
+    "mthumb": "https://img.youtube.com/vi/tVschVSuPLU/mqdefault.jpg",
+    "dthumb": "https://img.youtube.com/vi/tVschVSuPLU/hqdefault.jpg",
+    "channel": "THANTHI ONE",
+    "date": "2025-10-22"
+  },
+  {
     "platform": "dailymotion",
     "id": "k4kpPniPODKeXbE3XWW",
     "title": "Bigg Boss Tamil S9",
@@ -57637,7 +58375,7 @@
   },
   {
     "platform": "hls",
-    "id": "https://sports-r3ct.onrender.com/?url=http://116.90.120.149:8000/play/a0cl/index.m3u8",
+    "id": "http://116.90.120.149:8000/play/a0cl/index.m3u8",
     "title": "SPORT SELECT HD1",
     "channel": "Live TV",
     "date": "2025-08-29",
@@ -57646,7 +58384,7 @@
   },
   {
     "platform": "hls",
-    "id": "https://sports-r3ct.onrender.com/?url=http://116.90.120.149:8000/play/a0cm/index.m3u8",
+    "id": "http://116.90.120.149:8000/play/a0cm/index.m3u8",
     "title": "SPORTS SELECT HD2",
     "channel": "Live TV",
     "date": "2025-08-29",
@@ -57655,7 +58393,7 @@
   },
   {
     "platform": "hls",
-    "id": "https://sports-r3ct.onrender.com/?url=http://116.90.120.149:8000/play/a0ba/index.m3u8",
+    "id": "http://116.90.120.149:8000/play/a0ba/index.m3u8",
     "title": "STAR SPORTS 1 HD",
     "channel": "Live TV",
     "date": "2025-08-29",
@@ -57664,7 +58402,7 @@
   },
   {
     "platform": "hls",
-    "id": "https://sports-r3ct.onrender.com/?url=http://116.90.120.149:8000/play/a0bv/index.m3u8",
+    "id": "http://116.90.120.149:8000/play/a0bv/index.m3u8",
     "title": "STAR SPORTS 1 HINDI",
     "channel": "Live TV",
     "date": "2025-08-29",
@@ -57673,7 +58411,7 @@
   },
   {
     "platform": "hls",
-    "id": "https://sports-r3ct.onrender.com/?url=http://116.90.120.149:8000/play/a0cs/index.m3u8",
+    "id": "http://116.90.120.149:8000/play/a0cs/index.m3u8",
     "title": "STAR SPORTS HD2 HINDI",
     "channel": "Live TV",
     "date": "2025-08-29",
