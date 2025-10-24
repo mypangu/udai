@@ -233,11 +233,17 @@
     }
 
     /* Video info section */
-    .video-info {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 20px 15px;
-    }
+.video-info {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px 15px 5px 15px;
+}
+
+@media (max-width: 768px) {
+  .video-info {
+    padding: 15px 10px 5px 10px;
+  }
+}
 
     .video-title {
       font-size: clamp(18px, 4vw, 28px);
@@ -320,38 +326,91 @@
     }
 
     /* Related videos section */
-    .related-section {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 40px 15px;
-    }
+.related-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 5px 15px 40px 15px;
+}
 
-    .section-title {
-      font-size: clamp(20px, 3vw, 24px);
-      font-weight: 700;
-      margin: 0 0 25px 0;
-      color: #fff;
-    }
+/* Mobile only: Make it scrollable */
+@media (max-width: 768px) {
+  .related-section {
+    height: 60vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 0px 10px 30px 10px;
+  }
+  
+  /* Custom scrollbar for mobile */
+  .related-section::-webkit-scrollbar {
+    width: 6px;
+  }
 
-    .related-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 15px;
-    }
+  .related-section::-webkit-scrollbar-track {
+    background: rgba(255,255,255,0.05);
+    border-radius: 10px;
+  }
 
-    @media (min-width: 768px) {
-      .related-grid {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 20px;
-      }
-    }
+  .related-section::-webkit-scrollbar-thumb {
+    background: rgba(78, 205, 196, 0.5);
+    border-radius: 10px;
+  }
 
-    @media (min-width: 1024px) {
-      .related-grid {
-        grid-template-columns: repeat(4, 1fr);
-        gap: 25px;
-      }
-    }
+  .related-section::-webkit-scrollbar-thumb:hover {
+    background: rgba(78, 205, 196, 0.8);
+  }
+
+  /* Firefox scrollbar for mobile */
+  .related-section {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(78, 205, 196, 0.5) rgba(255,255,255,0.05);
+  }
+}
+
+/* Smooth scrolling */
+.related-section {
+  scroll-behavior: smooth;
+}
+
+.section-title {
+  font-size: clamp(20px, 3vw, 24px);
+  font-weight: 700;
+  margin: 0 0 15px 0;
+  color: #fff;
+}
+
+/* Sticky title on mobile only */
+@media (max-width: 768px) {
+  .section-title {
+    position: sticky;
+    top: 0;
+    background: linear-gradient(135deg, #0c0c0c 0%, #1a1a1a 100%);
+    padding: 10px 0;
+    z-index: 11;
+    margin: 0 0 10px 0;
+  }
+}
+
+.related-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+  padding-bottom: 20px;
+}
+
+@media (min-width: 768px) {
+  .related-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .related-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 25px;
+  }
+}
 
     .related-card {
       background: rgba(255,255,255,0.05);
@@ -448,10 +507,6 @@
         padding: 0 10px;
       }
 
-      .video-info {
-        padding: 15px 10px;
-      }
-
       .video-meta {
         flex-direction: column;
         align-items: flex-start;
@@ -466,9 +521,6 @@
         justify-content: flex-start;
       }
 
-      .related-section {
-        padding: 30px 10px;
-      }
     }
 
     /* Share modal */
@@ -1609,6 +1661,35 @@ const retryBtn = document.getElementById('retryBtn');
         const useNativeHLS = supportsNativeHLS && (isIOS || isSafari);
         
         console.log('Using native HLS:', useNativeHLS);
+		
+function cleanup() {
+  console.log('Cleaning up player resources');
+  
+  if (syncInterval) {
+    clearInterval(syncInterval);
+    syncInterval = null;
+  }
+  
+  if (videoHls) {
+    videoHls.destroy();
+    videoHls = null;
+  }
+  
+  if (audioHls) {
+    audioHls.destroy();
+    audioHls = null;
+  }
+  
+  if (audio) {
+    audio.pause();
+    audio.src = '';
+    audio = null;
+  }
+  
+  video.pause();
+  video.removeAttribute('src');
+  video.load();
+}		
         
         function initPlayer() {
           try {
@@ -1617,6 +1698,14 @@ const retryBtn = document.getElementById('retryBtn');
               console.log('Initializing native HLS player');
               video.src = videoUrl;
               video.load();
+			  
+video.addEventListener('error', () => {
+  console.error('Native HLS load error');
+  showError(
+    'Stream Load Failed',
+    'Cannot load this stream. The channel may be offline or the stream URL is invalid.'
+  );
+}, { once: true });			  
               
               if (isDualStream && audioUrl) {
                 audio = new Audio();
@@ -1648,12 +1737,49 @@ const retryBtn = document.getElementById('retryBtn');
                 startPlayback();
               });
               
-              videoHls.on(Hls.Events.ERROR, (event, data) => {
-                console.error('Video error:', data.type, data.details);
-                if (data.fatal) {
-                  handleFatalError(data);
-                }
-              });
+videoHls.on(Hls.Events.ERROR, (event, data) => {
+  console.error('HLS Error:', {
+    type: data.type,
+    details: data.details,
+    fatal: data.fatal,
+    reason: data.reason
+  });
+  
+  if (data.fatal) {
+    switch(data.type) {
+      case Hls.ErrorTypes.NETWORK_ERROR:
+        // Check if it's a 403/404 (stream offline)
+        if (data.response && (data.response.code === 403 || data.response.code === 404)) {
+          showError(
+            'Stream Not Available',
+            'This stream is currently offline or unavailable.'
+          );
+        } else {
+          // Try to recover from network error
+          console.log('Network error, attempting recovery...');
+          setTimeout(() => {
+            if (videoHls) videoHls.startLoad();
+          }, 1000);
+        }
+        break;
+        
+      case Hls.ErrorTypes.MEDIA_ERROR:
+        console.log('Media error, attempting recovery...');
+        if (videoHls) {
+          videoHls.recoverMediaError();
+        }
+        break;
+        
+      default:
+        // Fatal error that can't be recovered
+        showError(
+          'Playback Error',
+          'A fatal error occurred while loading the stream.'
+        );
+        break;
+    }
+  }
+});
               
               // Load audio track for dual stream
               if (isDualStream && audioUrl) {
@@ -1692,24 +1818,34 @@ const retryBtn = document.getElementById('retryBtn');
           }
         }
         
-        function handleFatalError(data) {
-          switch(data.type) {
-            case Hls.ErrorTypes.NETWORK_ERROR:
-              console.log('Network error, retrying...');
-              updateStatus('Network error, retrying...');
-              setTimeout(() => videoHls.startLoad(), 1000);
-              break;
-            case Hls.ErrorTypes.MEDIA_ERROR:
-              console.log('Media error, recovering...');
-              updateStatus('Recovering from error...');
-              videoHls.recoverMediaError();
-              break;
-            default:
-              console.error('Fatal error');
-              showError('Stream Error', 'A fatal error occurred while loading the stream.');
-              break;
-          }
-        }
+function handleFatalError(data) {
+  console.log('Handling fatal error:', data.details);
+  
+  switch(data.type) {
+    case Hls.ErrorTypes.NETWORK_ERROR:
+      console.log('Fatal network error');
+      showError(
+        'Connection Failed',
+        'Cannot connect to the stream. Please check your internet connection or try again later.'
+      );
+      break;
+      
+    case Hls.ErrorTypes.MEDIA_ERROR:
+      console.log('Fatal media error');
+      showError(
+        'Media Error',
+        'Cannot play this stream format. The stream may be corrupted or incompatible.'
+      );
+      break;
+      
+    default:
+      showError(
+        'Stream Error',
+        'An unexpected error occurred. Please try reloading the page.'
+      );
+      break;
+  }
+}
         
 function showError(title, message) {
   errorTitle.textContent = title;
@@ -1729,30 +1865,60 @@ async function startPlayback() {
         await audio.play();
         startSync();
       } catch (audioError) {
-        console.warn('Audio failed, continuing video-only');
+        console.warn('Audio failed, continuing video-only:', audioError);
       }
     } else {
       await video.play();
     }
+    
+    // If we get here, playback succeeded
+    console.log('Playback started successfully');
+    
   } catch (error) {
     console.error('Playback failed:', error);
     
+    // Determine error type and show appropriate message
     if (error.name === 'NotSupportedError') {
-      showError('Widevine Certificate Error', 'This stream requires DRM support that is not available on your device.');
+      // DRM/Widevine error
+      showError(
+        'DRM Protection Error', 
+        'This stream requires DRM support (Widevine) that is not available on your device or browser.'
+      );
     } else if (error.name === 'NotAllowedError') {
-      showError('Autoplay Blocked', 'Please tap the retry button to start playback.');
+      // Autoplay blocked - this is recoverable
+      showError(
+        'Tap to Play', 
+        'Please tap the button below to start playback.'
+      );
+    } else if (error.name === 'AbortError') {
+      // Stream connection failed
+      showError(
+        'Connection Failed', 
+        'Unable to connect to the stream. The channel may be offline or experiencing issues.'
+      );
     } else {
-      showError('Stream Not Available', 'Unable to play this live stream. The channel may be offline or experiencing technical difficulties.');
+      // Generic stream error
+      showError(
+        'Stream Not Available', 
+        'Unable to play this stream. The channel may be offline or experiencing technical difficulties.'
+      );
     }
   }
 }
 
-retryBtn.addEventListener('click', () => {
+retryBtn.addEventListener('click', async () => {
+  console.log('Retry button clicked');
   errorOverlay.style.display = 'none';
-  video.load();
-  if (audio) audio.load();
-  setTimeout(() => startPlayback(), 500);
-});		
+  
+  // Clean up existing player instances
+  cleanup();
+  
+  // Wait a bit for cleanup to complete
+  await new Promise(resolve => setTimeout(resolve, 300));
+  
+  // Reinitialize the player
+  initPlayer();
+});	
 		
         // Sync function for dual streams
         function startSync() {
@@ -1805,6 +1971,31 @@ retryBtn.addEventListener('click', () => {
             }
           });
         }
+		
+// Handle video element errors
+video.addEventListener('error', (e) => {
+  console.error('Video element error:', {
+    code: video.error?.code,
+    message: video.error?.message
+  });
+  
+  if (video.error) {
+    switch(video.error.code) {
+      case MediaError.MEDIA_ERR_ABORTED:
+        console.log('Playback aborted by user');
+        break;
+      case MediaError.MEDIA_ERR_NETWORK:
+        showError('Network Error', 'A network error caused the stream to fail.');
+        break;
+      case MediaError.MEDIA_ERR_DECODE:
+        showError('Decode Error', 'Cannot decode this stream format.');
+        break;
+      case MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED:
+        showError('Format Not Supported', 'This stream format is not supported by your browser.');
+        break;
+    }
+  }
+});		
         
         // Cleanup
         window.addEventListener('beforeunload', () => {
