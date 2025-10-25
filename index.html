@@ -1273,6 +1273,9 @@ disable-paste='false'>
 
     // Navigation
 function openPlayer(platform, videoId, video) {
+  // Determine if the video is marked as local-only
+  const isLocal = video.isLocal === "True" || video.isLocal === true ? "true" : "false";
+
   const playerData = {
     platform: platform,
     id: videoId,
@@ -1280,23 +1283,29 @@ function openPlayer(platform, videoId, video) {
     channel: video.channel,
     date: video.date,
     dthumb: video.dthumb,
-    mthumb: video.mthumb
+    mthumb: video.mthumb,
+    isLocal: isLocal
   };
   
   try {
+    // Save session data (for related videos, etc.)
     sessionStorage.setItem('currentVideo', JSON.stringify(playerData));
     sessionStorage.setItem('allVideos', JSON.stringify(videos));
-    // Redirect to ads page instead of player
-    window.location.href = `player.html`;
+
+    // ✅ Add isLocal explicitly to URL
+    window.location.href = `player.html?id=${encodeURIComponent(videoId)}&platform=${encodeURIComponent(platform)}&isLocal=${isLocal}`;
   } catch (e) {
     // Fallback if sessionStorage fails
     console.warn('SessionStorage not available, using URL parameters');
+
     const params = new URLSearchParams({
       platform: platform,
       id: videoId,
       title: video.title,
-      channel: video.channel
+      channel: video.channel,
+      isLocal: isLocal
     });
+
     window.location.href = `player.html?${params.toString()}`;
   }
 }

@@ -876,8 +876,17 @@ this.stretchModeNames = {
           externalLink: document.getElementById('externalLink')
         };
 
-        this.init();
+        this.bootstrap();
+
       }
+	  
+async bootstrap() {
+  // Wait for data to be fully ready before calling init()
+  await this.loadVideoData();
+
+  // ✅ Now currentVideo is guaranteed to exist
+  this.init();
+}	  
 	  
 async getVideoFromUrl() {
   const params = new URLSearchParams(window.location.search);
@@ -924,45 +933,38 @@ async getVideoFromUrl() {
 }	  
 
 async init() {
-  await this.loadVideoData();
-  
-  // Setup event listeners first (needed for all cases)
+  // Now we assume currentVideo is already ready from bootstrap()
   this.setupEventListeners();
   this.setupMobileOrientationHandler();
   this.detectCastDevices();
   this.initCast();
-  
-  // Check if video is local-only BEFORE loading anything
+
   if (this.currentVideo && this.currentVideo.isLocal === "True") {
     console.log('Local stream detected on init:', this.currentVideo.title);
     this.updateUI();
-    
-    // Show local overlay immediately, don't load video
     this.hideLoading();
+    this.hideError?.();
     this.showLocalOnlyOverlay();
-    
-    // Still extract M3U8 for potential MX Player use
+
     if (this.currentVideo.platform === 'dailymotion') {
       await this.extractM3U8();
     } else if (this.currentVideo.platform === 'gcs') {
       this.m3u8Url = `https://storage.googleapis.com/mrpangu/${this.currentVideo.id}`;
     }
-    
-    return; // Exit early, don't proceed with video loading
-  }
-  
-  // Normal initialization for non-local videos
-  this.updateUI();
-  this.loadVideo();
-  
-  // Extract M3U8 if Dailymotion video or set direct URL for GCS
-  if (this.currentVideo && this.currentVideo.platform === 'dailymotion') {
-    await this.extractM3U8();
-  } else if (this.currentVideo && this.currentVideo.platform === 'gcs') {
-    this.m3u8Url = `https://storage.googleapis.com/mrpangu/${this.currentVideo.id}`;
+
+    this.elements.playerIframe.src = 'about:blank';
+    return;
   }
 
-  // Note: Twitch doesn't need M3U8 extraction as it uses iframe embed
+  // Normal video path
+  this.updateUI();
+  this.loadVideo();
+
+  if (this.currentVideo.platform === 'dailymotion') {
+    await this.extractM3U8();
+  } else if (this.currentVideo.platform === 'gcs') {
+    this.m3u8Url = `https://storage.googleapis.com/mrpangu/${this.currentVideo.id}`;
+  }
 }
 
 async extractM3U8() {
@@ -1209,49 +1211,49 @@ initCast() {
 async loadVideoData() {
   // First, try to get video from URL parameters
   const urlVideo = await this.getVideoFromUrl();
-  
-if (urlVideo) {
-  // Video loaded from URL
-  this.currentVideo = urlVideo;
-  sessionStorage.setItem('currentVideo', JSON.stringify(urlVideo));
-  
-  // Load all videos for related section
-  const allVideosData = sessionStorage.getItem('allVideos');
-  this.allVideos = allVideosData ? JSON.parse(allVideosData) : [];
-} else {
-    // Fallback to sessionStorage (existing behavior)
-    const videoData = sessionStorage.getItem('currentVideo');
-    const allVideosData = sessionStorage.getItem('allVideos');
 
+  // ✅ Prefer sessionStorage data first, only use URL-based when explicitly loaded from share link
+  if (urlVideo) {
+    this.currentVideo = urlVideo;
+  } else {
+    const videoData = sessionStorage.getItem('currentVideo');
     if (!videoData) {
       // Redirect back if no video data
       window.location.href = 'index.html';
       return;
     }
-
     this.currentVideo = JSON.parse(videoData);
-    this.allVideos = allVideosData ? JSON.parse(allVideosData) : [];
   }
-  
-// Get related videos from same channel
-// For Live TV channels, show all channels; for others, show top 8
-const isLiveTVChannel = this.currentVideo.channel && 
-  (this.currentVideo.channel.includes('Live') || 
-   this.currentVideo.platform === 'hls' || 
-   this.currentVideo.platform === 'yupptv');
 
-if (isLiveTVChannel) {
-  // Show all Live TV channels
-  this.relatedVideos = this.allVideos
-    .filter(v => (v.platform === 'hls' || v.platform === 'yupptv') && v.id !== this.currentVideo.id)
-    .sort((a, b) => a.title.localeCompare(b.title)); // Sort alphabetically by title
-} else {
-  // Show top 8 for regular videos
-  this.relatedVideos = this.allVideos
-    .filter(v => v.channel === this.currentVideo.channel && v.id !== this.currentVideo.id)
-    .sort((a, b) => new Date(b.date) - new Date(a.date))
-    .slice(0, 8);
-}
+  // ✅ Always load related videos after currentVideo is stable
+  const allVideosData = sessionStorage.getItem('allVideos');
+  this.allVideos = allVideosData ? JSON.parse(allVideosData) : [];
+
+  // ✅ Optional: ensure the video from allVideos (if any) inherits isLocal properly
+  const matching = this.allVideos.find(v =>
+    v.platform === this.currentVideo.platform &&
+    v.id === this.currentVideo.id
+  );
+  if (matching) {
+    matching.isLocal = this.currentVideo.isLocal; // enforce true flag consistency
+  }
+
+  // Build related videos safely
+  const isLiveTVChannel = this.currentVideo.channel &&
+    (this.currentVideo.channel.includes('Live') ||
+     this.currentVideo.platform === 'hls' ||
+     this.currentVideo.platform === 'yupptv');
+
+  if (isLiveTVChannel) {
+    this.relatedVideos = this.allVideos
+      .filter(v => (v.platform === 'hls' || v.platform === 'yupptv') && v.id !== this.currentVideo.id)
+      .sort((a, b) => a.title.localeCompare(b.title));
+  } else {
+    this.relatedVideos = this.allVideos
+      .filter(v => v.channel === this.currentVideo.channel && v.id !== this.currentVideo.id)
+      .sort((a, b) => new Date(b.date) - new Date(a.date))
+      .slice(0, 8);
+  }
 
   this.updateUI();
 }
@@ -1488,6 +1490,9 @@ async playRelatedVideo(video) {
     } else if (video.platform === 'gcs') {
       this.m3u8Url = `https://storage.googleapis.com/mrpangu/${video.id}`;
     }
+	
+	return; // Prevents iframe from loading after overlay
+	
   } else {
     // Load normal video
     console.log('New video is normal stream, loading video');
@@ -1512,6 +1517,16 @@ async playRelatedVideo(video) {
 }
 
 loadVideo() {
+
+if (this.currentVideo?.isLocal === "True") {
+  console.warn("Blocked loadVideo() for local-only stream:", this.currentVideo.title);
+  this.hideLoading();
+  this.hideError?.();
+  this.showLocalOnlyOverlay();
+  this.elements.playerIframe.src = 'about:blank';
+  return;
+}
+
 
 // Ensure iframe is visible (in case it was hidden by local overlay)
   this.elements.playerIframe.style.display = 'block';
