@@ -923,24 +923,47 @@ async getVideoFromUrl() {
   return null;
 }	  
 
-      async init() {
-        await this.loadVideoData();
-        this.setupEventListeners();
-        this.setupMobileOrientationHandler();
-        this.detectCastDevices();
-        this.initCast();
-        this.loadVideo();
-        
-        // Extract M3U8 if Dailymotion video
-// Extract M3U8 if Dailymotion video or set direct URL for GCS
-if (this.currentVideo && this.currentVideo.platform === 'dailymotion') {
-  await this.extractM3U8();
-} else if (this.currentVideo && this.currentVideo.platform === 'gcs') {
-  this.m3u8Url = `https://storage.googleapis.com/mrpangu/${this.currentVideo.id}`;
-}
+async init() {
+  await this.loadVideoData();
+  
+  // Setup event listeners first (needed for all cases)
+  this.setupEventListeners();
+  this.setupMobileOrientationHandler();
+  this.detectCastDevices();
+  this.initCast();
+  
+  // Check if video is local-only BEFORE loading anything
+  if (this.currentVideo && this.currentVideo.isLocal === "True") {
+    console.log('Local stream detected on init:', this.currentVideo.title);
+    this.updateUI();
+    
+    // Show local overlay immediately, don't load video
+    this.hideLoading();
+    this.showLocalOnlyOverlay();
+    
+    // Still extract M3U8 for potential MX Player use
+    if (this.currentVideo.platform === 'dailymotion') {
+      await this.extractM3U8();
+    } else if (this.currentVideo.platform === 'gcs') {
+      this.m3u8Url = `https://storage.googleapis.com/mrpangu/${this.currentVideo.id}`;
+    }
+    
+    return; // Exit early, don't proceed with video loading
+  }
+  
+  // Normal initialization for non-local videos
+  this.updateUI();
+  this.loadVideo();
+  
+  // Extract M3U8 if Dailymotion video or set direct URL for GCS
+  if (this.currentVideo && this.currentVideo.platform === 'dailymotion') {
+    await this.extractM3U8();
+  } else if (this.currentVideo && this.currentVideo.platform === 'gcs') {
+    this.m3u8Url = `https://storage.googleapis.com/mrpangu/${this.currentVideo.id}`;
+  }
 
   // Note: Twitch doesn't need M3U8 extraction as it uses iframe embed
-      }
+}
 
 async extractM3U8() {
   try {
@@ -1396,73 +1419,112 @@ case 'hls':
           </div>
         `).join('');
 
-        // Add click listeners to related videos
         setTimeout(() => {
-          const relatedCards = this.elements.relatedGrid.querySelectorAll('.related-card');
-          relatedCards.forEach(card => {
-            card.addEventListener('click', () => {
-              const platform = card.dataset.platform;
-              const id = card.dataset.id;
-              const video = this.allVideos.find(v => v.platform === platform && v.id === id);
-              
-              if (video) {
-                this.playRelatedVideo(video);
-              }
-            });
-          });
-        }, 100);
+  const relatedCards = this.elements.relatedGrid.querySelectorAll('.related-card');
+  relatedCards.forEach(card => {
+    card.addEventListener('click', () => {
+      const platform = card.dataset.platform;
+      const id = card.dataset.id;
+      const video = this.allVideos.find(v => v.platform === platform && v.id === id);
+      
+      if (video) {
+        console.log('Related video clicked:', video.title, 'isLocal:', video.isLocal);
+        this.playRelatedVideo(video);
+      }
+    });
+  });
+}, 100);
       }
 
-      async playRelatedVideo(video) {
-        // Update current video data
-        this.currentVideo = video;
-        sessionStorage.setItem('currentVideo', JSON.stringify(video));
-       
-// Update related videos
-// For Live TV channels, show all channels; for others, show top 8
-const isLiveTVChannel = video.channel && 
-  (video.channel.includes('Live') || 
-   video.platform === 'hls' || 
-   video.platform === 'yupptv');
+async playRelatedVideo(video) {
+  console.log('Playing related video:', video.title, 'isLocal:', video.isLocal);
+  
+  // Remove local overlay if it exists
+  this.removeLocalOverlay();
+  
+  // Stop any currently playing video
+  this.elements.playerIframe.src = 'about:blank';
+  
+  // Update current video data
+  this.currentVideo = video;
+  sessionStorage.setItem('currentVideo', JSON.stringify(video));
+ 
+  // Update related videos
+  // For Live TV channels, show all channels; for others, show top 8
+  const isLiveTVChannel = video.channel && 
+    (video.channel.includes('Live') || 
+     video.platform === 'hls' || 
+     video.platform === 'yupptv');
 
-if (isLiveTVChannel) {
-  // Show all Live TV channels
-  this.relatedVideos = this.allVideos
-    .filter(v => (v.platform === 'hls' || v.platform === 'yupptv') && v.id !== video.id)
-    .sort((a, b) => a.title.localeCompare(b.title)); // Sort alphabetically by title
-} else {
-  // Show top 8 for regular videos
-  this.relatedVideos = this.allVideos
-    .filter(v => v.channel === video.channel && v.id !== video.id)
-    .sort((a, b) => new Date(b.date) - new Date(a.date))
-    .slice(0, 8);
+  if (isLiveTVChannel) {
+    // Show all Live TV channels
+    this.relatedVideos = this.allVideos
+      .filter(v => (v.platform === 'hls' || v.platform === 'yupptv') && v.id !== video.id)
+      .sort((a, b) => a.title.localeCompare(b.title)); // Sort alphabetically by title
+  } else {
+    // Show top 8 for regular videos
+    this.relatedVideos = this.allVideos
+      .filter(v => v.channel === video.channel && v.id !== video.id)
+      .sort((a, b) => new Date(b.date) - new Date(a.date))
+      .slice(0, 8);
+  }
+
+  // Reset retry count
+  this.retryCount = 0;
+  
+  // Update UI first
+  this.updateUI();
+  
+  // Check if new video is local-only
+  if (video.isLocal === "True") {
+    console.log('New video is local stream, showing overlay');
+    this.hideLoading();
+    this.hideError();
+    this.showLocalOnlyOverlay();
+    
+    // Extract M3U8 if Dailymotion (for MX Player use)
+    if (video.platform === 'dailymotion') {
+      await this.extractM3U8();
+    } else if (video.platform === 'gcs') {
+      this.m3u8Url = `https://storage.googleapis.com/mrpangu/${video.id}`;
+    }
+  } else {
+    // Load normal video
+    console.log('New video is normal stream, loading video');
+    this.loadVideo();
+    
+    // Extract M3U8 if Dailymotion video
+    if (video.platform === 'dailymotion') {
+      await this.extractM3U8();
+    } else if (video.platform === 'gcs') {
+      this.m3u8Url = `https://storage.googleapis.com/mrpangu/${video.id}`;
+    }
+  }
+  
+  // Scroll to top
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  
+  // Update URL
+  const shareableUrl = this.getShareableUrl();
+  if (window.history.pushState) {
+    window.history.pushState({ video: this.currentVideo }, document.title, shareableUrl);
+  }
 }
 
-        // Reset retry count and M3U8
-        this.retryCount = 0;
-        //this.m3u8Url = null;
-        
-        // Update UI and load new video
-        this.updateUI();
-        this.loadVideo();
-        
-        // Extract M3U8 if Dailymotion video
-        if (video.platform === 'dailymotion') {
-          await this.extractM3U8();
-        }
-        
-        // Scroll to top
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-// Update URL
-const shareableUrl = this.getShareableUrl();
-if (window.history.pushState) {
-  window.history.pushState({ video: this.currentVideo }, document.title, shareableUrl);
-}		
-      }
-
 loadVideo() {
-  // Check if video is local-only
+
+// Ensure iframe is visible (in case it was hidden by local overlay)
+  this.elements.playerIframe.style.display = 'block';
+  
+  
+  // Remove any existing local overlay first
+  this.removeLocalOverlay();
+  
+  // Double-check if video is local-only (shouldn't reach here if local)
   if (this.currentVideo.isLocal === "True") {
+    console.log('Local stream detected in loadVideo(), showing overlay');
+    this.hideLoading();
+    this.hideError();
     this.showLocalOnlyOverlay();
     return; // Don't load the iframe
   }
@@ -1494,143 +1556,166 @@ loadVideo() {
   };
 }
 
+removeLocalOverlay() {
+  const existingOverlay = document.getElementById('localOnlyOverlay');
+  if (existingOverlay) {
+    existingOverlay.remove();
+  }
+  
+  // Show the iframe again
+  this.elements.playerIframe.style.display = 'block';
+}
+
 showLocalOnlyOverlay() {
+
+console.log('Showing local-only overlay for:', this.currentVideo.title);
+
+ // Hide the iframe completely
+  this.elements.playerIframe.style.display = 'none';
+
   const isMobile = /Android/i.test(navigator.userAgent);
   const streamUrl = this.currentVideo.id;
+  
+  // Remove any existing overlay first
+  this.removeLocalOverlay();
   
   // Hide loading
   this.hideLoading();
   
-  // Create overlay HTML
-  const overlayHtml = isMobile ? `
-    <div style="
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.95);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      z-index: 999;
-      color: white;
-      text-align: center;
-      padding: 30px;
-    ">
-      <i class="fas fa-mobile-alt" style="font-size: 64px; color: #4ecdc4; margin-bottom: 20px;"></i>
-      <h3 style="font-size: 22px; margin: 0 0 15px 0; font-weight: 600;">Local Player Required</h3>
-      <p style="font-size: 15px; opacity: 0.8; margin-bottom: 30px; line-height: 1.6;">
-        This channel is only playable in local players like MX Player.<br>
-        Tap below to open in MX Player.
+  // Create overlay element
+  const overlayDiv = document.createElement('div');
+  overlayDiv.id = 'localOnlyOverlay';
+  overlayDiv.style.cssText = `
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.95);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+    color: white;
+    text-align: center;
+    padding: 20px;
+  `;
+  
+  // Mobile layout
+  if (isMobile) {
+    overlayDiv.innerHTML = `
+      <i class="fas fa-mobile-alt" style="font-size: 48px; color: #4ecdc4; margin-bottom: 15px;"></i>
+      <h3 style="font-size: 18px; margin: 0 0 10px 0; font-weight: 600;">Local Player Required</h3>
+      <p style="font-size: 13px; opacity: 0.8; margin-bottom: 20px; line-height: 1.5; max-width: 280px;">
+        This channel is only playable in local players like MX Player. Tap below to open.
       </p>
       <button id="openMxBtn" style="
         background: linear-gradient(135deg, #ff6b6b, #ff5252);
         border: none;
-        padding: 15px 40px;
+        padding: 12px 30px;
         border-radius: 50px;
         color: white;
         cursor: pointer;
-        font-size: 16px;
+        font-size: 14px;
         font-weight: 600;
-        box-shadow: 0 4px 20px rgba(255, 107, 107, 0.4);
+        box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 8px;
       ">
         <i class="fas fa-external-link-alt"></i>
         <span>Open in MX Player</span>
       </button>
-    </div>
-  ` : `
-    <div style="
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.95);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      z-index: 999;
-      color: white;
-      text-align: center;
-      padding: 30px;
-    ">
-      <i class="fas fa-desktop" style="font-size: 64px; color: #4ecdc4; margin-bottom: 20px;"></i>
-      <h3 style="font-size: 22px; margin: 0 0 15px 0; font-weight: 600;">Local Player Required</h3>
-      <p style="font-size: 15px; opacity: 0.8; margin-bottom: 20px; line-height: 1.6;">
-        This channel is only playable in local players like VLC.<br>
-        Copy the stream URL below and paste it in your local player.
+    `;
+  } else {
+    // Desktop layout
+    overlayDiv.innerHTML = `
+      <i class="fas fa-desktop" style="font-size: 48px; color: #4ecdc4; margin-bottom: 15px;"></i>
+      <h3 style="font-size: 18px; margin: 0 0 10px 0; font-weight: 600;">Local Player Required</h3>
+      <p style="font-size: 13px; opacity: 0.8; margin-bottom: 15px; line-height: 1.5; max-width: 400px;">
+        This channel is only playable in local players like VLC. Copy the stream URL below and paste it in your local player.
       </p>
       <input type="text" value="${streamUrl}" readonly style="
         background: rgba(255,255,255,0.1);
         border: 1px solid rgba(255,255,255,0.2);
         border-radius: 8px;
-        padding: 12px;
-        width: 80%;
-        max-width: 500px;
+        padding: 10px;
+        width: 90%;
+        max-width: 450px;
         color: #fff;
-        font-size: 13px;
-        margin-bottom: 20px;
+        font-size: 12px;
+        margin-bottom: 15px;
         outline: none;
         text-align: center;
       " id="localStreamUrl">
       <button id="copyStreamBtn" style="
         background: linear-gradient(135deg, #4ecdc4, #45b7d1);
         border: none;
-        padding: 12px 35px;
+        padding: 10px 25px;
         border-radius: 50px;
         color: white;
         cursor: pointer;
-        font-size: 15px;
+        font-size: 13px;
         font-weight: 600;
-        box-shadow: 0 4px 20px rgba(78, 205, 196, 0.4);
+        box-shadow: 0 4px 15px rgba(78, 205, 196, 0.4);
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 8px;
       ">
         <i class="fas fa-copy"></i>
         <span>Copy Stream URL</span>
       </button>
-    </div>
-  `;
+    `;
+  }
   
   // Insert overlay into player container
-  this.elements.playerContainer.insertAdjacentHTML('beforeend', overlayHtml);
+  this.elements.playerContainer.appendChild(overlayDiv);
   
-  // Add event listeners
-  if (isMobile) {
-    const openMxBtn = document.getElementById('openMxBtn');
-    openMxBtn.addEventListener('click', () => this.openStreamInMXPlayer(streamUrl));
-  } else {
-    const copyStreamBtn = document.getElementById('copyStreamBtn');
-    const localStreamUrl = document.getElementById('localStreamUrl');
-    
-    copyStreamBtn.addEventListener('click', async () => {
-      try {
-        await navigator.clipboard.writeText(streamUrl);
-        copyStreamBtn.innerHTML = '<i class="fas fa-check"></i><span>Copied!</span>';
-        copyStreamBtn.style.background = '#4ecdc4';
-        
-        setTimeout(() => {
-          copyStreamBtn.innerHTML = '<i class="fas fa-copy"></i><span>Copy Stream URL</span>';
-          copyStreamBtn.style.background = 'linear-gradient(135deg, #4ecdc4, #45b7d1)';
-        }, 2000);
-      } catch (err) {
-        localStreamUrl.select();
-        document.execCommand('copy');
-        copyStreamBtn.innerHTML = '<i class="fas fa-check"></i><span>Copied!</span>';
-        
-        setTimeout(() => {
-          copyStreamBtn.innerHTML = '<i class="fas fa-copy"></i><span>Copy Stream URL</span>';
-        }, 2000);
+  // Add event listeners after a small delay to ensure elements are in DOM
+  setTimeout(() => {
+    if (isMobile) {
+      const openMxBtn = document.getElementById('openMxBtn');
+      if (openMxBtn) {
+        openMxBtn.addEventListener('click', () => this.openStreamInMXPlayer(streamUrl));
       }
-    });
-  }
+    } else {
+      const copyStreamBtn = document.getElementById('copyStreamBtn');
+      const localStreamUrl = document.getElementById('localStreamUrl');
+      
+      if (copyStreamBtn && localStreamUrl) {
+        copyStreamBtn.addEventListener('click', async () => {
+          try {
+            await navigator.clipboard.writeText(streamUrl);
+            copyStreamBtn.innerHTML = '<i class="fas fa-check"></i><span>Copied!</span>';
+            copyStreamBtn.style.background = '#4ecdc4';
+            
+            setTimeout(() => {
+              copyStreamBtn.innerHTML = '<i class="fas fa-copy"></i><span>Copy Stream URL</span>';
+              copyStreamBtn.style.background = 'linear-gradient(135deg, #4ecdc4, #45b7d1)';
+            }, 2000);
+          } catch (err) {
+            localStreamUrl.select();
+            document.execCommand('copy');
+            copyStreamBtn.innerHTML = '<i class="fas fa-check"></i><span>Copied!</span>';
+            
+            setTimeout(() => {
+              copyStreamBtn.innerHTML = '<i class="fas fa-copy"></i><span>Copy Stream URL</span>';
+            }, 2000);
+          }
+        });
+      }
+    }
+  }, 100);
 }
 
 openStreamInMXPlayer(streamUrl) {
   const openMxBtn = document.getElementById('openMxBtn');
+  
+  if (!openMxBtn) {
+    console.error('MX Player button not found');
+    return;
+  }
   
   // Show loading state
   openMxBtn.innerHTML = `
@@ -1673,11 +1758,13 @@ openStreamInMXPlayer(streamUrl) {
     
     // Reset button after attempts
     setTimeout(() => {
-      openMxBtn.innerHTML = `
-        <i class="fas fa-external-link-alt"></i>
-        <span>Open in MX Player</span>
-      `;
-      openMxBtn.disabled = false;
+      if (openMxBtn) {
+        openMxBtn.innerHTML = `
+          <i class="fas fa-external-link-alt"></i>
+          <span>Open in MX Player</span>
+        `;
+        openMxBtn.disabled = false;
+      }
       
       // Show manual instructions if nothing worked
       this.showManualMXInstructions(streamUrl);
@@ -2484,6 +2571,21 @@ document.addEventListener("fullscreenchange", () => {
               break;
           }
         });
+		
+// Handle browser back/forward buttons
+window.addEventListener('popstate', async (event) => {
+  console.log('Browser navigation detected');
+  
+  if (event.state && event.state.video) {
+    const video = event.state.video;
+    console.log('Loading video from history:', video.title, 'isLocal:', video.isLocal);
+    await this.playRelatedVideo(video);
+  } else {
+    // If no state, reload from URL parameters
+    console.log('No state found, reloading from URL');
+    location.reload();
+  }
+});		
 
 		// Back button
 		this.elements.backBtn = document.getElementById('backBtn');
