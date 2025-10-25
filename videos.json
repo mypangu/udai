@@ -1,4 +1,252 @@
 [
+{
+    "platform": "hls",
+    "id": "http://87.255.35.150:18954",
+    "title": "Vijay Super HD",
+    "channel": "Live TV",
+    "date": "2025-10-25",
+    "dthumb": "https://img.imageride.net/images/2025/10/25/vsuper.png",
+    "mthumb": "https://img.imageride.net/images/2025/10/25/vsuper.png",
+    "isLocal": "True"
+},
+{
+    "platform": "hls",
+    "id": "http://87.255.35.150:18950",
+    "title": "Vijay Takkar",
+    "channel": "Live TV",
+    "date": "2025-10-25",
+    "dthumb": "https://img.imageride.net/images/2025/10/25/vtakkar.png",
+    "mthumb": "https://img.imageride.net/images/2025/10/25/vtakkar.png",
+    "isLocal": "True"
+
+},
+{
+    "platform": "hls",
+    "id": "http://87.255.35.150:18553",
+    "title": "Zee Tamil",
+    "channel": "Live TV",
+    "date": "2025-10-25",
+    "dthumb": "https://img.imageride.net/images/2025/10/25/ztamil.png",
+    "mthumb": "https://img.imageride.net/images/2025/10/25/ztamil.png",
+    "isLocal": "True"
+
+},
+{
+    "platform": "hls",
+    "id": "http://87.255.35.150:18597",
+    "title": "Zee Thirai",
+    "channel": "Live TV",
+    "date": "2025-10-25",
+    "dthumb": "https://img1.imageride.net/images/2025/10/25/zthirai.png",
+    "mthumb": "https://img1.imageride.net/images/2025/10/25/zthirai.png",
+    "isLocal": "True"
+
+},
+{
+    "platform": "hls",
+    "id": "http://87.255.35.150:18852",
+    "title": "Sun News",
+    "channel": "Live TV",
+    "date": "2025-10-25",
+    "dthumb": "https://img.imageride.net/images/2025/10/25/snews.png",
+    "mthumb": "https://img.imageride.net/images/2025/10/25/snews.png",
+    "isLocal": "True"
+
+},
+{
+    "platform": "hls",
+    "id": "http://87.255.35.150:18821",
+    "title": "Sun Music",
+    "channel": "Live TV",
+    "date": "2025-10-25",
+    "dthumb": "https://img.imageride.net/images/2025/10/25/smusic.png",
+    "mthumb": "https://img.imageride.net/images/2025/10/25/smusic.png",
+    "isLocal": "True"
+
+},
+{
+    "platform": "hls",
+    "id": "http://87.255.35.150:18953",
+    "title": "Sun Life",
+    "channel": "Live TV",
+    "date": "2025-10-25",
+    "dthumb": "https://img1.imageride.net/images/2025/10/25/slife.png",
+    "mthumb": "https://img1.imageride.net/images/2025/10/25/slife.png",
+    "isLocal": "True"
+
+},
+{
+    "platform": "hls",
+    "id": "http://87.255.35.150:18955",
+    "title": "Star Vijay HD",
+    "channel": "Live TV",
+    "date": "2025-10-25",
+    "dthumb": "https://img.imageride.net/images/2025/10/25/vijay.png",
+    "mthumb": "https://img.imageride.net/images/2025/10/25/vijay.png",
+    "isLocal": "True"
+
+},
+{
+    "platform": "hls",
+    "id": "http://87.255.35.150:18828",
+    "title": "Star Sports 2 HD",
+    "channel": "Live TV",
+    "date": "2025-10-25",
+    "dthumb": "https://img.imageride.net/images/2025/10/25/sports2.png",
+    "mthumb": "https://img.imageride.net/images/2025/10/25/sports2.png",
+    "isLocal": "True"
+
+},
+{
+    "platform": "hls",
+    "id": "http://87.255.35.150:18844",
+    "title": "Star Sports 1 Tamil HD",
+    "channel": "Live TV",
+    "date": "2025-10-25",
+    "dthumb": "https://img1.imageride.net/images/2025/10/25/sstamil1.png",
+    "mthumb": "https://img1.imageride.net/images/2025/10/25/sstamil1.png",
+    "isLocal": "True"
+
+},
+{
+    "platform": "hls",
+    "id": "http://87.255.35.150:18548",
+    "title": "Star Movies Select HD",
+    "channel": "Live TV",
+    "date": "2025-10-25",
+    "dthumb": "https://img1.imageride.net/images/2025/10/25/smselect.png",
+    "mthumb": "https://img1.imageride.net/images/2025/10/25/smselect.png",
+    "isLocal": "True"
+
+},
+{
+    "platform": "hls",
+    "id": "http://87.255.35.150:18301",
+    "title": "Star Movies HD",
+    "channel": "Live TV",
+    "date": "2025-10-25",
+    "dthumb": "https://img.imageride.net/images/2025/10/25/smovies.png",
+    "mthumb": "https://img.imageride.net/images/2025/10/25/smovies.png",
+    "isLocal": "True"
+
+},
+{
+    "platform": "hls",
+    "id": "http://87.255.35.150:18495",
+    "title": "Sony Pix",
+    "channel": "Live TV",
+    "date": "2025-10-25",
+    "dthumb": "https://img.imageride.net/images/2025/10/25/spix.png",
+    "mthumb": "https://img.imageride.net/images/2025/10/25/spix.png",
+    "isLocal": "True"
+
+},
+{
+    "platform": "hls",
+    "id": "https://livestream.rajtv.tv/cluster1/Content/Channel/Rajmusix/HLS/stream_06/index.m3u8",
+    "title": "Raj Musix Tamil",
+    "channel": "Live TV",
+    "date": "2025-10-25",
+    "dthumb": "https://d330rbx7lebtkh.cloudfront.net/cholafiles/posters/bnxI8WIDwR.jpeg",
+    "mthumb": "https://d330rbx7lebtkh.cloudfront.net/cholafiles/posters/bnxI8WIDwR.jpeg"
+
+},
+{
+    "platform": "hls",
+    "id": "https://livestream.rajtv.tv/cluster1/Content/Channel/Rajdigitalplus/HLS/stream_06/index.m3u8",
+    "title": "Raj Digital Plus",
+    "channel": "Live TV",
+    "date": "2025-10-25",
+    "dthumb": "https://d330rbx7lebtkh.cloudfront.net/cholafiles/posters/BwZ4vBDEEC.jpeg",
+    "mthumb": "https://d330rbx7lebtkh.cloudfront.net/cholafiles/posters/BwZ4vBDEEC.jpeg"
+
+},
+{
+    "platform": "hls",
+    "id": "https://livestream.rajtv.tv/cluster1/Content/Channel/rajtv/HLS/stream_06/index.m3u8",
+    "title": "Raj TV",
+    "channel": "Live TV",
+    "date": "2025-10-25",
+    "dthumb": "https://d330rbx7lebtkh.cloudfront.net/cholafiles/posters/MUUJy44KVO.jpeg",
+    "mthumb": "https://d330rbx7lebtkh.cloudfront.net/cholafiles/posters/MUUJy44KVO.jpeg"
+
+},
+{
+    "platform": "hls",
+    "id": "https://livestream.rajtv.tv/cluster1/Content/Channel/RajNews/HLS/stream_06/index.m3u8",
+    "title": "Raj News",
+    "channel": "Live TV",
+    "date": "2025-10-25",
+    "dthumb": "https://d330rbx7lebtkh.cloudfront.net/cholafiles/posters/YRRb12pJrd.jpeg",
+    "mthumb": "https://d330rbx7lebtkh.cloudfront.net/cholafiles/posters/YRRb12pJrd.jpeg"
+
+},
+{
+    "platform": "hls",
+    "id": "http://87.255.35.150:18935",
+    "title": "Movies Now",
+    "channel": "Live TV",
+    "date": "2025-10-25",
+    "dthumb": "https://img.imageride.net/images/2025/10/25/mnow.png",
+    "mthumb": "https://img.imageride.net/images/2025/10/25/mnow.png",
+    "isLocal": "True"
+
+},
+{
+    "platform": "hls",
+    "id": "http://87.255.35.150:18805",
+    "title": "KTV",
+    "channel": "Live TV",
+    "date": "2025-10-25",
+    "dthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/ktv-HD.jpg",
+    "mthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/ktv-HD.jpg",
+    "isLocal": "True"
+
+},
+{
+    "platform": "hls",
+    "id": "http://87.255.35.150:18829",
+    "title": "Jaya TV",
+    "channel": "Live TV",
+    "date": "2025-10-25",
+    "dthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/150/150/bnw/jaya-tv-black.png",
+    "mthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/150/150/bnw/jaya-tv-black.png",
+    "isLocal": "True"
+
+},
+{
+    "platform": "hls",
+    "id": "http://87.255.35.150:18225",
+    "title": "Colors Tamil",
+    "channel": "Live TV",
+    "date": "2025-10-25",
+    "dthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/Colors-Tamil.jpg",
+    "mthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/Colors-Tamil.jpg",
+    "isLocal": "True"
+
+},
+{
+    "platform": "hls",
+    "id": "http://87.255.35.150:18855",
+    "title": "Chutti TV",
+    "channel": "Live TV",
+    "date": "2025-10-25",
+    "dthumb": "https://img1.imageride.net/images/2025/10/25/chutti.png",
+    "mthumb": "https://img1.imageride.net/images/2025/10/25/chutti.png",
+    "isLocal": "True"
+
+},
+{
+    "platform": "hls",
+    "id": "http://87.255.35.150:18840",
+    "title": "Adithya TV",
+    "channel": "Live TV",
+    "date": "2025-10-25",
+    "dthumb": "https://img1.imageride.net/images/2025/10/25/aditya.png",
+    "mthumb": "https://img1.imageride.net/images/2025/10/25/aditya.png",
+    "isLocal": "True"
+
+},
   {
     "platform": "hls",
     "id": "https://sports.porus-in2012.workers.dev/?url=http://media.7starcloud.com:1935/live/7star/playlist.m3u8",
@@ -1697,8 +1945,8 @@
     "title": "DD Tamil",
     "channel": "Live TV",
     "date": "2025-10-21",
-    "dthumb": "https://img1.imageride.net/images/2025/10/21/dd-tamil.jpg",
-    "mthumb": "https://img1.imageride.net/images/2025/10/21/dd-tamil.jpg"
+    "dthumb": "https://img1.imageride.net/images/2025/10/25/ddtamil.png",
+    "mthumb": "https://img1.imageride.net/images/2025/10/25/ddtamil.png"
   },
   {
     "platform": "hls",
@@ -1706,8 +1954,8 @@
     "title": "Hebron TV",
     "channel": "Live TV",
     "date": "2025-10-21",
-    "dthumb": "https://img1.imageride.net/images/2025/10/21/hebron.png",
-    "mthumb": "https://img1.imageride.net/images/2025/10/21/hebron.png"
+    "dthumb": "https://img1.imageride.net/images/2025/10/25/nebrontv.png",
+    "mthumb": "https://img1.imageride.net/images/2025/10/25/nebrontv.png"
   },
   {
     "platform": "hls",
@@ -58380,7 +58628,8 @@
     "channel": "Live TV",
     "date": "2025-08-29",
     "dthumb": "https://img10.hotstar.com/image/upload/f_auto,q_90,w_384/sources/r1/cms/prod/7012/597012-h",
-    "mthumb": "https://img10.hotstar.com/image/upload/f_auto,q_90,w_384/sources/r1/cms/prod/7012/597012-h"
+    "mthumb": "https://img10.hotstar.com/image/upload/f_auto,q_90,w_384/sources/r1/cms/prod/7012/597012-h",
+	"isLocal": "True"
   },
   {
     "platform": "hls",
@@ -58389,7 +58638,8 @@
     "channel": "Live TV",
     "date": "2025-08-29",
     "dthumb": "https://img10.hotstar.com/image/upload/f_auto,q_90,w_384/sources/r1/cms/prod/7076/597076-h",
-    "mthumb": "https://img10.hotstar.com/image/upload/f_auto,q_90,w_384/sources/r1/cms/prod/7076/597076-h"
+    "mthumb": "https://img10.hotstar.com/image/upload/f_auto,q_90,w_384/sources/r1/cms/prod/7076/597076-h",
+	"isLocal": "True"
   },
   {
     "platform": "hls",
@@ -58398,7 +58648,8 @@
     "channel": "Live TV",
     "date": "2025-08-29",
     "dthumb": "https://img10.hotstar.com/image/upload/f_auto,q_90,w_384/sources/r1/cms/prod/7074/597074-h",
-    "mthumb": "https://img10.hotstar.com/image/upload/f_auto,q_90,w_384/sources/r1/cms/prod/7074/597074-h"
+    "mthumb": "https://img10.hotstar.com/image/upload/f_auto,q_90,w_384/sources/r1/cms/prod/7074/597074-h",
+	"isLocal": "True"
   },
   {
     "platform": "hls",
@@ -58407,7 +58658,8 @@
     "channel": "Live TV",
     "date": "2025-08-29",
     "dthumb": "https://img10.hotstar.com/image/upload/f_auto,q_90,w_384/sources/r1/cms/prod/6998/596998-h",
-    "mthumb": "https://img10.hotstar.com/image/upload/f_auto,q_90,w_384/sources/r1/cms/prod/6998/596998-h"
+    "mthumb": "https://img10.hotstar.com/image/upload/f_auto,q_90,w_384/sources/r1/cms/prod/6998/596998-h",
+	"isLocal": "True"
   },
   {
     "platform": "hls",
@@ -58415,7 +58667,8 @@
     "title": "STAR SPORTS HD2 HINDI",
     "channel": "Live TV",
     "date": "2025-08-29",
-    "dthumb": "https://jiotvimages.cdn.jio.com/dare_images/images/channel/186566b6e14d12ab38ec2f6fbfb717d6.png",
-    "mthumb": "https://jiotvimages.cdn.jio.com/dare_images/images/channel/186566b6e14d12ab38ec2f6fbfb717d6.png"
+    "dthumb": "https://img1.imageride.net/images/2025/10/25/sport2hindi.png",
+    "mthumb": "https://img1.imageride.net/images/2025/10/25/sport2hindi.png",
+	"isLocal": "True"
   }  
 ]
