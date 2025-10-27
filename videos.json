@@ -1,9 +1,20 @@
 [
 {
     "platform": "hls",
+    "id": "http://87.255.35.150:18966",
+    "title": "BiggBoss 24X7",
+    "channel": "Tamil TV",
+    "date": "2025-10-25",
+    "dthumb": "https://img10.hotstar.com/image/upload/f_auto,q_90,w_556/sources/r1/cms/prod/6690/1759685236690-h",
+    "mthumb": "https://img10.hotstar.com/image/upload/f_auto,q_90,w_556/sources/r1/cms/prod/6690/1759685236690-h",
+    "isLocal": "True"
+
+},
+{
+    "platform": "hls",
     "id": "http://87.255.35.150:18955",
     "title": "Star Vijay HD",
-    "channel": "Live TV",
+    "channel": "Tamil TV",
     "date": "2025-10-25",
     "dthumb": "https://img.imageride.net/images/2025/10/25/vijay.png",
     "mthumb": "https://img.imageride.net/images/2025/10/25/vijay.png",
@@ -14,7 +25,7 @@
     "platform": "hls",
     "id": "http://87.255.35.150:18954",
     "title": "Vijay Super HD",
-    "channel": "Live TV",
+    "channel": "Tamil TV",
     "date": "2025-10-25",
     "dthumb": "https://img.imageride.net/images/2025/10/25/vsuper.png",
     "mthumb": "https://img.imageride.net/images/2025/10/25/vsuper.png",
@@ -24,7 +35,7 @@
     "platform": "hls",
     "id": "http://87.255.35.150:18950",
     "title": "Vijay Takkar",
-    "channel": "Live TV",
+    "channel": "Tamil TV",
     "date": "2025-10-25",
     "dthumb": "https://img.imageride.net/images/2025/10/25/vtakkar.png",
     "mthumb": "https://img.imageride.net/images/2025/10/25/vtakkar.png",
@@ -35,7 +46,7 @@
     "platform": "hls",
     "id": "http://87.255.35.150:18553",
     "title": "Zee Tamil",
-    "channel": "Live TV",
+    "channel": "Tamil TV",
     "date": "2025-10-25",
     "dthumb": "https://img.imageride.net/images/2025/10/25/ztamil.png",
     "mthumb": "https://img.imageride.net/images/2025/10/25/ztamil.png",
@@ -46,7 +57,7 @@
     "platform": "hls",
     "id": "http://87.255.35.150:18597",
     "title": "Zee Thirai",
-    "channel": "Live TV",
+    "channel": "Tamil TV",
     "date": "2025-10-25",
     "dthumb": "https://img1.imageride.net/images/2025/10/25/zthirai.png",
     "mthumb": "https://img1.imageride.net/images/2025/10/25/zthirai.png",
@@ -57,7 +68,7 @@
     "platform": "hls",
     "id": "http://87.255.35.150:18801",
     "title": "Sun TV",
-    "channel": "Live TV",
+    "channel": "Tamil TV",
     "date": "2025-10-25",
     "dthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/sun-tv.jpg",
     "mthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/sun-tv.jpg",
@@ -67,7 +78,7 @@
     "platform": "hls",
     "id": "http://87.255.35.150:18805",
     "title": "KTV",
-    "channel": "Live TV",
+    "channel": "Tamil TV",
     "date": "2025-10-25",
     "dthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/ktv-HD.jpg",
     "mthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/ktv-HD.jpg",
@@ -78,7 +89,7 @@
     "platform": "hls",
     "id": "http://87.255.35.150:18821",
     "title": "Sun Music",
-    "channel": "Live TV",
+    "channel": "Tamil TV",
     "date": "2025-10-25",
     "dthumb": "https://img.imageride.net/images/2025/10/25/smusic.png",
     "mthumb": "https://img.imageride.net/images/2025/10/25/smusic.png",
@@ -89,7 +100,7 @@
     "platform": "hls",
     "id": "http://87.255.35.150:18855",
     "title": "Chutti TV",
-    "channel": "Live TV",
+    "channel": "Tamil TV",
     "date": "2025-10-25",
     "dthumb": "https://img1.imageride.net/images/2025/10/25/chutti.png",
     "mthumb": "https://img1.imageride.net/images/2025/10/25/chutti.png",
@@ -100,7 +111,7 @@
     "platform": "hls",
     "id": "http://87.255.35.150:18840",
     "title": "Adithya TV",
-    "channel": "Live TV",
+    "channel": "Tamil TV",
     "date": "2025-10-25",
     "dthumb": "https://img1.imageride.net/images/2025/10/25/aditya.png",
     "mthumb": "https://img1.imageride.net/images/2025/10/25/aditya.png",
@@ -111,7 +122,7 @@
     "platform": "hls",
     "id": "http://87.255.35.150:18953",
     "title": "Sun Life",
-    "channel": "Live TV",
+    "channel": "Tamil TV",
     "date": "2025-10-25",
     "dthumb": "https://img1.imageride.net/images/2025/10/25/slife.png",
     "mthumb": "https://img1.imageride.net/images/2025/10/25/slife.png",
@@ -122,7 +133,7 @@
     "platform": "hls",
     "id": "http://87.255.35.150:18852",
     "title": "Sun News",
-    "channel": "Live TV",
+    "channel": "Tamil TV",
     "date": "2025-10-25",
     "dthumb": "https://img.imageride.net/images/2025/10/25/snews.png",
     "mthumb": "https://img.imageride.net/images/2025/10/25/snews.png",
@@ -133,7 +144,7 @@
     "platform": "hls",
     "id": "https://livestream.rajtv.tv/cluster1/Content/Channel/rajtv/HLS/stream_06/index.m3u8",
     "title": "Raj TV",
-    "channel": "Live TV",
+    "channel": "Tamil TV",
     "date": "2025-10-25",
     "dthumb": "https://d330rbx7lebtkh.cloudfront.net/cholafiles/posters/MUUJy44KVO.jpeg",
     "mthumb": "https://d330rbx7lebtkh.cloudfront.net/cholafiles/posters/MUUJy44KVO.jpeg",
@@ -144,7 +155,7 @@
     "platform": "hls",
     "id": "https://livestream.rajtv.tv/cluster1/Content/Channel/Rajmusix/HLS/stream_06/index.m3u8",
     "title": "Raj Musix Tamil",
-    "channel": "Live TV",
+    "channel": "Tamil TV",
     "date": "2025-10-25",
     "dthumb": "https://d330rbx7lebtkh.cloudfront.net/cholafiles/posters/bnxI8WIDwR.jpeg",
     "mthumb": "https://d330rbx7lebtkh.cloudfront.net/cholafiles/posters/bnxI8WIDwR.jpeg",
@@ -155,7 +166,7 @@
     "platform": "hls",
     "id": "https://livestream.rajtv.tv/cluster1/Content/Channel/Rajdigitalplus/HLS/stream_06/index.m3u8",
     "title": "Raj Digital Plus",
-    "channel": "Live TV",
+    "channel": "Tamil TV",
     "date": "2025-10-25",
     "dthumb": "https://d330rbx7lebtkh.cloudfront.net/cholafiles/posters/BwZ4vBDEEC.jpeg",
     "mthumb": "https://d330rbx7lebtkh.cloudfront.net/cholafiles/posters/BwZ4vBDEEC.jpeg",
@@ -166,7 +177,7 @@
     "platform": "hls",
     "id": "https://livestream.rajtv.tv/cluster1/Content/Channel/RajNews/HLS/stream_06/index.m3u8",
     "title": "Raj News",
-    "channel": "Live TV",
+    "channel": "Tamil TV",
     "date": "2025-10-25",
     "dthumb": "https://d330rbx7lebtkh.cloudfront.net/cholafiles/posters/YRRb12pJrd.jpeg",
     "mthumb": "https://d330rbx7lebtkh.cloudfront.net/cholafiles/posters/YRRb12pJrd.jpeg",
@@ -177,7 +188,7 @@
     "platform": "hls",
     "id": "https://segment.yuppcdn.net/240122/kalaignartv/playlist.m3u8",
     "title": "Kalaignar TV",
-    "channel": "Live TV",
+    "channel": "Tamil TV",
     "date": "2025-10-25",
     "dthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/kalaignar-tv.jpg",
     "mthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/kalaignar-tv.jpg"
@@ -186,7 +197,7 @@
     "platform": "hls",
     "id": "https://segment.yuppcdn.net/140622/isaiaruvi/playlist.m3u8",
     "title": "Isai Aruvi",
-    "channel": "Live TV",
+    "channel": "Tamil TV",
     "date": "2025-10-25",
     "dthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/isai-aruvi.jpg",
     "mthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/isai-aruvi.jpg"
@@ -197,7 +208,7 @@
     "title": "Murasu",
     "mthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/murasu.jpg",
     "dthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/murasu.jpg",
-    "channel": "Live TV",
+    "channel": "Tamil TV",
     "date": "2025-10-25"
   },
   {
@@ -206,14 +217,14 @@
     "title": "Seithigal TV",
     "mthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/seithigal-tv.jpg",
     "dthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/seithigal-tv.jpg",
-    "channel": "Live TV",
+    "channel": "Tamil TV",
     "date": "2025-10-25"
   },
   {
     "platform": "hls",
     "id": "https://yuppmedtaorire.akamaized.net/v1/manifest/a0d007312bfd99c47f76b77ae26b1ccdaae76cb1/siripoli_nim_https/c4e6500f-ea05-4226-810e-2833ee0075ff/0.m3u8",
     "title": "Kalaignar Sirippoli",
-    "channel": "Live TV",
+    "channel": "Tamil TV",
     "date": "2025-10-25",
     "dthumb": "https://img.imageride.net/images/2025/10/20/Kalaignar-Sirippoli.jpg",
     "mthumb": "https://img.imageride.net/images/2025/10/20/Kalaignar-Sirippoli.jpg"
@@ -222,7 +233,7 @@
     "platform": "hls",
     "id": "https://cdn-2.pishow.tv/live/1241/master.m3u8",
     "title": "Polimer TV",
-    "channel": "Live TV",
+    "channel": "Tamil TV",
     "date": "2025-10-25",
     "dthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/polimertv.jpg",
     "mthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/polimertv.jpg"
@@ -233,14 +244,14 @@
     "title": "Polimer News",
     "mthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/polimer-news.jpg",
     "dthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/polimer-news.jpg",
-    "channel": "Live TV",
+    "channel": "Tamil TV",
     "date": "2025-10-25"
 },
 {
     "platform": "hls",
     "id": "http://87.255.35.150:18829",
     "title": "Jaya TV",
-    "channel": "Live TV",
+    "channel": "Tamil TV",
     "date": "2025-10-25",
     "dthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/150/150/bnw/jaya-tv-black.png",
     "mthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/150/150/bnw/jaya-tv-black.png",
@@ -249,9 +260,20 @@
 },
 {
     "platform": "hls",
+    "id": "http://87.255.35.150:18829",
+    "title": "Jaya Max",
+    "channel": "Tamil TV",
+    "date": "2025-10-25",
+    "dthumb": "https://i.imgur.com/cGoOX7l.png",
+    "mthumb": "https://i.imgur.com/cGoOX7l.png",
+    "isLocal": "True"
+
+},
+{
+    "platform": "hls",
     "id": "https://cdn-3.pishow.tv/live/1279/master.m3u8",
     "title": "News J",
-    "channel": "Live TV",
+    "channel": "Tamil TV",
     "date": "2025-10-25",
     "dthumb": "https://jiotvimages.cdn.jio.com/dare_images/images/News_J.png",
     "mthumb": "https://jiotvimages.cdn.jio.com/dare_images/images/News_J.png"
@@ -260,7 +282,7 @@
     "platform": "hls",
     "id": "http://87.255.35.150:18225",
     "title": "Colors Tamil",
-    "channel": "Live TV",
+    "channel": "Tamil TV",
     "date": "2025-10-25",
     "dthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/Colors-Tamil.jpg",
     "mthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/Colors-Tamil.jpg",
@@ -271,7 +293,7 @@
     "platform": "hls",
     "id": "https://cdn.zionmediait.com/zionmediaitserver2024/97484f5ce6da96e496a9b87c439835d0.sdp/playlist.m3u8",
     "title": "Tamilan TV",
-    "channel": "Live TV",
+    "channel": "Tamil TV",
     "date": "2025-10-25",
     "dthumb": "https://jiotvimages.cdn.jio.com/dare_images/images/Tamilan_Television.png",
     "mthumb": "https://jiotvimages.cdn.jio.com/dare_images/images/Tamilan_Television.png"
@@ -280,7 +302,7 @@
     "platform": "hls",
     "id": "https://cdn-3.pishow.tv/live/1247/master.m3u8",
     "title": "Vasanth TV",
-    "channel": "Live TV",
+    "channel": "Tamil TV",
     "date": "2025-10-25",
     "dthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/vasanth-tv.jpg",
     "mthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/vasanth-tv.jpg"
@@ -289,7 +311,7 @@
     "platform": "hls",
     "id": "https://cdn-3.pishow.tv/live/1271/master.m3u8",
     "title": "Vendhar TV",
-    "channel": "Live TV",
+    "channel": "Tamil TV",
     "date": "2025-10-25",
     "dthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/vendhartv.jpg",
     "mthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/vendhartv.jpg"
@@ -298,7 +320,7 @@
     "platform": "hls",
     "id": "https://cdn-4.pishow.tv/live/1531/master.m3u8",
     "title": "Win TV",
-    "channel": "Live TV",
+    "channel": "Tamil TV",
     "date": "2025-10-25",
     "dthumb": "https://jiotvimages.cdn.jio.com/dare_images/images/Win_TV.png",
     "mthumb": "https://jiotvimages.cdn.jio.com/dare_images/images/Win_TV.png"
@@ -307,7 +329,7 @@
     "platform": "hls",
     "id": "https://d2lk5u59tns74c.cloudfront.net/out/v1/abf46b14847e45499f4a47f3a9afe93d/index.m3u8",
     "title": "DD Tamil",
-    "channel": "Live TV",
+    "channel": "Tamil TV",
     "date": "2025-10-25",
     "dthumb": "https://img1.imageride.net/images/2025/10/25/ddtamil.png",
     "mthumb": "https://img1.imageride.net/images/2025/10/25/ddtamil.png"
@@ -316,7 +338,7 @@
     "platform": "hls",
     "id": "https://5k8q87azdy4v-hls-live.wmncdn.net/MAKKAL/271ddf829afeece44d8732757fba1a66.sdp/playlist.m3u8",
     "title": "Makkal TV",
-    "channel": "Live TV",
+    "channel": "Tamil TV",
     "date": "2025-10-25",
     "dthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/makkal-tv.jpg",
     "mthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/makkal-tv.jpg"
@@ -325,7 +347,7 @@
     "platform": "hls",
     "id": "https://cdn-3.pishow.tv/live/1606/master.m3u8",
     "title": "Malai Murasu TV",
-    "channel": "Live TV",
+    "channel": "Tamil TV",
     "date": "2025-10-25",
     "dthumb": "https://jiotvimages.cdn.jio.com/dare_images/images/Malai_Murasu.png",
     "mthumb": "https://jiotvimages.cdn.jio.com/dare_images/images/Malai_Murasu.png"
@@ -336,7 +358,7 @@
     "title": "Puthiya Thalaimurai",
     "mthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/puthiyathalaimurai.jpg",
     "dthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/puthiyathalaimurai.jpg",
-    "channel": "Live TV",
+    "channel": "Tamil TV",
     "date": "2025-10-25"
   },
   {
@@ -345,7 +367,7 @@
     "title": "News7 Tamil",
     "mthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/news7tamil.jpg",
     "dthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/news7tamil.jpg",
-    "channel": "Live TV",
+    "channel": "Tamil TV",
     "date": "2025-10-25"
   },
   {
@@ -354,7 +376,7 @@
     "title": "Sun News",
     "mthumb": "https://img1.imageride.net/images/2025/10/20/sun_news-1.png",
     "dthumb": "https://img1.imageride.net/images/2025/10/20/sun_news-1.png",
-    "channel": "Live TV",
+    "channel": "Tamil TV",
     "date": "2025-10-25"
   },
   {
@@ -363,7 +385,7 @@
     "title": "News18 Tamilnadu",
     "mthumb": "https://img.imageride.net/images/2025/10/20/news18_tamil-1.png",
     "dthumb": "https://img.imageride.net/images/2025/10/20/news18_tamil-1.png",
-    "channel": "Live TV",
+    "channel": "Tamil TV",
     "date": "2025-10-25"
   },
   {
@@ -372,34 +394,23 @@
     "title": "NewsTamil 24X7",
     "mthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/News-Tamil.jpg",
     "dthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/News-Tamil.jpg",
-    "channel": "Live TV",
+    "channel": "Tamil TV",
     "date": "2025-10-25"
   },
   {
     "platform": "hls",
     "id": "https://cdn-6.pishow.tv/live/13/master.m3u8",
     "title": "DD Sports",
-    "channel": "Live TV",
+    "channel": "Tamil TV",
     "date": "2025-10-25",
     "dthumb": "https://jiotvimages.cdn.jio.com/dare_images/images/DD_Sports.png",
     "mthumb": "https://jiotvimages.cdn.jio.com/dare_images/images/DD_Sports.png"
   },
 {
     "platform": "hls",
-    "id": "http://87.255.35.150:18828",
-    "title": "Star Sports 2 HD",
-    "channel": "Live TV",
-    "date": "2025-10-25",
-    "dthumb": "https://img.imageride.net/images/2025/10/25/sports2.png",
-    "mthumb": "https://img.imageride.net/images/2025/10/25/sports2.png",
-    "isLocal": "True"
-
-},
-{
-    "platform": "hls",
     "id": "http://87.255.35.150:18844",
-    "title": "Star Sports 1 Tamil HD",
-    "channel": "Live TV",
+    "title": "Star Sports 1 Tamil",
+    "channel": "Tamil TV",
     "date": "2025-10-25",
     "dthumb": "https://img1.imageride.net/images/2025/10/25/sstamil1.png",
     "mthumb": "https://img1.imageride.net/images/2025/10/25/sstamil1.png",
@@ -408,9 +419,121 @@
 },
 {
     "platform": "hls",
+    "id": "http://116.90.120.149:8000/play/a0ba/index.m3u8",
+    "title": "STAR SPORTS 1",
+    "channel": "Tamil TV",
+    "date": "2025-10-25",
+    "dthumb": "https://img10.hotstar.com/image/upload/f_auto,q_90,w_384/sources/r1/cms/prod/7074/597074-h",
+    "mthumb": "https://img10.hotstar.com/image/upload/f_auto,q_90,w_384/sources/r1/cms/prod/7074/597074-h",
+	"isLocal": "True"
+},
+{
+    "platform": "hls",
+    "id": "http://87.255.35.150:18828",
+    "title": "Star Sports 2",
+    "channel": "Tamil TV",
+    "date": "2025-10-25",
+    "dthumb": "https://img.imageride.net/images/2025/10/25/sports2.png",
+    "mthumb": "https://img.imageride.net/images/2025/10/25/sports2.png",
+    "isLocal": "True"
+
+},
+{
+    "platform": "hls",
+    "id": "http://87.255.35.150:18804",
+    "title": "Star Sports 3",
+    "channel": "Tamil TV",
+    "date": "2025-10-25",
+    "dthumb": "https://w7.pngwing.com/pngs/734/315/png-transparent-cricket-world-cup-star-sports-3-streaming-media-ptv-sports-live-stream-television-text-sport.png",
+    "mthumb": "https://w7.pngwing.com/pngs/734/315/png-transparent-cricket-world-cup-star-sports-3-streaming-media-ptv-sports-live-stream-television-text-sport.png",
+    "isLocal": "True"
+
+},
+  {
+    "platform": "hls",
+    "id": "http://116.90.120.149:8000/play/a0cl/index.m3u8",
+    "title": "SPORT SELECT 1",
+    "channel": "Tamil TV",
+    "date": "2025-10-25",
+    "dthumb": "https://img10.hotstar.com/image/upload/f_auto,q_90,w_384/sources/r1/cms/prod/7012/597012-h",
+    "mthumb": "https://img10.hotstar.com/image/upload/f_auto,q_90,w_384/sources/r1/cms/prod/7012/597012-h",
+	"isLocal": "True"
+  },
+  {
+    "platform": "hls",
+    "id": "http://116.90.120.149:8000/play/a0cm/index.m3u8",
+    "title": "SPORTS SELECT 2",
+    "channel": "Tamil TV",
+    "date": "2025-10-25",
+    "dthumb": "https://img10.hotstar.com/image/upload/f_auto,q_90,w_384/sources/r1/cms/prod/7076/597076-h",
+    "mthumb": "https://img10.hotstar.com/image/upload/f_auto,q_90,w_384/sources/r1/cms/prod/7076/597076-h",
+	"isLocal": "True"
+  },
+  {
+    "platform": "hls",
+    "id": "http://116.90.120.149:8000/play/a0bv/index.m3u8",
+    "title": "STAR SPORTS 1 HINDI",
+    "channel": "Tamil TV",
+    "date": "2025-10-25",
+    "dthumb": "https://img10.hotstar.com/image/upload/f_auto,q_90,w_384/sources/r1/cms/prod/6998/596998-h",
+    "mthumb": "https://img10.hotstar.com/image/upload/f_auto,q_90,w_384/sources/r1/cms/prod/6998/596998-h",
+	"isLocal": "True"
+  },
+  {
+    "platform": "hls",
+    "id": "http://116.90.120.149:8000/play/a0cs/index.m3u8",
+    "title": "STAR SPORTS 2 HINDI",
+    "channel": "Tamil TV",
+    "date": "2025-10-25",
+    "dthumb": "https://img1.imageride.net/images/2025/10/25/sport2hindi.png",
+    "mthumb": "https://img1.imageride.net/images/2025/10/25/sport2hindi.png",
+	"isLocal": "True"
+  },
+  {
+    "platform": "hls",
+    "id": "http://87.255.35.150:18544",
+    "title": "Sony Sports Ten 1",
+    "channel": "Tamil TV",
+    "date": "2025-10-25",
+    "dthumb": "https://jiotvimages.cdn.jio.com/dare_images/images/Ten_1.png",
+    "mthumb": "https://jiotvimages.cdn.jio.com/dare_images/images/Ten_1.png",
+	"isLocal": "True"
+  },
+  {
+    "platform": "hls",
+    "id": "http://87.255.35.150:18927",
+    "title": "Sony Sports Ten 2",
+    "channel": "Tamil TV",
+    "date": "2025-10-25",
+    "dthumb": "https://jiotvimages.cdn.jio.com/dare_images/images/Ten_2.png",
+    "mthumb": "https://jiotvimages.cdn.jio.com/dare_images/images/Ten_2.png",
+	"isLocal": "True"
+  },
+  {
+    "platform": "hls",
+    "id": "http://87.255.35.150:18818",
+    "title": "Sony Sports Ten 5",
+    "channel": "Tamil TV",
+    "date": "2025-10-25",
+    "dthumb": "https://jiotvimages.cdn.jio.com/dare_images/images/Sony_Six_SD.png",
+    "mthumb": "https://jiotvimages.cdn.jio.com/dare_images/images/Sony_Six_SD.png",
+	"isLocal": "True"
+  },
+  {
+    "platform": "hls",
+    "id": "http://87.255.35.150:18848",
+    "title": "Sony Sports Ten 3 Hindi",
+    "channel": "Tamil TV",
+    "date": "2025-10-25",
+    "dthumb": "https://jiotvimages.cdn.jio.com/dare_images/images/Ten_3.png",
+    "mthumb": "https://jiotvimages.cdn.jio.com/dare_images/images/Ten_3.png",
+	"isLocal": "True"
+  },
+{
+    "platform": "hls",
     "id": "http://87.255.35.150:18548",
     "title": "Star Movies Select HD",
-    "channel": "Live TV",
+    "channel": "Tamil TV",
     "date": "2025-10-25",
     "dthumb": "https://img1.imageride.net/images/2025/10/25/smselect.png",
     "mthumb": "https://img1.imageride.net/images/2025/10/25/smselect.png",
@@ -421,7 +544,7 @@
     "platform": "hls",
     "id": "http://87.255.35.150:18301",
     "title": "Star Movies HD",
-    "channel": "Live TV",
+    "channel": "Tamil TV",
     "date": "2025-10-25",
     "dthumb": "https://img.imageride.net/images/2025/10/25/smovies.png",
     "mthumb": "https://img.imageride.net/images/2025/10/25/smovies.png",
@@ -432,7 +555,7 @@
     "platform": "hls",
     "id": "http://87.255.35.150:18495",
     "title": "Sony Pix",
-    "channel": "Live TV",
+    "channel": "Tamil TV",
     "date": "2025-10-25",
     "dthumb": "https://img.imageride.net/images/2025/10/25/spix.png",
     "mthumb": "https://img.imageride.net/images/2025/10/25/spix.png",
@@ -443,86 +566,180 @@
     "platform": "hls",
     "id": "http://87.255.35.150:18935",
     "title": "Movies Now",
-    "channel": "Live TV",
+    "channel": "Tamil TV",
     "date": "2025-10-25",
     "dthumb": "https://img.imageride.net/images/2025/10/25/mnow.png",
     "mthumb": "https://img.imageride.net/images/2025/10/25/mnow.png",
     "isLocal": "True"
 
 },
-  {
+{
     "platform": "hls",
-    "id": "http://116.90.120.149:8000/play/a0cl/index.m3u8",
-    "title": "SPORT SELECT HD1",
-    "channel": "Live TV",
+    "id": "http://87.255.35.150:18936",
+    "title": "MNX HD",
+    "channel": "Tamil TV",
     "date": "2025-10-25",
-    "dthumb": "https://img10.hotstar.com/image/upload/f_auto,q_90,w_384/sources/r1/cms/prod/7012/597012-h",
-    "mthumb": "https://img10.hotstar.com/image/upload/f_auto,q_90,w_384/sources/r1/cms/prod/7012/597012-h",
-	"isLocal": "True"
+    "dthumb": "https://jiotvimages.cdn.jio.com/dare_images/images/Movies_Now2_HD.png",
+    "mthumb": "https://jiotvimages.cdn.jio.com/dare_images/images/Movies_Now2_HD.png",
+    "isLocal": "True"
+
+},
+{
+    "platform": "hls",
+    "id": "http://87.255.35.150:18838",
+    "title": "Colors Infinity HD",
+    "channel": "Tamil TV",
+    "date": "2025-10-25",
+    "dthumb": "https://oxolive.com/wp-content/uploads/2025/09/ChatGPT-Image-Sep-20-2025-03_18_52-PM-1-150x150.png",
+    "mthumb": "https://oxolive.com/wp-content/uploads/2025/09/ChatGPT-Image-Sep-20-2025-03_18_52-PM-1-150x150.png",
+    "isLocal": "True"
+
+},
+{
+    "platform": "hls",
+    "id": "http://87.255.35.150:18494",
+    "title": "&Prive HD",
+    "channel": "Tamil TV",
+    "date": "2025-10-25",
+    "dthumb": "https://oxolive.com/wp-content/uploads/2025/08/ChatGPT-Image-Aug-30-2025-11_24_59-AM-1-150x150.png",
+    "mthumb": "https://oxolive.com/wp-content/uploads/2025/08/ChatGPT-Image-Aug-30-2025-11_24_59-AM-1-150x150.png",
+    "isLocal": "True"
+
+},
+{
+    "platform": "hls",
+    "id": "http://87.255.35.150:18802",
+    "title": "Cartoon Network",
+    "channel": "Tamil TV",
+    "date": "2025-10-25",
+    "dthumb": "https://oxolive.com/wp-content/uploads/2025/10/ChatGPT-Image-Oct-25-2025-08_06_03-AM-1-150x150.png",
+    "mthumb": "https://oxolive.com/wp-content/uploads/2025/10/ChatGPT-Image-Oct-25-2025-08_06_03-AM-1-150x150.png",
+    "isLocal": "True"
+
+},
+{
+    "platform": "hls",
+    "id": "http://87.255.35.150:18811",
+    "title": "Hungama",
+    "channel": "Tamil TV",
+    "date": "2025-10-25",
+    "dthumb": "https://oxolive.com/wp-content/uploads/2023/07/ChatGPT-Image-Jul-11-2025-10_32_56-PM-150x150.png",
+    "mthumb": "https://oxolive.com/wp-content/uploads/2023/07/ChatGPT-Image-Jul-11-2025-10_32_56-PM-150x150.png",
+    "isLocal": "True"
+
+},
+{
+    "platform": "hls",
+    "id": "http://87.255.35.150:18862",
+    "title": "Pogo",
+    "channel": "Tamil TV",
+    "date": "2025-10-25",
+    "dthumb": "https://oxolive.com/wp-content/uploads/2025/09/ChatGPT-Image-Oct-9-2025-09_21_16-PM-1-150x150.png",
+    "mthumb": "https://oxolive.com/wp-content/uploads/2025/09/ChatGPT-Image-Oct-9-2025-09_21_16-PM-1-150x150.png",
+    "isLocal": "True"
+
+},
+{
+    "platform": "hls",
+    "id": "http://87.255.35.150:18902",
+    "title": "Discovery Kids",
+    "channel": "Tamil TV",
+    "date": "2025-10-25",
+    "dthumb": "https://oxolive.com/wp-content/uploads/2025/10/ChatGPT-Image-Oct-24-2025-05_22_31-PM-1-1-150x150.png",
+    "mthumb": "https://oxolive.com/wp-content/uploads/2025/10/ChatGPT-Image-Oct-24-2025-05_22_31-PM-1-1-150x150.png",
+    "isLocal": "True"
+
+},
+{
+    "platform": "hls",
+    "id": "http://87.255.35.150:18249",
+    "title": "Nick",
+    "channel": "Tamil TV",
+    "date": "2025-10-25",
+    "dthumb": "https://oxolive.com/wp-content/uploads/2025/09/nick-150x150.png",
+    "mthumb": "https://oxolive.com/wp-content/uploads/2025/09/nick-150x150.png",
+    "isLocal": "True"
+
+},
+{
+    "platform": "hls",
+    "id": "http://87.255.35.150:18285",
+    "title": "Sony Yay",
+    "channel": "Tamil TV",
+    "date": "2025-10-25",
+    "dthumb": "https://oxolive.com/wp-content/uploads/2022/12/ChatGPT-Image-May-2-2025-10_29_18-AM-150x150.png",
+    "mthumb": "https://oxolive.com/wp-content/uploads/2022/12/ChatGPT-Image-May-2-2025-10_29_18-AM-150x150.png",
+    "isLocal": "True"
+
+},
+  {
+    "platform": "yupptv",
+    "id": "sri-sankara-tamil",
+    "title": "Sri Sankara Tamil",
+    "mthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/sri-sankara-tamil.jpg",
+    "dthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/sri-sankara-tamil.jpg",
+    "channel": "Tamil TV",
+    "date": "2025-10-25"
   },
   {
-    "platform": "hls",
-    "id": "http://116.90.120.149:8000/play/a0cm/index.m3u8",
-    "title": "SPORTS SELECT HD2",
-    "channel": "Live TV",
-    "date": "2025-10-25",
-    "dthumb": "https://img10.hotstar.com/image/upload/f_auto,q_90,w_384/sources/r1/cms/prod/7076/597076-h",
-    "mthumb": "https://img10.hotstar.com/image/upload/f_auto,q_90,w_384/sources/r1/cms/prod/7076/597076-h",
-	"isLocal": "True"
+    "platform": "yupptv",
+    "id": "madha-tv",
+    "title": "Madha TV",
+    "mthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/Madha_TV.jpg",
+    "dthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/Madha_TV.jpg",
+    "channel": "Tamil TV",
+    "date": "2025-10-25"
   },
   {
-    "platform": "hls",
-    "id": "http://116.90.120.149:8000/play/a0ba/index.m3u8",
-    "title": "STAR SPORTS 1 HD",
-    "channel": "Live TV",
-    "date": "2025-10-25",
-    "dthumb": "https://img10.hotstar.com/image/upload/f_auto,q_90,w_384/sources/r1/cms/prod/7074/597074-h",
-    "mthumb": "https://img10.hotstar.com/image/upload/f_auto,q_90,w_384/sources/r1/cms/prod/7074/597074-h",
-	"isLocal": "True"
+    "platform": "yupptv",
+    "id": "angel-tv",
+    "title": "Angel TV",
+    "mthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/angel-tv.jpg",
+    "dthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/angel-tv.jpg",
+    "channel": "Tamil TV",
+    "date": "2025-10-25"
   },
   {
-    "platform": "hls",
-    "id": "http://116.90.120.149:8000/play/a0bv/index.m3u8",
-    "title": "STAR SPORTS 1 HINDI",
-    "channel": "Live TV",
-    "date": "2025-10-25",
-    "dthumb": "https://img10.hotstar.com/image/upload/f_auto,q_90,w_384/sources/r1/cms/prod/6998/596998-h",
-    "mthumb": "https://img10.hotstar.com/image/upload/f_auto,q_90,w_384/sources/r1/cms/prod/6998/596998-h",
-	"isLocal": "True"
+    "platform": "yupptv",
+    "id": "moon-tv",
+    "title": "Moon TV",
+    "mthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/Moon-TV.jpg",
+    "dthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/Moon-TV.jpg",
+    "channel": "Tamil TV",
+    "date": "2025-10-25"
   },
   {
-    "platform": "hls",
-    "id": "http://116.90.120.149:8000/play/a0cs/index.m3u8",
-    "title": "STAR SPORTS HD2 HINDI",
-    "channel": "Live TV",
-    "date": "2025-10-25",
-    "dthumb": "https://img1.imageride.net/images/2025/10/25/sport2hindi.png",
-    "mthumb": "https://img1.imageride.net/images/2025/10/25/sport2hindi.png",
-	"isLocal": "True"
-  },
-  {
-    "platform": "hls",
-    "id": "https://sports.porus-in2012.workers.dev/?url=http://media.7starcloud.com:1935/erodekrishnatv/livestream/playlist.m3u8",
-    "title": "SRI KRISHNA TV",
-    "channel": "Live TV",
-    "date": "2025-10-25",
-    "dthumb": "https://repowis2k23.blueinkcreations.com/wp-content/uploads/2022/03/New-Sri-Krishna-TV-logo-300x170.png",
-    "mthumb": "https://repowis2k23.blueinkcreations.com/wp-content/uploads/2022/03/New-Sri-Krishna-TV-logo-300x170.png"
+    "platform": "yupptv",
+    "id": "nambikkai",
+    "title": "Nambikkai TV",
+    "mthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/Nambikkai-TV.jpg",
+    "dthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/Nambikkai-TV.jpg",
+    "channel": "Tamil TV",
+    "date": "2025-10-25"
   },
   {
     "platform": "hls",
     "id": "https://sports.porus-in2012.workers.dev/?url=http://player.mslivestream.net/tamil/ac206e74d75b285755ee4924df87d951.sdp/index.m3u8",
     "title": "SVBC 2",
-    "channel": "Live TV",
+    "channel": "Tamil TV",
     "date": "2025-10-25",
     "dthumb": "https://i.imgur.com/NtmRt1A.png",
     "mthumb": "https://i.imgur.com/NtmRt1A.png"
   },
   {
     "platform": "hls",
+    "id": "https://sports.porus-in2012.workers.dev/?url=http://media.7starcloud.com:1935/erodekrishnatv/livestream/playlist.m3u8",
+    "title": "SRI KRISHNA TV",
+    "channel": "Tamil Local TV",
+    "date": "2025-10-25",
+    "dthumb": "https://repowis2k23.blueinkcreations.com/wp-content/uploads/2022/03/New-Sri-Krishna-TV-logo-300x170.png",
+    "mthumb": "https://repowis2k23.blueinkcreations.com/wp-content/uploads/2022/03/New-Sri-Krishna-TV-logo-300x170.png"
+  },
+  {
+    "platform": "hls",
     "id": "https://sports.porus-in2012.workers.dev/?url=http://rasinetworks.in:1935/rasitvhd/rasitvhd.stream_aac/playlist.m3u8",
     "title": "Rasi TV",
-    "channel": "Live TV",
+    "channel": "Tamil Local TV",
     "date": "2025-10-25",
     "dthumb": "https://raw.githubusercontent.com/codedbyakil/Rasi-TV-Network-IPTV/refs/heads/main/Logos/rasi_tv.png",
     "mthumb": "https://raw.githubusercontent.com/codedbyakil/Rasi-TV-Network-IPTV/refs/heads/main/Logos/rasi_tv.png"
@@ -531,7 +748,7 @@
     "platform": "hls",
     "id": "https://sports.porus-in2012.workers.dev/?url=http://rasinetworks.in:1935/rasitamil/rasitamil.stream_aac/index.m3u8",
     "title": "Rasi Tamil",
-    "channel": "Live TV",
+    "channel": "Tamil Local TV",
     "date": "2025-10-25",
     "dthumb": "https://raw.githubusercontent.com/codedbyakil/Rasi-TV-Network-IPTV/refs/heads/main/Logos/rasi_tamil.png",
     "mthumb": "https://raw.githubusercontent.com/codedbyakil/Rasi-TV-Network-IPTV/refs/heads/main/Logos/rasi_tamil.png"
@@ -540,7 +757,7 @@
     "platform": "hls",
     "id": "https://sports.porus-in2012.workers.dev/?url=http://rasinetworks.in:1935/rasimovies/rasimovies.stream_aac/index.m3u8",
     "title": "Rasi Movies",
-    "channel": "Live TV",
+    "channel": "Tamil Local TV",
     "date": "2025-10-25",
     "dthumb": "https://raw.githubusercontent.com/codedbyakil/Rasi-TV-Network-IPTV/refs/heads/main/Logos/rasi_movies.png",
     "mthumb": "https://raw.githubusercontent.com/codedbyakil/Rasi-TV-Network-IPTV/refs/heads/main/Logos/rasi_movies.png"
@@ -549,7 +766,7 @@
     "platform": "hls",
     "id": "https://sports.porus-in2012.workers.dev/?url=http://rasinetworks.in:1935/rasimusic/rasimusic.stream_aac/index.m3u8",
     "title": "Rasi Music",
-    "channel": "Live TV",
+    "channel": "Tamil Local TV",
     "date": "2025-10-25",
     "dthumb": "https://raw.githubusercontent.com/codedbyakil/Rasi-TV-Network-IPTV/refs/heads/main/Logos/rasi_music.png",
     "mthumb": "https://raw.githubusercontent.com/codedbyakil/Rasi-TV-Network-IPTV/refs/heads/main/Logos/rasi_music.png"
@@ -558,7 +775,7 @@
     "platform": "hls",
     "id": "https://sports.porus-in2012.workers.dev/?url=http://rasinetworks.in:1935/rasihollywood/rasihollywood.stream_aac/index.m3u8",
     "title": "Rasi Hollywood",
-    "channel": "Live TV",
+    "channel": "Tamil Local TV",
     "date": "2025-10-25",
     "dthumb": "https://raw.githubusercontent.com/codedbyakil/Rasi-TV-Network-IPTV/refs/heads/main/Logos/rasi_hollywood.png",
     "mthumb": "https://raw.githubusercontent.com/codedbyakil/Rasi-TV-Network-IPTV/refs/heads/main/Logos/rasi_hollywood.png"
@@ -567,7 +784,7 @@
     "platform": "hls",
     "id": "https://sports.porus-in2012.workers.dev/?url=http://rasinetworks.in:1935/rasiclassic/rasiclassic.stream_aac/index.m3u8",
     "title": "Rasi Classic",
-    "channel": "Live TV",
+    "channel": "Tamil Local TV",
     "date": "2025-10-25",
     "dthumb": "https://raw.githubusercontent.com/codedbyakil/Rasi-TV-Network-IPTV/refs/heads/main/Logos/rasi_classic.png",
     "mthumb": "https://raw.githubusercontent.com/codedbyakil/Rasi-TV-Network-IPTV/refs/heads/main/Logos/rasi_classic.png"
@@ -576,7 +793,7 @@
     "platform": "hls",
     "id": "https://sports.porus-in2012.workers.dev/?url=http://rasinetworks.in:1935/rasicomedy/rasicomedy.stream_aac/index.m3u8",
     "title": "Rasi Comedy",
-    "channel": "Live TV",
+    "channel": "Tamil Local TV",
     "date": "2025-10-25",
     "dthumb": "https://raw.githubusercontent.com/codedbyakil/Rasi-TV-Network-IPTV/refs/heads/main/Logos/rasi_comedy.png",
     "mthumb": "https://raw.githubusercontent.com/codedbyakil/Rasi-TV-Network-IPTV/refs/heads/main/Logos/rasi_comedy.png"
@@ -585,7 +802,7 @@
     "platform": "hls",
     "id": "https://sports.porus-in2012.workers.dev/?url=http://media.7starcloud.com:1935/live/7star/playlist.m3u8",
     "title": "7Star TV",
-    "channel": "Live TV",
+    "channel": "Tamil Local TV",
     "date": "2025-10-25",
     "dthumb": "https://i.imgur.com/EaHWWNl.jpeg",
     "mthumb": "https://i.imgur.com/EaHWWNl.jpeg"
@@ -594,7 +811,7 @@
     "platform": "hls",
     "id": "https://stream.galaxyott.live/live/anandhamtv/tracks-v1a1/mono.m3u8",
     "title": "Anandham TV",
-    "channel": "Live TV",
+    "channel": "Tamil Local TV",
     "date": "2025-10-25",
     "dthumb": "https://img1.imageride.net/images/2025/10/20/anantham-tv.jpg",
     "mthumb": "https://img1.imageride.net/images/2025/10/20/anantham-tv.jpg"
@@ -603,7 +820,7 @@
     "platform": "hls",
     "id": "https://ipcloud.live/udhayamtv/live/tracks-v1a1/mono.m3u8",
     "title": "Udhayam TV",
-    "channel": "Live TV",
+    "channel": "Tamil Local TV",
     "date": "2025-10-25",
     "dthumb": "https://img.imageride.net/images/2025/10/20/udhayam-tv.jpg",
     "mthumb": "https://img.imageride.net/images/2025/10/20/udhayam-tv.jpg"
@@ -612,7 +829,7 @@
     "platform": "hls",
     "id": "https://stream.galaxyott.live/live/subintv/tracks-v1a1/mono.m3u8",
     "title": "Subin TV",
-    "channel": "Live TV",
+    "channel": "Tamil Local TV",
     "date": "2025-10-25",
     "dthumb": "https://img.imageride.net/images/2025/10/20/subin-tv.jpg",
     "mthumb": "https://img.imageride.net/images/2025/10/20/subin-tv.jpg"
@@ -621,7 +838,7 @@
     "platform": "hls",
     "id": "https://stream.galaxyott.live/live/utv/tracks-v1a1/mono.m3u8",
     "title": "UTV HD",
-    "channel": "Live TV",
+    "channel": "Tamil Local TV",
     "date": "2025-10-25",
     "dthumb": "https://img1.imageride.net/images/2025/10/20/utv.jpg",
     "mthumb": "https://img1.imageride.net/images/2025/10/20/utv.jpg"
@@ -630,7 +847,7 @@
     "platform": "hls",
     "id": "https://mntv.livebox.co.in/musichls/live.m3u8",
     "title": "MN TV Music Tamil",
-    "channel": "Live TV",
+    "channel": "Tamil Local TV",
     "date": "2025-10-25",
     "dthumb": "https://img1.imageride.net/images/2025/10/20/mn-music.jpg",
     "mthumb": "https://img1.imageride.net/images/2025/10/20/mn-music.jpg"
@@ -639,7 +856,7 @@
     "platform": "hls",
     "id": "https://6n3yope4d9ok-hls-live.5centscdn.com/vaanavil/TV.stream/playlist.m3u8",
     "title": "Vaanavil TV",
-    "channel": "Live TV",
+    "channel": "Tamil Local TV",
     "date": "2025-10-25",
     "dthumb": "https://img1.imageride.net/images/2025/10/20/Vaanavil.jpg",
     "mthumb": "https://img1.imageride.net/images/2025/10/20/Vaanavil.jpg"
@@ -648,7 +865,7 @@
     "platform": "hls",
     "id": "https://galaxyott.live/hls/sanatv.m3u8",
     "title": "Sana TV",
-    "channel": "Live TV",
+    "channel": "Tamil Local TV",
     "date": "2025-10-25",
     "dthumb": "https://img1.imageride.net/images/2025/10/20/sana-tv.jpg",
     "mthumb": "https://img1.imageride.net/images/2025/10/20/sana-tv.jpg"
@@ -657,7 +874,7 @@
     "platform": "hls",
     "id": "https://live.streamjo.com/eetlive/eettv.m3u8",
     "title": "EET TV Tamil",
-    "channel": "Live TV",
+    "channel": "Tamil Local TV",
     "date": "2025-10-25",
     "dthumb": "https://img.imageride.net/images/2025/10/20/EETV.jpg",
     "mthumb": "https://img.imageride.net/images/2025/10/20/EETV.jpg"
@@ -666,7 +883,7 @@
     "platform": "hls",
     "id": "https://mntv.livebox.co.in/mntvhls/live.m3u8",
     "title": "MN TV HD",
-    "channel": "Live TV",
+    "channel": "Tamil Local TV",
     "date": "2025-10-25",
     "dthumb": "https://img1.imageride.net/images/2025/10/20/Marutam.jpg",
     "mthumb": "https://img1.imageride.net/images/2025/10/20/Marutam.jpg"
@@ -675,7 +892,7 @@
     "platform": "hls",
     "id": "https://live.skystream.in/live/no1tv/index.m3u8",
     "title": "No 1 TV Tamil",
-    "channel": "Live TV",
+    "channel": "Tamil Local TV",
     "date": "2025-10-25",
     "dthumb": "https://img1.imageride.net/images/2025/10/20/1tv.jpg",
     "mthumb": "https://img1.imageride.net/images/2025/10/20/1tv.jpg"
@@ -684,7 +901,7 @@
     "platform": "hls",
     "id": "https://ipcloud.live/thendralmdu/madurai/tracks-v1a1/mono.m3u8",
     "title": "Thendral TV",
-    "channel": "Live TV",
+    "channel": "Tamil Local TV",
     "date": "2025-10-25",
     "dthumb": "https://img.imageride.net/images/2025/10/20/thendral-tv.jpg",
     "mthumb": "https://img.imageride.net/images/2025/10/20/thendral-tv.jpg"
@@ -695,7 +912,7 @@
     "title": "Peppers TV",
     "mthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/Peppers-TV.jpg",
     "dthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/Peppers-TV.jpg",
-    "channel": "Live TV",
+    "channel": "Tamil Local TV",
     "date": "2025-10-25"
   },
   {
@@ -704,16 +921,7 @@
     "title": "Athavan TV HD",
     "mthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/Athavan_TV.jpg",
     "dthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/Athavan_TV.jpg",
-    "channel": "Live TV",
-    "date": "2025-10-25"
-  },
-  {
-    "platform": "yupptv",
-    "id": "sri-sankara-tamil",
-    "title": "Sri Sankara Tamil",
-    "mthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/sri-sankara-tamil.jpg",
-    "dthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/sri-sankara-tamil.jpg",
-    "channel": "Live TV",
+    "channel": "Tamil Local TV",
     "date": "2025-10-25"
   },
   {
@@ -722,7 +930,7 @@
     "title": "Sri Naga Sai Mandir",
     "mthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/Sri-Naga-Sai-Mandir.jpg",
     "dthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/Sri-Naga-Sai-Mandir.jpg",
-    "channel": "Live TV",
+    "channel": "Tamil Local TV",
     "date": "2025-10-25"
   },
   {
@@ -731,7 +939,7 @@
     "title": "Sivan Temple TV",
     "mthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/Sivan_Temple_TV.jpg",
     "dthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/Sivan_Temple_TV.jpg",
-    "channel": "Live TV",
+    "channel": "Tamil Local TV",
     "date": "2025-10-25"
   },
   {
@@ -740,7 +948,7 @@
     "title": "SVBC 2",
     "mthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/SVBC-2_TV.jpg",
     "dthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/SVBC-2_TV.jpg",
-    "channel": "Live TV",
+    "channel": "Tamil TV",
     "date": "2025-10-25"
   },
   {
@@ -749,43 +957,7 @@
     "title": "Swasthik TV",
     "mthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/swasthik.jpg",
     "dthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/swasthik.jpg",
-    "channel": "Live TV",
-    "date": "2025-10-25"
-  },
-  {
-    "platform": "yupptv",
-    "id": "madha-tv",
-    "title": "Madha TV",
-    "mthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/Madha_TV.jpg",
-    "dthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/Madha_TV.jpg",
-    "channel": "Live TV",
-    "date": "2025-10-25"
-  },
-  {
-    "platform": "yupptv",
-    "id": "angel-tv",
-    "title": "Angel TV",
-    "mthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/angel-tv.jpg",
-    "dthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/angel-tv.jpg",
-    "channel": "Live TV",
-    "date": "2025-10-25"
-  },
-  {
-    "platform": "yupptv",
-    "id": "moon-tv",
-    "title": "Moon TV",
-    "mthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/Moon-TV.jpg",
-    "dthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/Moon-TV.jpg",
-    "channel": "Live TV",
-    "date": "2025-10-25"
-  },
-  {
-    "platform": "yupptv",
-    "id": "nambikkai",
-    "title": "Nambikkai TV",
-    "mthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/Nambikkai-TV.jpg",
-    "dthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/Nambikkai-TV.jpg",
-    "channel": "Live TV",
+    "channel": "Tamil Local TV",
     "date": "2025-10-25"
   },
   {
@@ -794,7 +966,7 @@
     "title": "Hosanna",
     "mthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/hosanna-tv.jpg",
     "dthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/hosanna-tv.jpg",
-    "channel": "Live TV",
+    "channel": "Tamil Local TV",
     "date": "2025-10-25"
   },
   {
@@ -803,14 +975,14 @@
     "title": "Holy God TV",
     "mthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/HOLY_GOD_TV.jpg",
     "dthumb": "https://d229kpbsb5jevy.cloudfront.net/tv/480/270/languages/HOLY_GOD_TV.jpg",
-    "channel": "Live TV",
+    "channel": "Tamil Local TV",
     "date": "2025-10-25"
   },
   {
     "platform": "hls",
     "id": "https://aasthaott.akamaized.net/110923/smil:aasthatamil.smil/playlist.m3u8",
     "title": "Aastha Tamil",
-    "channel": "Live TV",
+    "channel": "Tamil TV",
     "date": "2025-10-25",
     "dthumb": "https://d229kpbsb5jevy.cloudfront.net/aastha/320/280/content/common/channel/logos/vwnnbv.jpeg",
     "mthumb": "https://d229kpbsb5jevy.cloudfront.net/aastha/320/280/content/common/channel/logos/vwnnbv.jpeg"
@@ -819,7 +991,7 @@
     "platform": "hls",
     "id": "https://account20.livebox.co.in/charleshls/live.m3u8",
     "title": "Hebron TV",
-    "channel": "Live TV",
+    "channel": "Tamil Local TV",
     "date": "2025-10-25",
     "dthumb": "https://img1.imageride.net/images/2025/10/25/nebrontv.png",
     "mthumb": "https://img1.imageride.net/images/2025/10/25/nebrontv.png"
@@ -828,7 +1000,7 @@
     "platform": "hls",
     "id": "https://cdn-3.pishow.tv/live/473/master.m3u8",
     "title": "Malar TV",
-    "channel": "Live TV",
+    "channel": "Tamil Local TV",
     "date": "2025-10-25",
     "dthumb": "https://www.lyngsat.com/logo/tv/mm/malar-tv-in.png",
     "mthumb": "https://www.lyngsat.com/logo/tv/mm/malar-tv-in.png"
@@ -837,7 +1009,7 @@
     "platform": "hls",
     "id": "https://cdn-3.pishow.tv/live/1253/master.m3u8",
     "title": "MK Six",
-    "channel": "Live TV",
+    "channel": "Tamil Local TV",
     "date": "2025-10-25",
     "dthumb": "https://jiotvimages.cdn.jio.com/dare_images/images/MK_Six.png",
     "mthumb": "https://jiotvimages.cdn.jio.com/dare_images/images/MK_Six.png"
@@ -846,7 +1018,7 @@
     "platform": "hls",
     "id": "https://g4wlkqqwl23a-hls-live.5centscdn.com/NDTVLANKA/1ff5fa54d14c3ff6c6bd3918bbb7db5d.sdp/playlist.m3u8",
     "title": "NDTV LANKA",
-    "channel": "Live TV",
+    "channel": "Tamil Local TV",
     "date": "2025-10-25",
     "dthumb": "https://img1.imageride.net/images/2025/10/21/ndtv-lanka.png",
     "mthumb": "https://img1.imageride.net/images/2025/10/21/ndtv-lanka.png"
@@ -855,7 +1027,7 @@
     "platform": "hls",
     "id": "https://galaxyott.live/hls/sanaplus.m3u8",
     "title": "Sana Plus",
-    "channel": "Live TV",
+    "channel": "Tamil Local TV",
     "date": "2025-10-25",
     "dthumb": "https://jiotvimages.cdn.jio.com/dare_images/images/sanaplus.png",
     "mthumb": "https://jiotvimages.cdn.jio.com/dare_images/images/sanaplus.png"
@@ -864,7 +1036,7 @@
     "platform": "hls",
     "id": "https://edge4-moblive.yuppcdn.net/transsd/smil:saktv10.smil/playlist.m3u8?dvr=",
     "title": "Shakthi TV",
-    "channel": "Live TV",
+    "channel": "Tamil Local TV",
     "date": "2025-10-25",
     "dthumb": "https://img.imageride.net/images/2025/10/21/sakthitv.jpg",
     "mthumb": "https://img.imageride.net/images/2025/10/21/sakthitv.jpg"
@@ -873,7 +1045,7 @@
     "platform": "hls",
     "id": "https://live20.bozztv.com/giatv/giatv-Infinittyott/Infinittyott/playlist.m3u8",
     "title": "Sooriyan TV",
-    "channel": "Live TV",
+    "channel": "Tamil Local TV",
     "date": "2025-10-25",
     "dthumb": "https://i.ibb.co/LSyydKj/Sooriyan-TV-Tamil.jpg",
     "mthumb": "https://i.ibb.co/LSyydKj/Sooriyan-TV-Tamil.jpg"
@@ -882,7 +1054,7 @@
     "platform": "hls",
     "id": "https://edge4-moblive.yuppcdn.net/trans1sd/smil:strtml19.smil/playlist.m3u8?dvr=",
     "title": "Star Tamil",
-    "channel": "Live TV",
+    "channel": "Tamil Local TV",
     "date": "2025-10-25",
     "dthumb": "https://img1.imageride.net/images/2025/10/21/startamil.jpg",
     "mthumb": "https://img1.imageride.net/images/2025/10/21/startamil.jpg"

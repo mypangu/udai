@@ -846,6 +846,7 @@ disable-paste='false'>
         this.m3u8Url = null;
 		this.currentBlobUrl = null;
         this.workerUrl = 'https://dm.porus-in2012.workers.dev';
+		this.loadTimeout = null;
 		
 this.stretchMode = localStorage.getItem('stretchMode') || 'fill'; // Default to stretch/fill
 this.stretchModes = ['contain', 'cover', 'fill'];
@@ -1238,22 +1239,28 @@ async loadVideoData() {
     matching.isLocal = this.currentVideo.isLocal; // enforce true flag consistency
   }
 
-  // Build related videos safely
-  const isLiveTVChannel = this.currentVideo.channel &&
-    (this.currentVideo.channel.includes('Live') ||
-     this.currentVideo.platform === 'hls' ||
-     this.currentVideo.platform === 'yupptv');
+// Build related videos safely
+const isTamilTVChannel = this.currentVideo.channel &&
+  (this.currentVideo.channel === 'Tamil TV' || 
+   this.currentVideo.channel === 'Tamil Local TV');
 
-  if (isLiveTVChannel) {
-    this.relatedVideos = this.allVideos
-      .filter(v => (v.platform === 'hls' || v.platform === 'yupptv') && v.id !== this.currentVideo.id)
-      .sort((a, b) => a.title.localeCompare(b.title));
-  } else {
-    this.relatedVideos = this.allVideos
-      .filter(v => v.channel === this.currentVideo.channel && v.id !== this.currentVideo.id)
-      .sort((a, b) => new Date(b.date) - new Date(a.date))
-      .slice(0, 8);
-  }
+if (isTamilTVChannel) {
+  // Show ALL videos from the SAME Tamil TV category
+  this.relatedVideos = this.allVideos
+    .filter(v => 
+      v.channel === this.currentVideo.channel && 
+      v.id !== this.currentVideo.id
+    )
+    //.sort((a, b) => a.title.localeCompare(b.title));
+	.sort((a, b) => new Date(b.date) - new Date(a.date))
+  // ← No .slice() here, shows ALL videos
+} else {
+  // Show ONLY top 8 for regular videos
+  this.relatedVideos = this.allVideos
+    .filter(v => v.channel === this.currentVideo.channel && v.id !== this.currentVideo.id)
+    .sort((a, b) => new Date(b.date) - new Date(a.date))
+    .slice(0, 8);  // ← Limit to 8 videos
+}
 
   this.updateUI();
 }
@@ -1264,13 +1271,9 @@ async loadVideoData() {
         this.elements.videoTitle.textContent = title;
         this.elements.channelName.textContent = channel;
         this.elements.videoDate.textContent = this.formatDate(date);
-// Update section title based on content type
-const isLiveTVChannel = this.currentVideo.channel && 
-  (this.currentVideo.channel.includes('Live') || 
-   this.currentVideo.platform === 'hls' || 
-   this.currentVideo.platform === 'yupptv');
-
-this.elements.relatedTitle.textContent = isLiveTVChannel ? 'All Live TV Channels' : `More from ${channel}`;
+		
+// Always show "More from {channel name}"
+this.elements.relatedTitle.textContent = `More from ${channel}`;
 
         document.title = `${title} - YouDai Player`;
 
@@ -1444,32 +1447,41 @@ async playRelatedVideo(video) {
   // Remove local overlay if it exists
   this.removeLocalOverlay();
   
-  // Stop any currently playing video
-  this.elements.playerIframe.src = 'about:blank';
+// Clear any pending load timeout
+if (this.loadTimeout) {
+  clearTimeout(this.loadTimeout);
+  this.loadTimeout = null;
+}
+
+// Stop any currently playing video
+this.elements.playerIframe.src = 'about:blank';
   
   // Update current video data
   this.currentVideo = video;
   sessionStorage.setItem('currentVideo', JSON.stringify(video));
  
-  // Update related videos
-  // For Live TV channels, show all channels; for others, show top 8
-  const isLiveTVChannel = video.channel && 
-    (video.channel.includes('Live') || 
-     video.platform === 'hls' || 
-     video.platform === 'yupptv');
+// Update related videos
+const isTamilTVChannel = video.channel && 
+  (video.channel === 'Tamil TV' || 
+   video.channel === 'Tamil Local TV');
 
-  if (isLiveTVChannel) {
-    // Show all Live TV channels
-    this.relatedVideos = this.allVideos
-      .filter(v => (v.platform === 'hls' || v.platform === 'yupptv') && v.id !== video.id)
-      .sort((a, b) => a.title.localeCompare(b.title)); // Sort alphabetically by title
-  } else {
-    // Show top 8 for regular videos
-    this.relatedVideos = this.allVideos
-      .filter(v => v.channel === video.channel && v.id !== video.id)
-      .sort((a, b) => new Date(b.date) - new Date(a.date))
-      .slice(0, 8);
-  }
+if (isTamilTVChannel) {
+  // Show ALL videos from the SAME Tamil TV category
+  this.relatedVideos = this.allVideos
+    .filter(v => 
+      v.channel === video.channel && 
+      v.id !== video.id
+    )
+    //.sort((a, b) => a.title.localeCompare(b.title));
+	.sort((a, b) => new Date(b.date) - new Date(a.date))
+  // ← No .slice() here, shows ALL videos
+} else {
+  // Show ONLY top 8 for regular videos
+  this.relatedVideos = this.allVideos
+    .filter(v => v.channel === video.channel && v.id !== video.id)
+    .sort((a, b) => new Date(b.date) - new Date(a.date))
+    .slice(0, 8);  // ← Limit to 8 videos
+}
 
   // Reset retry count
   this.retryCount = 0;
@@ -1552,23 +1564,35 @@ if (this.currentVideo?.isLocal === "True") {
   
   this.elements.playerIframe.src = embedUrl;
   
-  // Set loading timeout
-  const loadTimeout = setTimeout(() => {
-    this.handleLoadError();
-  }, 8000);
+  // Clear any existing timeout first
+if (this.loadTimeout) {
+  clearTimeout(this.loadTimeout);
+  this.loadTimeout = null;
+}
 
-  // Handle successful load
-  this.elements.playerIframe.onload = () => {
-    clearTimeout(loadTimeout);
-    this.hideLoading();
-    console.log('Video loaded successfully');
-  };
+// Set loading timeout
+this.loadTimeout = setTimeout(() => {
+  this.handleLoadError();
+}, 8000);
 
-  // Handle load errors
-  this.elements.playerIframe.onerror = () => {
-    clearTimeout(loadTimeout);
-    this.handleLoadError();
-  };
+// Handle successful load
+this.elements.playerIframe.onload = () => {
+  if (this.loadTimeout) {
+    clearTimeout(this.loadTimeout);
+    this.loadTimeout = null;
+  }
+  this.hideLoading();
+  console.log('Video loaded successfully');
+};
+
+// Handle load errors
+this.elements.playerIframe.onerror = () => {
+  if (this.loadTimeout) {
+    clearTimeout(this.loadTimeout);
+    this.loadTimeout = null;
+  }
+  this.handleLoadError();
+};
 }
 
 removeLocalOverlay() {
