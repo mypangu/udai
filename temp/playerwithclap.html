@@ -1,0 +1,3399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <title>YouDai Player</title>
+  
+  <!-- <script src="Dev-shield.js"></script> -->
+
+
+  <link rel="icon" type="image/png" href="/icons/icon-192.png">
+  
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<!-- Cast API -->
+<script type="text/javascript" src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework"></script>
+
+<!-- Dash.js -->
+<script src="https://cdn.jsdelivr.net/npm/dashjs@4.7.0/dist/dash.all.min.js"></script>
+
+<!-- Clappr and Plugins - ADD THESE -->
+<script src="https://cdn.jsdelivr.net/npm/clappr@latest/dist/clappr.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/level-selector@0.2.0/dist/level-selector.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@c3voc/clappr-audio-track-selector@0.2.4/dist/audio-track-selector.min.js"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+	
+	html, body {
+	  touch-action: manipulation;
+	}
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #0c0c0c 0%, #1a1a1a 100%);
+      color: #ffffff;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Top navigation bar */
+    .top-nav {
+      background: rgba(30, 30, 30, 0.95);
+      backdrop-filter: blur(10px);
+      padding: 15px 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .nav-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 15px;
+    }
+
+    .back-btn {
+      background: rgba(255,255,255,0.1);
+      border: none;
+      border-radius: 8px;
+      padding: 10px 15px;
+      color: #fff;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+
+    .back-btn:hover {
+      background: #4ecdc4;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(78, 205, 196, 0.3);
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .nav-btn {
+      background: rgba(255,255,255,0.1);
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      color: #fff;
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .nav-btn:hover {
+      background: #4ecdc4;
+      transform: scale(1.1);
+      box-shadow: 0 4px 15px rgba(78, 205, 196, 0.3);
+    }
+
+    .nav-btn.cast-btn:hover {
+      background: #ff6b6b;
+      box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+    }
+
+    .nav-btn.share-btn:hover {
+      background: #45b7d1;
+      box-shadow: 0 4px 15px rgba(69, 183, 209, 0.3);
+    }
+
+    /* Player section */
+    .player-section {
+      background: #000;
+      position: relative;
+    }
+
+    .player-container {
+      position: relative;
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      aspect-ratio: 16 / 9;
+      background: #000;
+    }
+
+    .player-iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+	  object-fit: fill !important;
+    }
+
+    .player-loading {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #4ecdc4;
+    }
+
+    .loading {
+      display: inline-block;
+      width: 40px;
+      height: 40px;
+      border: 4px solid rgba(78, 205, 196, 0.3);
+      border-radius: 50%;
+      border-top-color: #4ecdc4;
+      animation: spin 1s ease-in-out infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .player-error {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      display: none;
+    }
+
+    .error-icon {
+      font-size: 48px;
+      margin-bottom: 20px;
+      color: #ff6b6b;
+    }
+
+    .error-title {
+      font-size: 20px;
+      margin: 0 0 10px 0;
+      font-weight: 600;
+    }
+
+    .error-message {
+      margin: 0 0 20px 0;
+      max-width: 400px;
+      line-height: 1.5;
+      opacity: 0.8;
+    }
+
+    .error-actions {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .error-btn {
+      background: #4ecdc4;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      color: white;
+      cursor: pointer;
+      font-size: 14px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .error-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 15px rgba(78, 205, 196, 0.3);
+    }
+
+    .error-btn.external {
+      background: #ff6b6b;
+    }
+
+    .error-btn.external:hover {
+      box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+    }
+
+    /* Video info section */
+.video-info {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px 15px 5px 15px;
+}
+
+@media (max-width: 768px) {
+  .video-info {
+    padding: 15px 10px 5px 10px;
+  }
+}
+
+    .video-title {
+      font-size: clamp(18px, 4vw, 28px);
+      font-weight: 700;
+      line-height: 1.3;
+      margin: 0 0 15px 0;
+      color: #fff;
+    }
+
+    .video-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .meta-left {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+
+    .channel-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .channel-badge {
+      background: linear-gradient(135deg, #4ecdc4, #45b7d1);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .video-date {
+      color: rgba(255,255,255,0.7);
+      font-size: 14px;
+    }
+
+    .video-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .action-btn {
+      background: rgba(255,255,255,0.1);
+      border: none;
+      border-radius: 20px;
+      padding: 8px 16px;
+      color: #fff;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+    }
+
+    .action-btn:hover {
+      background: rgba(255,255,255,0.2);
+      transform: translateY(-2px);
+    }
+
+    .action-btn.cast:hover {
+      background: #ff6b6b;
+      color: white;
+    }
+
+    .action-btn.share:hover {
+      background: #45b7d1;
+      color: white;
+    }
+
+    /* Related videos section */
+.related-section {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 5px 15px 40px 15px;
+}
+
+/* Mobile only: Make it scrollable */
+@media (max-width: 768px) {
+  .related-section {
+    height: 60vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 0px 10px 30px 10px;
+  }
+  
+  /* Custom scrollbar for mobile */
+  .related-section::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .related-section::-webkit-scrollbar-track {
+    background: rgba(255,255,255,0.05);
+    border-radius: 10px;
+  }
+
+  .related-section::-webkit-scrollbar-thumb {
+    background: rgba(78, 205, 196, 0.5);
+    border-radius: 10px;
+  }
+
+  .related-section::-webkit-scrollbar-thumb:hover {
+    background: rgba(78, 205, 196, 0.8);
+  }
+
+  /* Firefox scrollbar for mobile */
+  .related-section {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(78, 205, 196, 0.5) rgba(255,255,255,0.05);
+  }
+}
+
+/* Smooth scrolling */
+.related-section {
+  scroll-behavior: smooth;
+}
+
+.section-title {
+  font-size: clamp(20px, 3vw, 24px);
+  font-weight: 700;
+  margin: 0 0 15px 0;
+  color: #fff;
+}
+
+/* Sticky title on mobile only */
+@media (max-width: 768px) {
+  .section-title {
+    position: sticky;
+    top: 0;
+    background: linear-gradient(135deg, #0c0c0c 0%, #1a1a1a 100%);
+    padding: 10px 0;
+    z-index: 11;
+    margin: 0 0 10px 0;
+  }
+}
+
+.related-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+  padding-bottom: 20px;
+}
+
+@media (min-width: 768px) {
+  .related-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .related-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 25px;
+  }
+}
+
+    .related-card {
+      background: rgba(255,255,255,0.05);
+      border-radius: 12px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .related-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+      border-color: rgba(78, 205, 196, 0.5);
+    }
+
+    .related-thumbnail {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      overflow: hidden;
+    }
+
+    .related-thumbnail img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    .related-card:hover .related-thumbnail img {
+      transform: scale(1.05);
+    }
+
+    .play-icon {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0,0,0,0.7);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #4ecdc4;
+      font-size: 16px;
+      opacity: 0;
+      transition: all 0.3s ease;
+    }
+
+    .related-card:hover .play-icon {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1.1);
+    }
+
+    .related-content {
+      padding: 12px;
+    }
+
+    .related-title {
+      font-size: 14px;
+      font-weight: 600;
+      line-height: 1.3;
+      margin: 0 0 8px 0;
+      color: #fff;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .related-date {
+      font-size: 12px;
+      color: rgba(255,255,255,0.6);
+      margin: 0;
+    }
+
+    /* Fullscreen styles - MINIMAL CHANGES ONLY */
+    .fullscreen-player {
+      position: fixed !important;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 10000;
+      max-width: none;
+    }
+
+    /* Mobile optimizations */
+    @media (max-width: 768px) {
+      .nav-container {
+        padding: 0 10px;
+      }
+
+      .video-meta {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .meta-left {
+        width: 100%;
+      }
+
+      .video-actions {
+        width: 100%;
+        justify-content: flex-start;
+      }
+
+    }
+
+    /* Share modal */
+    .share-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(10px);
+      z-index: 10001;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .share-content {
+      background: rgba(30, 30, 30, 0.95);
+      border-radius: 16px;
+      padding: 30px;
+      max-width: 400px;
+      width: 100%;
+      text-align: center;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .share-title {
+      font-size: 20px;
+      font-weight: 600;
+      margin: 0 0 20px 0;
+      color: #fff;
+    }
+
+    .share-url {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 8px;
+      padding: 12px;
+      width: 100%;
+      color: #fff;
+      font-size: 14px;
+      margin-bottom: 20px;
+      outline: none;
+    }
+
+    .share-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .copy-btn, .mx-btn, .open-btn, .close-btn {
+      background: #4ecdc4;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 20px;
+      color: white;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .copy-btn:hover, .open-btn:hover {
+      background: #45b7d1;
+      transform: translateY(-2px);
+    }
+
+    .mx-btn {
+      background: #ff6b6b;
+    }
+
+    .mx-btn:hover {
+      background: #ff5252;
+      transform: translateY(-2px);
+    }
+
+    .close-btn {
+      background: rgba(255,255,255,0.2);
+    }
+
+    .close-btn:hover {
+      background: rgba(255,255,255,0.3);
+    }
+
+    .loading-spinner {
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top: 2px solid #4ecdc4;
+      border-radius: 50%;
+      width: 16px;
+      height: 16px;
+      animation: spin 1s linear infinite;
+    }
+
+    /* Cast detection */
+    .cast-available {
+      color: #4ecdc4 !important;
+    }
+
+    /* Responsive design */
+    @media (max-width: 480px) {
+      .nav-container {
+        padding: 0 10px;
+      }
+
+      .nav-actions {
+        gap: 8px;
+      }
+
+      .nav-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 14px;
+      }
+
+      .share-content {
+        padding: 20px;
+        margin: 10px;
+      }
+
+      .share-actions {
+        flex-direction: column;
+      }
+
+      .copy-btn, .mx-btn, .close-btn {
+        width: 100%;
+      }
+    }
+
+    /* Hide elements when needed */
+    .hidden {
+      display: none !important;
+    }
+	
+/* Fullscreen player container */
+.fullscreen-player {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 10000;
+  background: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Default fit mode */
+.fullscreen-player iframe {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* works for <video>, ignored for iframe */
+  transition: transform 0.3s ease;
+}
+
+/* Zoom fill mode */
+.fullscreen-player.zoom-fill iframe {
+  transform: scale(1.2); /* zoom in */
+}
+
+/* Overlay for pinch gestures */
+.gesture-overlay {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 5;              /* sits above iframe */
+  background: transparent;
+  touch-action: none;      /* allow pinch gestures */
+  pointer-events: auto;    /* capture touches */
+}
+
+/* Custom fullscreen button */
+.custom-fs-btn {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  width: 40px;
+  height: 40px;
+  border-radius: 2px;
+  background: rgba(28, 28, 28, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10; /* above iframe */
+  color: #fff;
+  font-size: 18px;
+  transition: background 0.2s ease;
+}
+
+.custom-fs-btn:hover {
+  background: rgba(40, 40, 40, 0.95);
+}
+
+.hidden { display: none !important; }
+  </style>
+</head>
+<body>
+  <!-- Top Navigation -->
+  <nav class="top-nav">
+    <div class="nav-container">
+      <button class="back-btn" id="backBtn">
+        <i class="fas fa-arrow-left"></i>
+        <span>Back</span>
+      </button>
+      
+      <div class="nav-actions">
+		<button class="nav-btn reload-btn" id="reloadBtn" title="Reload Page" onclick="location.reload()">
+          <i class="fas fa-sync-alt"></i>
+        </button>
+        <button class="nav-btn cast-btn" id="castBtn" title="Open Link">
+          <i class="fa-solid fa-globe"></i>
+        </button>
+        <button class="nav-btn share-btn" id="shareBtn" title="Share Video">
+          <i class="fas fa-share-alt"></i>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Player Section -->
+  <section class="player-section">
+    <div class="player-container" id="playerContainer">
+      <div class="player-loading" id="playerLoading">
+        <div class="loading"></div>
+      </div>
+	  
+<div class="custom-fs-btn" id="customFsBtn">
+  <i class="fas fa-expand"></i>
+</div>
+      
+      <iframe id="playerIframe" class="player-iframe" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"></iframe>
+	  
+	  <div id="clappr-player" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; display: none;"></div>
+      
+      <div class="player-error" id="playerError">
+        <i class="fas fa-exclamation-triangle error-icon"></i>
+        <h3 class="error-title">Unable to Load Video</h3>
+        <p class="error-message">This video cannot be embedded. You can watch it on the original platform.</p>
+        <div class="error-actions">
+          <button class="error-btn" onclick="retryLoad()">Try Again</button>
+          <a href="#" class="error-btn external" id="externalLink" target="_blank">Watch on Platform</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Video Info -->
+  <section class="video-info">
+    <h1 class="video-title" id="videoTitle">Loading...</h1>
+    
+    <div class="video-meta">
+      <div class="meta-left">
+        <div class="channel-info">
+          <div class="channel-badge" id="channelName">Loading...</div>
+        </div>
+        <div class="video-date" id="videoDate">Loading...</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Related Videos -->
+  <section class="related-section">
+    <h2 class="section-title" id="relatedTitle">More from Channel</h2>
+    <div class="related-grid" id="relatedGrid">
+      <!-- Related videos will be populated here -->
+    </div>
+  </section>
+
+<!-- Share Modal -->
+<div class="share-modal" id="shareModal">
+  <div class="share-content">
+    <h3 class="share-title">Share Video</h3>
+    <input type="text" class="share-url" id="shareUrl" readonly>
+    <div class="share-actions">
+      <button class="copy-btn" id="copyBtn">
+        <i class="fas fa-copy"></i>
+        <span>Copy Link</span>
+      </button>
+      <button class="mx-btn" id="mxBtn" style="display: none;">
+        <i class="fas fa-external-link-alt"></i>
+        <span>Open in MX Player</span>
+      </button>
+
+      <!-- new Download button -->
+      <button class="mx-btn" id="downloadBtn" style="display: none;">
+        <i class="fas fa-download"></i>
+        <span>Download</span>
+      </button>
+
+      <button class="close-btn" id="closeShareBtn">
+        <i class="fas fa-times"></i>
+        <span>Close</span>
+      </button>
+    </div>
+  </div>
+</div>
+<!--
+<script disable-devtool-auto='true'
+src='https://cdn.jsdelivr.net/npm/disable-devtool'
+clear-log='true'
+disable-select='true' 
+disable-copy='true'
+disable-cut='true' 
+disable-paste='false'>
+</script>  -->
+
+  <script>
+    class VideoPlayer {
+      constructor() {
+        this.currentVideo = null;
+        this.allVideos = [];
+        this.relatedVideos = [];
+        this.retryCount = 0;
+        this.maxRetries = 3;
+        this.m3u8Url = null;
+		this.currentBlobUrl = null;
+        this.workerUrl = 'https://dm.porus-in2012.workers.dev';
+		this.clapprPlayer = null;
+		this.loadTimeout = null;
+		
+this.stretchMode = localStorage.getItem('stretchMode') || 'fill'; // Default to stretch/fill
+this.stretchModes = ['contain', 'cover', 'fill'];
+this.stretchModeNames = {
+  'contain': 'Fit',
+  'cover': 'Zoom',
+  'fill': 'Stretch'
+};
+        
+        this.elements = {
+          playerIframe: document.getElementById('playerIframe'),
+          playerLoading: document.getElementById('playerLoading'),
+          playerError: document.getElementById('playerError'),
+          playerContainer: document.getElementById('playerContainer'),
+          videoTitle: document.getElementById('videoTitle'),
+          channelName: document.getElementById('channelName'),
+          videoDate: document.getElementById('videoDate'),
+          relatedTitle: document.getElementById('relatedTitle'),
+          relatedGrid: document.getElementById('relatedGrid'),
+          shareModal: document.getElementById('shareModal'),
+          shareUrl: document.getElementById('shareUrl'),
+          copyBtn: document.getElementById('copyBtn'),
+          mxBtn: document.getElementById('mxBtn'),
+		  downloadBtn: document.getElementById('downloadBtn'),
+          closeShareBtn: document.getElementById('closeShareBtn'),
+          castBtn: document.getElementById('castBtn'),
+          shareBtn: document.getElementById('shareBtn'),
+          externalLink: document.getElementById('externalLink')
+        };
+
+        this.bootstrap();
+
+      }
+	  
+async bootstrap() {
+  // Wait for data to be fully ready before calling init()
+  await this.loadVideoData();
+
+  // ✅ Now currentVideo is guaranteed to exist
+  this.init();
+}	  
+	  
+async getVideoFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  const platform = params.get('platform');
+  const id = params.get('id');
+  const title = params.get('title');
+  
+  if (!platform || (!id && !title)) {
+    return null;
+  }
+  
+  // Try sessionStorage first
+  let allVideosData = sessionStorage.getItem('allVideos');
+  let videos = [];
+  
+  if (allVideosData) {
+    videos = JSON.parse(allVideosData);
+  } else {
+    // Fetch videos.json directly if sessionStorage is empty
+    try {
+      const response = await fetch('videos.json');
+      if (response.ok) {
+        videos = await response.json();
+        sessionStorage.setItem('allVideos', JSON.stringify(videos));
+      }
+    } catch (error) {
+      console.error('Failed to load videos.json:', error);
+      return null;
+    }
+  }
+  
+  // For HLS and MPD streams, use title as identifier
+  if ((platform === 'hls' || platform === 'mpd') && title) {
+    return videos.find(v => v.platform === platform && v.title === decodeURIComponent(title));
+  }
+  
+  // For other platforms, use id
+  if (id) {
+    return videos.find(v => v.platform === platform && v.id === id);
+  }
+  
+  return null;
+}	  
+
+async init() {
+  // Now we assume currentVideo is already ready from bootstrap()
+  this.setupEventListeners();
+  this.setupMobileOrientationHandler();
+  this.detectCastDevices();
+  this.initCast();
+
+  if (this.currentVideo && this.currentVideo.isLocal === "True") {
+    console.log('Local stream detected on init:', this.currentVideo.title);
+    this.updateUI();
+    this.hideLoading();
+    this.hideError?.();
+    this.showLocalOnlyOverlay();
+
+    if (this.currentVideo.platform === 'dailymotion') {
+      await this.extractM3U8();
+    } else if (this.currentVideo.platform === 'gcs') {
+      this.m3u8Url = `https://storage.googleapis.com/mrpangu/${this.currentVideo.id}`;
+    }
+
+    this.elements.playerIframe.src = 'about:blank';
+    return;
+  }
+
+  // Normal video path
+  this.updateUI();
+  this.loadVideo();
+
+  if (this.currentVideo.platform === 'dailymotion') {
+    await this.extractM3U8();
+  } else if (this.currentVideo.platform === 'gcs') {
+    this.m3u8Url = `https://storage.googleapis.com/mrpangu/${this.currentVideo.id}`;
+  }
+}
+
+async extractM3U8() {
+  try {
+    const metaRes = await fetch(`${this.workerUrl}/meta?id=${this.currentVideo.id}`);
+    const data = await metaRes.json();
+    
+    const m3u8Url = data?.qualities?.auto?.[0]?.url;
+    if (m3u8Url) {
+      const title = encodeURIComponent(this.currentVideo.title || data.title || "playlist");
+      const created = encodeURIComponent(data.created_time || "");
+      this.m3u8Url = `${this.workerUrl}/proxy?u=${encodeURIComponent(m3u8Url)}&title=${title}&created=${created}`;
+      console.log("M3U8 extracted:", this.m3u8Url);
+    }
+  } catch (error) {
+    console.error("Failed to extract M3U8:", error);
+  }
+}
+
+      isAndroid() {
+        return /Android/i.test(navigator.userAgent);
+      }
+
+openInMXPlayer() {
+  if (!this.m3u8Url) {
+    alert('M3U8 URL not available');
+    return;
+  }
+
+  if (this.isAndroid()) {
+    this.elements.mxBtn.innerHTML = `
+      <div class="loading-spinner"></div>
+      <span>Opening...</span>
+    `;
+
+    // Method 1: Direct schemes
+    const directSchemes = [
+      `mxplayer://video?url=${encodeURIComponent(this.m3u8Url)}`,
+      `mxplayerpro://video?url=${encodeURIComponent(this.m3u8Url)}`,
+      `vlc://${this.m3u8Url}`,
+      `potplayer://${this.m3u8Url}`
+    ];
+
+    let schemeIndex = 0;
+    const tryDirectScheme = () => {
+      if (schemeIndex < directSchemes.length) {
+        const iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        iframe.src = directSchemes[schemeIndex];
+        document.body.appendChild(iframe);
+
+        setTimeout(() => {
+          document.body.removeChild(iframe);
+          schemeIndex++;
+          tryDirectScheme();
+        }, 1000);
+      } else {
+        // Method 2: Corrected intent method
+        tryIntentMethod();
+      }
+    };
+
+    // Correct Intent method
+    const tryIntentMethod = () => {
+      const cleanUrl = this.m3u8Url.replace(/^https?:\/\//, '');
+      const scheme = this.m3u8Url.startsWith('https') ? 'https' : 'http';
+
+      const intentUrl = `intent://${cleanUrl}#Intent;scheme=${scheme};type=video/*;package=com.mxtech.videoplayer.ad;end`;
+
+      const link = document.createElement('a');
+      link.href = intentUrl;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      setTimeout(() => this.showMXPlayerOptions(), 2000);
+    };
+
+    // Start with direct schemes
+    tryDirectScheme();
+
+    // Reset button after attempts
+    setTimeout(() => {
+      this.elements.mxBtn.innerHTML = `
+        <i class="fas fa-external-link-alt"></i>
+        <span>Open in MX Player</span>
+      `;
+    }, 8000);
+
+  } else {
+    window.open(this.m3u8Url, '_blank');
+  }
+}
+
+      showMXPlayerOptions() {
+        // Create a custom modal for manual instructions
+        const manualModal = document.createElement('div');
+        manualModal.className = 'share-modal';
+        manualModal.style.display = 'flex';
+        manualModal.innerHTML = `
+          <div class="share-content">
+            <h3 class="share-title">Open in MX Player</h3>
+            <p style="margin-bottom: 20px; color: rgba(255,255,255,0.8); line-height: 1.5;">
+              Choose how to open the video:
+            </p>
+            <div class="share-actions" style="flex-direction: column; gap: 15px;">
+              <button class="copy-btn" id="manualCopyBtn" style="width: 100%;">
+                <i class="fas fa-copy"></i>
+                <span>Copy M3U8 Link</span>
+              </button>
+              <a href="${this.m3u8Url}" target="_blank" style="text-decoration: none; width: 100%;">
+                <button class="mx-btn" style="width: 100%;">
+                  <i class="fas fa-external-link-alt"></i>
+                  <span>Open in Browser</span>
+                </button>
+              </a>
+              <div style="padding: 15px; background: rgba(255,255,255,0.1); border-radius: 8px; font-size: 13px; color: rgba(255,255,255,0.7);">
+                <strong>Manual Steps:</strong><br>
+                1. Copy the M3U8 link above<br>
+                2. Open MX Player<br>
+                3. Tap "Network/URL Stream" or "+"<br>
+                4. Paste the link and play
+              </div>
+              <button class="close-btn" id="manualCloseBtn" style="width: 100%;">
+                <i class="fas fa-times"></i>
+                <span>Close</span>
+              </button>
+            </div>
+          </div>
+        `;
+        
+        document.body.appendChild(manualModal);
+        
+        // Add event listeners
+        document.getElementById('manualCopyBtn').addEventListener('click', async () => {
+          try {
+            await navigator.clipboard.writeText(this.m3u8Url);
+            document.getElementById('manualCopyBtn').innerHTML = `
+              <i class="fas fa-check"></i>
+              <span>Copied!</span>
+            `;
+            setTimeout(() => {
+              document.getElementById('manualCopyBtn').innerHTML = `
+                <i class="fas fa-copy"></i>
+                <span>Copy M3U8 Link</span>
+              `;
+            }, 2000);
+          } catch (err) {
+            alert('Copy failed. Please copy manually.');
+          }
+        });
+        
+        document.getElementById('manualCloseBtn').addEventListener('click', () => {
+          document.body.removeChild(manualModal);
+        });
+        
+        manualModal.addEventListener('click', (e) => {
+          if (e.target === manualModal) {
+            document.body.removeChild(manualModal);
+          }
+        });
+      }
+	  
+initCast() {
+  if (!window.chrome || !window.chrome.cast) {
+    console.log('Cast API not available');
+    return;
+  }
+
+  // Wait for Cast API to be ready
+  const initializeCastApi = () => {
+    try {
+      cast.framework.CastContext.getInstance().setOptions({
+        receiverApplicationId: chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID,
+        autoJoinPolicy: chrome.cast.AutoJoinPolicy.ORIGIN_SCOPED
+      });
+      
+      // Listen for session state changes
+      const context = cast.framework.CastContext.getInstance();
+      context.addEventListener(
+        cast.framework.CastContextEventType.SESSION_STATE_CHANGED,
+        (event) => this.handleCastSessionChange(event)
+      );
+      
+      console.log("Cast initialized successfully");
+      this.updateCastButton();
+    } catch (error) {
+      console.error('Cast initialization failed:', error);
+    }
+  };
+
+  // Check if Cast API is already loaded
+  if (window.cast && window.cast.framework) {
+    initializeCastApi();
+  } else {
+    // Wait for Cast API to load
+    window['__onGCastApiAvailable'] = (isAvailable) => {
+      if (isAvailable) {
+        initializeCastApi();
+      }
+    };
+  }
+}
+
+      // MINIMAL ADDITION - Only handle mobile orientation in fullscreen
+      setupMobileOrientationHandler() {
+        // Handle fullscreen changes to manage orientation on mobile
+        const handleFullscreenChange = async () => {
+          const isFullscreen = !!(document.fullscreenElement || 
+                                 document.webkitFullscreenElement || 
+                                 document.mozFullScreenElement);
+
+          // Only attempt orientation lock on mobile devices
+          const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
+                          window.innerWidth <= 768;
+
+          if (isFullscreen && isMobile) {
+            // Try to lock to landscape when entering fullscreen on mobile
+            if (screen.orientation && screen.orientation.lock) {
+              try {
+                await screen.orientation.lock('landscape-primary');
+              } catch (error) {
+                // Fallback: try alternative landscape orientation
+                try {
+                  await screen.orientation.lock('landscape');
+                } catch (altError) {
+                  console.log('Orientation lock not supported:', altError);
+                }
+              }
+            }
+          } else if (!isFullscreen && isMobile) {
+            // Unlock orientation when exiting fullscreen
+            if (screen.orientation && screen.orientation.unlock) {
+              screen.orientation.unlock();
+            }
+          }
+        };
+
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+        document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+        document.addEventListener('mozfullscreenchange', handleFullscreenChange);
+      }
+
+async loadVideoData() {
+  // First, try to get video from URL parameters
+  const urlVideo = await this.getVideoFromUrl();
+
+  // ✅ Prefer sessionStorage data first, only use URL-based when explicitly loaded from share link
+  if (urlVideo) {
+    this.currentVideo = urlVideo;
+  } else {
+    const videoData = sessionStorage.getItem('currentVideo');
+    if (!videoData) {
+      // Redirect back if no video data
+      window.location.href = 'index.html';
+      return;
+    }
+    this.currentVideo = JSON.parse(videoData);
+  }
+
+  // ✅ Always load related videos after currentVideo is stable
+  const allVideosData = sessionStorage.getItem('allVideos');
+  this.allVideos = allVideosData ? JSON.parse(allVideosData) : [];
+
+  // ✅ Optional: ensure the video from allVideos (if any) inherits isLocal properly
+  const matching = this.allVideos.find(v =>
+    v.platform === this.currentVideo.platform &&
+    v.id === this.currentVideo.id
+  );
+  if (matching) {
+    matching.isLocal = this.currentVideo.isLocal; // enforce true flag consistency
+  }
+
+// Build related videos safely
+const isTamilTVChannel = this.currentVideo.channel &&
+  (this.currentVideo.channel === 'Tamil TV' || 
+   this.currentVideo.channel === 'Tamil Local TV');
+
+if (isTamilTVChannel) {
+  // Show ALL videos from the SAME Tamil TV category
+  this.relatedVideos = this.allVideos
+    .filter(v => 
+      v.channel === this.currentVideo.channel && 
+      v.id !== this.currentVideo.id
+    )
+    //.sort((a, b) => a.title.localeCompare(b.title));
+	.sort((a, b) => new Date(b.date) - new Date(a.date))
+  // ← No .slice() here, shows ALL videos
+} else {
+  // Show ONLY top 8 for regular videos
+  this.relatedVideos = this.allVideos
+    .filter(v => v.channel === this.currentVideo.channel && v.id !== this.currentVideo.id)
+    .sort((a, b) => new Date(b.date) - new Date(a.date))
+    .slice(0, 8);  // ← Limit to 8 videos
+}
+
+  this.updateUI();
+}
+
+      updateUI() {
+        const { title, channel, date } = this.currentVideo;
+        
+        this.elements.videoTitle.textContent = title;
+        this.elements.channelName.textContent = channel;
+        this.elements.videoDate.textContent = this.formatDate(date);
+		
+// Always show "More from {channel name}"
+this.elements.relatedTitle.textContent = `More from ${channel}`;
+
+        document.title = `${title} - YouDai Player`;
+
+        // Use direct video link instead of page URL
+        this.elements.shareUrl.value = this.getShareableUrl();
+
+        // External platform link
+        this.updateExternalLink();
+		
+// Show overlay and fullscreen button only for YouTube on mobile
+const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) 
+                 || window.innerWidth <= 768;
+
+if (this.currentVideo.platform === 'youtube' && isMobile) {
+  document.getElementById('customFsBtn').style.display = 'flex';
+} else {
+  document.getElementById('customFsBtn').style.display = 'none';
+}
+
+        this.renderRelatedVideos();
+// Update browser URL without reload
+const shareableUrl = this.getShareableUrl();
+if (window.history.pushState) {
+  window.history.pushState({ video: this.currentVideo }, document.title, shareableUrl);
+}		
+		
+      }
+	  
+applyStretchMode() {
+  // Always use fill mode
+  this.elements.playerIframe.classList.remove('fit-contain', 'fit-cover');
+  this.elements.playerIframe.classList.add('fit-fill');
+}	  
+
+      getDirectVideoLink() {
+        const { platform, id } = this.currentVideo;
+        switch(platform) {
+case 'youtube': 
+  // Check if it's a channel ID for live stream
+  const isChannelId = id.startsWith('UC');
+  if (isChannelId) {
+    return `https://www.youtube.com/channel/${id}/live`;
+  }
+  return `https://www.youtube.com/watch?v=${id}`;
+          case 'dailymotion': return `https://www.dailymotion.com/video/${id}`;
+          case 'ok': return `https://ok.ru/video/${id}`;
+          case 'yupptv': return `https://www.yupptv.com/yupptvnew/channels/${id}/live`;
+case 'gcs':
+  return `https://storage.googleapis.com/mrpangu/${id}`;	
+    case 'twitch':
+      // Extract channel name from id
+      const channelMatch = id.match(/channel=([^&]+)/);
+      const channel = channelMatch ? channelMatch[1] : id;
+      return `https://www.twitch.tv/${channel}`;
+
+case 'vimeo':
+  return `https://vimeo.com/${id}`;
+  
+case 'hls':
+  return id; // id contains the full stream URL  
+  
+case 'mpd':
+  return id;  
+
+case 'udai':
+  return id; // id contains the full stream URL  
+  
+          default: return window.location.href;
+        }
+      }
+	  
+getShareableUrl() {
+  const { platform, id, title } = this.currentVideo;
+  const baseUrl = window.location.origin + window.location.pathname;
+  
+  // For HLS and MPD streams, use title as parameter
+  if (platform === 'hls' || platform === 'mpd') {
+    return `${baseUrl}?platform=${platform}&title=${encodeURIComponent(title)}`;
+  }
+  
+  // For other platforms, use id
+  return `${baseUrl}?platform=${platform}&id=${encodeURIComponent(id)}`;
+}	  
+
+      updateExternalLink() {
+        const { platform, id } = this.currentVideo;
+        let url = '#';
+        
+        switch(platform) {
+case 'youtube':
+  // Check if it's a channel ID for live stream
+  const isYtChannelId = id.startsWith('UC');
+  if (isYtChannelId) {
+    url = `https://www.youtube.com/channel/${id}/live`;
+  } else {
+    url = `https://www.youtube.com/watch?v=${id}`;
+  }
+  break;
+          case 'dailymotion':
+            url = `https://www.dailymotion.com/video/${id}`;
+            break;
+          case 'ok':
+            url = `https://ok.ru/video/${id}`;
+            break;
+          case 'yupptv':
+            url = `https://www.yupptv.com/yupptvnew/channels/${id}/live`;
+            break;
+case 'gcs':
+  url = `https://storage.googleapis.com/mrpangu/${id}`;
+  break;	
+    case 'twitch':
+      const channelMatch = id.match(/channel=([^&]+)/);
+      const channel = channelMatch ? channelMatch[1] : id;
+      url = `https://www.twitch.tv/${channel}`;
+      break;  
+case 'vimeo':
+  url = `https://vimeo.com/${id}`;
+  break;
+
+case 'hls':
+  url = id; // id contains the full stream URL
+  break;
+  
+case 'mpd':
+  url = id; // id contains the full MPD URL
+  break;  
+  
+case 'udai':
+  url = id; // id contains the full stream URL
+  break;  
+  
+        }
+        
+        this.elements.externalLink.href = url;
+        this.elements.externalLink.textContent = `Watch on ${platform.charAt(0).toUpperCase() + platform.slice(1)}`;
+      }
+
+      formatDate(dateString) {
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-IN', { 
+          day: 'numeric', 
+          month: 'short',
+          year: 'numeric'
+        });
+      }
+
+      getOptimalThumbnail(video) {
+        return window.innerWidth < 768 ? video.mthumb : video.dthumb;
+      }
+
+      renderRelatedVideos() {
+        if (this.relatedVideos.length === 0) {
+          this.elements.relatedGrid.innerHTML = `
+            <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: rgba(255,255,255,0.6);">
+              <i class="fas fa-video" style="font-size: 48px; margin-bottom: 15px; opacity: 0.5;"></i>
+              <p>No related videos found</p>
+            </div>
+          `;
+          return;
+        }
+
+        this.elements.relatedGrid.innerHTML = this.relatedVideos.map(video => `
+          <div class="related-card" data-platform="${video.platform}" data-id="${video.id}">
+            <div class="related-thumbnail">
+              <img src="${this.getOptimalThumbnail(video)}" alt="${video.title}" loading="lazy" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQwIiBoZWlnaHQ9IjE4MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjMzMzIi8+CiAgPHRleHQgeD0iNTAlIiB5PSI1MCUiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxNCIgZmlsbD0iIzk5OSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPk5vIEltYWdlPC90ZXh0Pgo8L3N2Zz4K'">
+              <div class="play-icon">
+                <i class="fas fa-play"></i>
+              </div>
+            </div>
+            <div class="related-content">
+              <h3 class="related-title">${video.title}</h3>
+              <p class="related-date">${this.formatDate(video.date)}</p>
+            </div>
+          </div>
+        `).join('');
+
+        setTimeout(() => {
+  const relatedCards = this.elements.relatedGrid.querySelectorAll('.related-card');
+  relatedCards.forEach(card => {
+    card.addEventListener('click', () => {
+      const platform = card.dataset.platform;
+      const id = card.dataset.id;
+      const video = this.allVideos.find(v => v.platform === platform && v.id === id);
+      
+      if (video) {
+        console.log('Related video clicked:', video.title, 'isLocal:', video.isLocal);
+        this.playRelatedVideo(video);
+      }
+    });
+  });
+}, 100);
+      }
+
+async playRelatedVideo(video) {
+  console.log('Playing related video:', video.title, 'isLocal:', video.isLocal);
+  
+  // Remove local overlay if it exists
+  this.removeLocalOverlay();
+  
+// Clear any pending load timeout
+if (this.loadTimeout) {
+  clearTimeout(this.loadTimeout);
+  this.loadTimeout = null;
+}
+
+// Stop any currently playing video
+this.elements.playerIframe.src = 'about:blank';
+
+// Destroy Clappr player if switching away from udai
+this.destroyClapprPlayer();
+  
+  // Update current video data
+  this.currentVideo = video;
+  sessionStorage.setItem('currentVideo', JSON.stringify(video));
+ 
+// Update related videos
+const isTamilTVChannel = video.channel && 
+  (video.channel === 'Tamil TV' || 
+   video.channel === 'Tamil Local TV');
+
+if (isTamilTVChannel) {
+  // Show ALL videos from the SAME Tamil TV category
+  this.relatedVideos = this.allVideos
+    .filter(v => 
+      v.channel === video.channel && 
+      v.id !== video.id
+    )
+    //.sort((a, b) => a.title.localeCompare(b.title));
+	.sort((a, b) => new Date(b.date) - new Date(a.date))
+  // ← No .slice() here, shows ALL videos
+} else {
+  // Show ONLY top 8 for regular videos
+  this.relatedVideos = this.allVideos
+    .filter(v => v.channel === video.channel && v.id !== video.id)
+    .sort((a, b) => new Date(b.date) - new Date(a.date))
+    .slice(0, 8);  // ← Limit to 8 videos
+}
+
+  // Reset retry count
+  this.retryCount = 0;
+  
+  // Update UI first
+  this.updateUI();
+  
+  // Check if new video is local-only
+  if (video.isLocal === "True") {
+    console.log('New video is local stream, showing overlay');
+    this.hideLoading();
+    this.hideError();
+    this.showLocalOnlyOverlay();
+    
+    // Extract M3U8 if Dailymotion (for MX Player use)
+    if (video.platform === 'dailymotion') {
+      await this.extractM3U8();
+    } else if (video.platform === 'gcs') {
+      this.m3u8Url = `https://storage.googleapis.com/mrpangu/${video.id}`;
+    }
+	
+	return; // Prevents iframe from loading after overlay
+	
+  } else {
+    // Load normal video
+    console.log('New video is normal stream, loading video');
+    this.loadVideo();
+    
+    // Extract M3U8 if Dailymotion video
+    if (video.platform === 'dailymotion') {
+      await this.extractM3U8();
+    } else if (video.platform === 'gcs') {
+      this.m3u8Url = `https://storage.googleapis.com/mrpangu/${video.id}`;
+    }
+  }
+  
+  // Scroll to top
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  
+  // Update URL
+  const shareableUrl = this.getShareableUrl();
+  if (window.history.pushState) {
+    window.history.pushState({ video: this.currentVideo }, document.title, shareableUrl);
+  }
+}
+
+loadVideo() {
+
+if (this.currentVideo?.isLocal === "True") {
+  console.warn("Blocked loadVideo() for local-only stream:", this.currentVideo.title);
+  this.hideLoading();
+  this.hideError?.();
+  this.showLocalOnlyOverlay();
+  this.elements.playerIframe.src = 'about:blank';
+  return;
+}
+
+  // Check if platform is udai
+  if (this.currentVideo.platform === 'udai') {
+    console.log('Loading Udai platform with Clappr');
+    this.showLoading();
+    this.hideError();
+    this.removeLocalOverlay(); // Remove any overlays
+    this.initClapprPlayer(this.currentVideo.id);
+    return; // Exit early, don't load iframe
+  }
+
+
+// Ensure iframe is visible (in case it was hidden by local overlay)
+  this.elements.playerIframe.style.display = 'block';
+  
+  
+  // Remove any existing local overlay first
+  this.removeLocalOverlay();
+  
+  // Double-check if video is local-only (shouldn't reach here if local)
+  if (this.currentVideo.isLocal === "True") {
+    console.log('Local stream detected in loadVideo(), showing overlay');
+    this.hideLoading();
+    this.hideError();
+    this.showLocalOnlyOverlay();
+    return; // Don't load the iframe
+  }
+  
+  this.showLoading();
+  this.hideError();
+  
+  const { platform, id } = this.currentVideo;
+  let embedUrl = this.getEmbedUrl(platform, id);
+  
+  this.elements.playerIframe.src = embedUrl;
+  
+  // Clear any existing timeout first
+if (this.loadTimeout) {
+  clearTimeout(this.loadTimeout);
+  this.loadTimeout = null;
+}
+
+// Set loading timeout
+this.loadTimeout = setTimeout(() => {
+  this.handleLoadError();
+}, 8000);
+
+// Handle successful load
+this.elements.playerIframe.onload = () => {
+  if (this.loadTimeout) {
+    clearTimeout(this.loadTimeout);
+    this.loadTimeout = null;
+  }
+  this.hideLoading();
+  console.log('Video loaded successfully');
+};
+
+// Handle load errors
+this.elements.playerIframe.onerror = () => {
+  if (this.loadTimeout) {
+    clearTimeout(this.loadTimeout);
+    this.loadTimeout = null;
+  }
+  this.handleLoadError();
+};
+}
+
+removeLocalOverlay() {
+  const existingOverlay = document.getElementById('localOnlyOverlay');
+  if (existingOverlay) {
+    existingOverlay.remove();
+  }
+  
+  // Show the iframe again
+  this.elements.playerIframe.style.display = 'block';
+}
+
+showLocalOnlyOverlay() {
+
+console.log('Showing local-only overlay for:', this.currentVideo.title);
+
+ // Hide the iframe completely
+  this.elements.playerIframe.style.display = 'none';
+
+  const isMobile = /Android/i.test(navigator.userAgent);
+  const streamUrl = this.currentVideo.id;
+  
+  // Remove any existing overlay first
+  this.removeLocalOverlay();
+  
+  // Hide loading
+  this.hideLoading();
+  
+  // Create overlay element
+  const overlayDiv = document.createElement('div');
+  overlayDiv.id = 'localOnlyOverlay';
+  overlayDiv.style.cssText = `
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.95);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+    color: white;
+    text-align: center;
+    padding: 20px;
+  `;
+  
+  // Mobile layout
+  if (isMobile) {
+    overlayDiv.innerHTML = `
+      <i class="fas fa-mobile-alt" style="font-size: 48px; color: #4ecdc4; margin-bottom: 15px;"></i>
+      <h3 style="font-size: 18px; margin: 0 0 10px 0; font-weight: 600;">Local Player Required</h3>
+      <p style="font-size: 13px; opacity: 0.8; margin-bottom: 20px; line-height: 1.5; max-width: 280px;">
+        This channel is only playable in local players like MX Player. Tap below to open.
+      </p>
+      <button id="openMxBtn" style="
+        background: linear-gradient(135deg, #ff6b6b, #ff5252);
+        border: none;
+        padding: 12px 30px;
+        border-radius: 50px;
+        color: white;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+        box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      ">
+        <i class="fas fa-external-link-alt"></i>
+        <span>Open in MX Player</span>
+      </button>
+    `;
+  } else {
+    // Desktop layout
+    overlayDiv.innerHTML = `
+      <i class="fas fa-desktop" style="font-size: 48px; color: #4ecdc4; margin-bottom: 15px;"></i>
+      <h3 style="font-size: 18px; margin: 0 0 10px 0; font-weight: 600;">Local Player Required</h3>
+      <p style="font-size: 13px; opacity: 0.8; margin-bottom: 15px; line-height: 1.5; max-width: 400px;">
+        This channel is only playable in local players like VLC. Copy the stream URL below and paste it in your local player.
+      </p>
+      <input type="text" value="${streamUrl}" readonly style="
+        background: rgba(255,255,255,0.1);
+        border: 1px solid rgba(255,255,255,0.2);
+        border-radius: 8px;
+        padding: 10px;
+        width: 90%;
+        max-width: 450px;
+        color: #fff;
+        font-size: 12px;
+        margin-bottom: 15px;
+        outline: none;
+        text-align: center;
+      " id="localStreamUrl">
+      <button id="copyStreamBtn" style="
+        background: linear-gradient(135deg, #4ecdc4, #45b7d1);
+        border: none;
+        padding: 10px 25px;
+        border-radius: 50px;
+        color: white;
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 600;
+        box-shadow: 0 4px 15px rgba(78, 205, 196, 0.4);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      ">
+        <i class="fas fa-copy"></i>
+        <span>Copy Stream URL</span>
+      </button>
+    `;
+  }
+  
+  // Insert overlay into player container
+  this.elements.playerContainer.appendChild(overlayDiv);
+  
+  // Add event listeners after a small delay to ensure elements are in DOM
+  setTimeout(() => {
+    if (isMobile) {
+      const openMxBtn = document.getElementById('openMxBtn');
+      if (openMxBtn) {
+        openMxBtn.addEventListener('click', () => this.openStreamInMXPlayer(streamUrl));
+      }
+    } else {
+      const copyStreamBtn = document.getElementById('copyStreamBtn');
+      const localStreamUrl = document.getElementById('localStreamUrl');
+      
+      if (copyStreamBtn && localStreamUrl) {
+        copyStreamBtn.addEventListener('click', async () => {
+          try {
+            await navigator.clipboard.writeText(streamUrl);
+            copyStreamBtn.innerHTML = '<i class="fas fa-check"></i><span>Copied!</span>';
+            copyStreamBtn.style.background = '#4ecdc4';
+            
+            setTimeout(() => {
+              copyStreamBtn.innerHTML = '<i class="fas fa-copy"></i><span>Copy Stream URL</span>';
+              copyStreamBtn.style.background = 'linear-gradient(135deg, #4ecdc4, #45b7d1)';
+            }, 2000);
+          } catch (err) {
+            localStreamUrl.select();
+            document.execCommand('copy');
+            copyStreamBtn.innerHTML = '<i class="fas fa-check"></i><span>Copied!</span>';
+            
+            setTimeout(() => {
+              copyStreamBtn.innerHTML = '<i class="fas fa-copy"></i><span>Copy Stream URL</span>';
+            }, 2000);
+          }
+        });
+      }
+    }
+  }, 100);
+}
+
+openStreamInMXPlayer(streamUrl) {
+  const openMxBtn = document.getElementById('openMxBtn');
+  
+  if (!openMxBtn) {
+    console.error('MX Player button not found');
+    return;
+  }
+  
+  // Show loading state
+  openMxBtn.innerHTML = `
+    <div class="loading-spinner"></div>
+    <span>Opening...</span>
+  `;
+  openMxBtn.disabled = true;
+  
+  // Method 1: Try Intent URI (most reliable for PWA)
+  const intentUri = `intent://${streamUrl.replace(/^https?:\/\//, '')}#Intent;` +
+    `scheme=${streamUrl.startsWith('https') ? 'https' : 'http'};` +
+    `type=video/*;` +
+    `package=com.mxtech.videoplayer.ad;` +
+    `S.title=${encodeURIComponent(this.currentVideo.title || 'Stream')};` +
+    `end`;
+  
+  window.location.href = intentUri;
+  
+  // Fallback after 2 seconds if MX Player doesn't open
+  setTimeout(() => {
+    // Method 2: Try custom URL scheme
+    const schemes = [
+      `mxplayer://video?url=${encodeURIComponent(streamUrl)}&title=${encodeURIComponent(this.currentVideo.title || 'Stream')}`,
+      `mxplayerpro://video?url=${encodeURIComponent(streamUrl)}&title=${encodeURIComponent(this.currentVideo.title || 'Stream')}`
+    ];
+    
+    // Try each scheme
+    schemes.forEach((scheme, index) => {
+      setTimeout(() => {
+        const iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        iframe.src = scheme;
+        document.body.appendChild(iframe);
+        
+        setTimeout(() => {
+          document.body.removeChild(iframe);
+        }, 1000);
+      }, index * 1000);
+    });
+    
+    // Reset button after attempts
+    setTimeout(() => {
+      if (openMxBtn) {
+        openMxBtn.innerHTML = `
+          <i class="fas fa-external-link-alt"></i>
+          <span>Open in MX Player</span>
+        `;
+        openMxBtn.disabled = false;
+      }
+      
+      // Show manual instructions if nothing worked
+      this.showManualMXInstructions(streamUrl);
+    }, 4000);
+  }, 2000);
+}
+
+showManualMXInstructions(streamUrl) {
+  const manualModal = document.createElement('div');
+  manualModal.className = 'share-modal';
+  manualModal.style.display = 'flex';
+  manualModal.innerHTML = `
+    <div class="share-content">
+      <h3 class="share-title">Open in MX Player</h3>
+      <p style="margin-bottom: 20px; color: rgba(255,255,255,0.8); line-height: 1.5; font-size: 14px;">
+        If MX Player didn't open automatically, follow these steps:
+      </p>
+      <div style="padding: 15px; background: rgba(255,255,255,0.1); border-radius: 8px; font-size: 13px; color: rgba(255,255,255,0.7); margin-bottom: 20px; text-align: left;">
+        <strong style="color: #4ecdc4; display: block; margin-bottom: 10px;">Manual Steps:</strong>
+        1. Copy the stream URL below<br>
+        2. Open MX Player app<br>
+        3. Tap the menu (☰) or + button<br>
+        4. Select "Network Stream" or "URL Stream"<br>
+        5. Paste the URL and tap Play
+      </div>
+      <input type="text" value="${streamUrl}" readonly style="
+        background: rgba(255,255,255,0.1);
+        border: 1px solid rgba(255,255,255,0.2);
+        border-radius: 8px;
+        padding: 10px;
+        width: 100%;
+        color: #fff;
+        font-size: 12px;
+        margin-bottom: 15px;
+        outline: none;
+      " id="manualStreamUrl">
+      <div class="share-actions" style="flex-direction: column; gap: 12px;">
+        <button class="copy-btn" id="manualCopyBtn" style="width: 100%;">
+          <i class="fas fa-copy"></i>
+          <span>Copy Stream URL</span>
+        </button>
+        <button class="close-btn" id="manualCloseBtn" style="width: 100%;">
+          <i class="fas fa-times"></i>
+          <span>Close</span>
+        </button>
+      </div>
+    </div>
+  `;
+  
+  document.body.appendChild(manualModal);
+  
+  // Copy button handler
+  document.getElementById('manualCopyBtn').addEventListener('click', async () => {
+    const manualStreamUrl = document.getElementById('manualStreamUrl');
+    try {
+      await navigator.clipboard.writeText(streamUrl);
+      document.getElementById('manualCopyBtn').innerHTML = `
+        <i class="fas fa-check"></i>
+        <span>Copied! Open MX Player</span>
+      `;
+      setTimeout(() => {
+        document.getElementById('manualCopyBtn').innerHTML = `
+          <i class="fas fa-copy"></i>
+          <span>Copy Stream URL</span>
+        `;
+      }, 2000);
+    } catch (err) {
+      manualStreamUrl.select();
+      document.execCommand('copy');
+      document.getElementById('manualCopyBtn').innerHTML = `
+        <i class="fas fa-check"></i>
+        <span>Copied!</span>
+      `;
+      setTimeout(() => {
+        document.getElementById('manualCopyBtn').innerHTML = `
+          <i class="fas fa-copy"></i>
+          <span>Copy Stream URL</span>
+        `;
+      }, 2000);
+    }
+  });
+  
+  // Close button handler
+  document.getElementById('manualCloseBtn').addEventListener('click', () => {
+    document.body.removeChild(manualModal);
+  });
+  
+  // Click outside to close
+  manualModal.addEventListener('click', (e) => {
+    if (e.target === manualModal) {
+      document.body.removeChild(manualModal);
+    }
+  });
+}
+
+getEmbedUrl(platform, id, retryAttempt = 0) {
+        switch(platform) {
+case 'youtube':
+  // detect PC vs mobile
+  const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) 
+                   || window.innerWidth <= 768;
+
+  // fs=1 (enable YouTube fullscreen button) on PC; fs=0 (hide) on mobile
+  const fsParam = isMobile ? 0 : 1;
+
+  // Check if it's a channel ID (starts with UC) for live stream
+  const isChannelId = id.startsWith('UC');
+  
+  let ytUrls;
+  if (isChannelId) {
+    // Live stream URLs using channel ID
+    ytUrls = [
+      `https://www.youtube-nocookie.com/embed/live_stream?channel=${id}&autoplay=1&rel=0&modestbranding=1&controls=1&fs=${fsParam}`,
+      `https://www.youtube.com/embed/live_stream?channel=${id}&autoplay=1&rel=0&modestbranding=1&controls=1&fs=${fsParam}`,
+      `https://www.youtube-nocookie.com/embed/live_stream?channel=${id}&rel=0&controls=1&fs=${fsParam}`
+    ];
+  } else {
+    // Regular video URLs using video ID
+    ytUrls = [
+      `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&modestbranding=1&controls=1&fs=${fsParam}`,
+      `https://www.youtube.com/embed/${id}?autoplay=1&rel=0&modestbranding=1&controls=1&fs=${fsParam}`,
+      `https://www.youtube-nocookie.com/embed/${id}?rel=0&controls=1&fs=${fsParam}`
+    ];
+  }
+  
+  return ytUrls[retryAttempt] || ytUrls[0];
+            
+          case 'dailymotion':
+            return `https://www.dailymotion.com/embed/video/${id}?autoplay=1&ui-logo=0&controls=1`;
+            
+          case 'ok':
+            return `https://ok.ru/videoembed/${id}?autoplay=1`;
+			
+          case 'yupptv':
+            return `https://www.yupptv.com/yupptvnew/channels/${id}/live/embed`;
+			
+case 'gcs': 
+  // For GCS, we'll load the MP4 directly in the iframe using a blob URL approach
+  const fullUrl = `https://storage.googleapis.com/mrpangu/${id}`;
+  return this.createVideoIframe(fullUrl);
+
+case 'twitch':
+  const channelMatch = id.match(/channel=([^&]+)/);
+  const channel = channelMatch ? channelMatch[1] : id;
+  const parent = window.location.hostname; // Will be 'www.udai.panguplay.in'
+  return `https://player.twitch.tv/?channel=${channel}&parent=${parent}&autoplay=true&muted=false`;
+
+case 'vimeo':
+  return `https://player.vimeo.com/video/${id}?autoplay=1&title=0&byline=0&portrait=0`; 
+
+case 'udai':
+  // Clean the URL - remove any trailing backticks or special characters
+  return id.trim().replace(/`$/, '');
+  
+case 'hls':
+  // Check if it's dual stream (video&audio)
+  const isDualStream = id.includes('&');
+  
+  // Unified player for both single and dual streams
+  const videoUrl = isDualStream ? id.split('&')[0] : id;
+  const audioUrl = isDualStream ? id.split('&')[1] : null;
+  
+  return `data:text/html;charset=utf-8,${encodeURIComponent(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <script src="https://cdn.jsdelivr.net/npm/hls.js@1.4.12/dist/hls.min.js"><\/script>
+      <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+          background: #000; 
+          width: 100vw; 
+          height: 100vh; 
+          display: flex; 
+          position: relative; 
+          overflow: hidden;
+          margin: 0;
+          padding: 0;
+        }
+        video { 
+          width: 100%; 
+          height: 100%; 
+          object-fit: fill; 
+          background: #000; 
+        }
+        #playOverlay {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(0,0,0,0.85);
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          z-index: 999;
+        }
+        #playBtn {
+          background: linear-gradient(135deg, #4ecdc4, #45b7d1);
+          border: none;
+          padding: 20px 45px;
+          font-size: 18px;
+          color: white;
+          border-radius: 50px;
+          cursor: pointer;
+          box-shadow: 0 4px 20px rgba(78,205,196,0.4);
+          transition: all 0.3s ease;
+          font-weight: 600;
+        }
+        #playBtn:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 6px 25px rgba(78,205,196,0.6);
+        }
+        #playBtn:disabled {
+          opacity: 0.7;
+          cursor: not-allowed;
+          transform: none;
+        }
+        #statusText {
+          color: #fff;
+          font-size: 13px;
+          margin-top: 15px;
+          opacity: 0.7;
+        }
+      </style>
+    </head>
+    <body>
+      <video id="video" controls playsinline webkit-playsinline crossorigin="anonymous"><\/video>
+<div id="errorOverlay" style="
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.9);
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  color: white;
+  text-align: center;
+  padding: 20px;
+">
+  <i class="fas fa-exclamation-triangle" style="font-size: 48px; color: #ff6b6b; margin-bottom: 20px;"></i>
+  <h3 id="errorTitle" style="font-size: 20px; margin-bottom: 10px;">Stream Not Available</h3>
+  <p id="errorMessage" style="font-size: 14px; opacity: 0.8; margin-bottom: 20px;"></p>
+  <button id="retryBtn" style="
+    background: #4ecdc4;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+  ">Try Again</button>
+</div>
+      <script>
+        const video = document.getElementById('video');
+const errorOverlay = document.getElementById('errorOverlay');
+const errorTitle = document.getElementById('errorTitle');
+const errorMessage = document.getElementById('errorMessage');
+const retryBtn = document.getElementById('retryBtn');
+        
+        const videoUrl = '${videoUrl}';
+        const audioUrl = ${audioUrl ? `'${audioUrl}'` : 'null'};
+        const isDualStream = ${isDualStream};
+        
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+        const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+        const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        
+        let audio = null;
+        let videoHls = null;
+        let audioHls = null;
+        let syncInterval = null;
+        let isUserSeeking = false;
+        
+        console.log('Platform:', { isIOS, isSafari, isMobile, isDualStream });
+        
+        // Check if browser supports native HLS
+        const supportsNativeHLS = video.canPlayType('application/vnd.apple.mpegurl');
+        const useNativeHLS = supportsNativeHLS && (isIOS || isSafari);
+        
+        console.log('Using native HLS:', useNativeHLS);
+		
+function cleanup() {
+  console.log('Cleaning up player resources');
+  
+  if (syncInterval) {
+    clearInterval(syncInterval);
+    syncInterval = null;
+  }
+  
+  if (videoHls) {
+    videoHls.destroy();
+    videoHls = null;
+  }
+  
+  if (audioHls) {
+    audioHls.destroy();
+    audioHls = null;
+  }
+  
+  if (audio) {
+    audio.pause();
+    audio.src = '';
+    audio = null;
+  }
+  
+  video.pause();
+  video.removeAttribute('src');
+  video.load();
+}		
+        
+        function initPlayer() {
+          try {
+            if (useNativeHLS) {
+              // Native HLS (Safari/iOS)
+              console.log('Initializing native HLS player');
+              video.src = videoUrl;
+              video.load();
+			  
+video.addEventListener('error', () => {
+  console.error('Native HLS load error');
+  showError(
+    'Stream Load Failed',
+    'Cannot load this stream. The channel may be offline or the stream URL is invalid.'
+  );
+}, { once: true });			  
+              
+              if (isDualStream && audioUrl) {
+                audio = new Audio();
+                audio.crossOrigin = "anonymous";
+                audio.src = audioUrl;
+                audio.load();
+                console.log('Audio track loaded');
+              }
+              
+              startPlayback();
+              
+            } else if (Hls.isSupported()) {
+              // hls.js (Chrome/Android/Others)
+              console.log('Initializing hls.js player');
+              
+              videoHls = new Hls({
+                enableWorker: true,
+                maxBufferLength: 30,
+                maxMaxBufferLength: 60,
+                backBufferLength: 30,
+                lowLatencyMode: false
+              });
+              
+              videoHls.loadSource(videoUrl);
+              videoHls.attachMedia(video);
+              
+              videoHls.on(Hls.Events.MANIFEST_PARSED, () => {
+                console.log('Video manifest loaded');
+                startPlayback();
+              });
+              
+videoHls.on(Hls.Events.ERROR, (event, data) => {
+  console.error('HLS Error:', {
+    type: data.type,
+    details: data.details,
+    fatal: data.fatal,
+    reason: data.reason
+  });
+  
+  if (data.fatal) {
+    switch(data.type) {
+      case Hls.ErrorTypes.NETWORK_ERROR:
+        // Check if it's a 403/404 (stream offline)
+        if (data.response && (data.response.code === 403 || data.response.code === 404)) {
+          showError(
+            'Stream Not Available',
+            'This stream is currently offline or unavailable.'
+          );
+        } else {
+          // Try to recover from network error
+          console.log('Network error, attempting recovery...');
+          setTimeout(() => {
+            if (videoHls) videoHls.startLoad();
+          }, 1000);
+        }
+        break;
+        
+      case Hls.ErrorTypes.MEDIA_ERROR:
+        console.log('Media error, attempting recovery...');
+        if (videoHls) {
+          videoHls.recoverMediaError();
+        }
+        break;
+        
+      default:
+        // Fatal error that can't be recovered
+        showError(
+          'Playback Error',
+          'A fatal error occurred while loading the stream.'
+        );
+        break;
+    }
+  }
+});
+              
+              // Load audio track for dual stream
+              if (isDualStream && audioUrl) {
+                audio = new Audio();
+                audio.crossOrigin = "anonymous";
+                
+                audioHls = new Hls({
+                  enableWorker: true,
+                  maxBufferLength: 30,
+                  maxMaxBufferLength: 60,
+                  backBufferLength: 30,
+                  lowLatencyMode: false
+                });
+                
+                audioHls.loadSource(audioUrl);
+                audioHls.attachMedia(audio);
+                
+                audioHls.on(Hls.Events.MANIFEST_PARSED, () => {
+                  console.log('Audio manifest loaded');
+                });
+                
+                audioHls.on(Hls.Events.ERROR, (event, data) => {
+                  console.error('Audio error:', data.details);
+                });
+              }
+              
+            } else {
+              throw new Error('HLS not supported in this browser');
+            }
+            
+          } catch (error) {
+            console.error('Init error:', error);
+            updateStatus('Error: ' + error.message);
+            playBtn.textContent = '⚠️ Not Supported';
+            playBtn.disabled = true;
+          }
+        }
+        
+function handleFatalError(data) {
+  console.log('Handling fatal error:', data.details);
+  
+  switch(data.type) {
+    case Hls.ErrorTypes.NETWORK_ERROR:
+      console.log('Fatal network error');
+      showError(
+        'Connection Failed',
+        'Cannot connect to the stream. Please check your internet connection or try again later.'
+      );
+      break;
+      
+    case Hls.ErrorTypes.MEDIA_ERROR:
+      console.log('Fatal media error');
+      showError(
+        'Media Error',
+        'Cannot play this stream format. The stream may be corrupted or incompatible.'
+      );
+      break;
+      
+    default:
+      showError(
+        'Stream Error',
+        'An unexpected error occurred. Please try reloading the page.'
+      );
+      break;
+  }
+}
+        
+function showError(title, message) {
+  errorTitle.textContent = title;
+  errorMessage.textContent = message;
+  errorOverlay.style.display = 'flex';
+}
+
+async function startPlayback() {
+  try {
+    video.muted = false;
+    
+    if (isDualStream && audio) {
+      await video.play();
+      await new Promise(resolve => setTimeout(resolve, isMobile ? 500 : 200));
+      
+      try {
+        await audio.play();
+        startSync();
+      } catch (audioError) {
+        console.warn('Audio failed, continuing video-only:', audioError);
+      }
+    } else {
+      await video.play();
+    }
+    
+    // If we get here, playback succeeded
+    console.log('Playback started successfully');
+    
+  } catch (error) {
+    console.error('Playback failed:', error);
+    
+    // Determine error type and show appropriate message
+    if (error.name === 'NotSupportedError') {
+      // DRM/Widevine error
+      showError(
+        'DRM Protection Error', 
+        'This stream requires DRM support (Widevine) that is not available on your device or browser.'
+      );
+    } else if (error.name === 'NotAllowedError') {
+      // Autoplay blocked - this is recoverable
+      showError(
+        'Tap to Play', 
+        'Please tap the button below to start playback.'
+      );
+    } else if (error.name === 'AbortError') {
+      // Stream connection failed
+      showError(
+        'Connection Failed', 
+        'Unable to connect to the stream. The channel may be offline or experiencing issues.'
+      );
+    } else {
+      // Generic stream error
+      showError(
+        'Stream Not Available', 
+        'Unable to play this stream. The channel may be offline or experiencing technical difficulties.'
+      );
+    }
+  }
+}
+
+retryBtn.addEventListener('click', async () => {
+  console.log('Retry button clicked');
+  errorOverlay.style.display = 'none';
+  
+  // Clean up existing player instances
+  cleanup();
+  
+  // Wait a bit for cleanup to complete
+  await new Promise(resolve => setTimeout(resolve, 300));
+  
+  // Reinitialize the player
+  initPlayer();
+});	
+		
+        // Sync function for dual streams
+        function startSync() {
+          if (!isDualStream || !audio) return;
+          
+          console.log('Starting audio sync');
+          
+          if (syncInterval) clearInterval(syncInterval);
+          
+          syncInterval = setInterval(() => {
+            if (!video.paused && !audio.paused && !isUserSeeking) {
+              const diff = Math.abs(video.currentTime - audio.currentTime);
+              
+              if (diff > 0.5) {
+                console.log('Syncing: diff=' + diff.toFixed(2) + 's');
+                audio.currentTime = video.currentTime;
+              }
+            }
+          }, 1000);
+        }
+        
+        // Video event handlers
+        if (isDualStream && audio) {
+          video.addEventListener('pause', () => {
+            if (audio && !audio.paused) audio.pause();
+          });
+          
+          video.addEventListener('play', () => {
+            if (audio && audio.paused && playOverlay.style.display === 'none') {
+              audio.play().catch(e => console.log('Audio restart failed:', e));
+            }
+          });
+          
+          video.addEventListener('seeking', () => {
+            isUserSeeking = true;
+          });
+          
+          video.addEventListener('seeked', () => {
+            if (audio) audio.currentTime = video.currentTime;
+            isUserSeeking = false;
+            if (audio && !video.paused) {
+              audio.play().catch(e => console.log('Audio sync failed:', e));
+            }
+          });
+          
+          video.addEventListener('volumechange', () => {
+            if (audio) {
+              audio.volume = video.volume;
+              audio.muted = video.muted;
+            }
+          });
+        }
+		
+// Handle video element errors
+video.addEventListener('error', (e) => {
+  console.error('Video element error:', {
+    code: video.error?.code,
+    message: video.error?.message
+  });
+  
+  if (video.error) {
+    switch(video.error.code) {
+      case MediaError.MEDIA_ERR_ABORTED:
+        console.log('Playback aborted by user');
+        break;
+      case MediaError.MEDIA_ERR_NETWORK:
+        showError('Network Error', 'A network error caused the stream to fail.');
+        break;
+      case MediaError.MEDIA_ERR_DECODE:
+        showError('Decode Error', 'Cannot decode this stream format.');
+        break;
+      case MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED:
+        showError('Format Not Supported', 'This stream format is not supported by your browser.');
+        break;
+    }
+  }
+});		
+        
+        // Cleanup
+        window.addEventListener('beforeunload', () => {
+          if (syncInterval) clearInterval(syncInterval);
+          if (videoHls) videoHls.destroy();
+          if (audioHls) audioHls.destroy();
+        });
+        
+        // Initialize player
+        initPlayer();
+        
+      <\/script>
+    </body>
+    </html>
+  `)}`;
+  
+case 'mpd':
+  // For MPD streams, create custom player
+  const mpdUrl = id; // id contains the full MPD URL
+  return `data:text/html;charset=utf-8,${encodeURIComponent(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <script src="https://cdn.jsdelivr.net/npm/dashjs@4.7.0/dist/dash.all.min.js"><\/script>
+      <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+          background: #000; 
+          width: 100vw; 
+          height: 100vh; 
+          display: flex; 
+          position: relative; 
+          overflow: hidden;
+        }
+        video { 
+          width: 100%; 
+          height: 100%; 
+          object-fit: fill; 
+          background: #000; 
+        }
+        #errorOverlay {
+          position: absolute;
+          top: 0; left: 0;
+          width: 100%; height: 100%;
+          background: rgba(0,0,0,0.9);
+          display: none;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          z-index: 999;
+          color: white;
+          text-align: center;
+          padding: 20px;
+        }
+        .error-icon {
+          font-size: 48px;
+          color: #ff6b6b;
+          margin-bottom: 20px;
+        }
+        #errorTitle {
+          font-size: 20px;
+          margin-bottom: 10px;
+        }
+        #errorMessage {
+          font-size: 14px;
+          opacity: 0.8;
+          margin-bottom: 20px;
+        }
+        #retryBtn {
+          background: #4ecdc4;
+          border: none;
+          padding: 12px 24px;
+          border-radius: 8px;
+          color: white;
+          cursor: pointer;
+          font-size: 14px;
+          font-weight: 600;
+        }
+      </style>
+    </head>
+    <body>
+      <video id="video" controls autoplay playsinline webkit-playsinline><\/video>
+      
+      <div id="errorOverlay">
+        <div class="error-icon">⚠️</div>
+        <h3 id="errorTitle">Stream Not Available</h3>
+        <p id="errorMessage"></p>
+        <button id="retryBtn">Try Again</button>
+      </div>
+      
+      <script>
+        const video = document.getElementById('video');
+        const errorOverlay = document.getElementById('errorOverlay');
+        const errorTitle = document.getElementById('errorTitle');
+        const errorMessage = document.getElementById('errorMessage');
+        const retryBtn = document.getElementById('retryBtn');
+        
+        const mpdUrl = '${mpdUrl}';
+        let player = null;
+        
+        console.log('MPD URL:', mpdUrl);
+        
+        function showError(title, message) {
+          errorTitle.textContent = title;
+          errorMessage.textContent = message;
+          errorOverlay.style.display = 'flex';
+        }
+        
+        function cleanup() {
+          if (player) {
+            player.reset();
+            player = null;
+          }
+          video.pause();
+          video.removeAttribute('src');
+          video.load();
+        }
+        
+        function initPlayer() {
+          try {
+            // Initialize Dash.js player
+            player = dashjs.MediaPlayer().create();
+            
+            player.initialize(video, mpdUrl, true); // autoplay = true
+            
+            player.updateSettings({
+              streaming: {
+                buffer: {
+                  bufferTimeAtTopQuality: 30,
+                  bufferTimeAtTopQualityLongForm: 60,
+                  initialBufferLevel: 10,
+                  stableBufferTime: 30
+                },
+                abr: {
+                  autoSwitchBitrate: {
+                    video: true,
+                    audio: true
+                  }
+                }
+              }
+            });
+            
+            // Handle errors
+            player.on(dashjs.MediaPlayer.events.ERROR, (e) => {
+              console.error('DASH Error:', e);
+              
+              if (e.error === 'download') {
+                showError(
+                  'Connection Failed',
+                  'Cannot connect to the stream. The channel may be offline or experiencing issues.'
+                );
+              } else if (e.error === 'manifestError') {
+                showError(
+                  'Stream Error',
+                  'Cannot load stream manifest. The stream may be unavailable.'
+                );
+              } else {
+                showError(
+                  'Playback Error',
+                  'An error occurred during playback.'
+                );
+              }
+            });
+            
+            // Handle successful stream start
+            player.on(dashjs.MediaPlayer.events.STREAM_INITIALIZED, () => {
+              console.log('DASH stream initialized successfully');
+            });
+            
+            console.log('DASH player initialized');
+            
+          } catch (error) {
+            console.error('Init error:', error);
+            showError('Player Error', 'Failed to initialize player: ' + error.message);
+          }
+        }
+        
+        // Video element error handler
+        video.addEventListener('error', (e) => {
+          console.error('Video element error:', video.error);
+          if (video.error) {
+            switch(video.error.code) {
+              case MediaError.MEDIA_ERR_NETWORK:
+                showError('Network Error', 'A network error caused the stream to fail.');
+                break;
+              case MediaError.MEDIA_ERR_DECODE:
+                showError('Decode Error', 'Cannot decode this stream format.');
+                break;
+              case MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED:
+                showError('Format Not Supported', 'This stream format is not supported.');
+                break;
+              default:
+                showError('Video Error', 'An error occurred while playing the video.');
+            }
+          }
+        });
+        
+        // Retry button
+        retryBtn.addEventListener('click', async () => {
+          console.log('Retry button clicked');
+          errorOverlay.style.display = 'none';
+          cleanup();
+          await new Promise(resolve => setTimeout(resolve, 300));
+          initPlayer();
+        });
+        
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', () => {
+          cleanup();
+        });
+        
+        // Initialize player
+        initPlayer();
+        
+      <\/script>
+    </body>
+    </html>
+  `)}`;  
+            
+          default:
+            return '';
+        }
+      }
+
+initClapprPlayer(streamUrl) {
+  // Clean the URL
+  streamUrl = streamUrl.trim().replace(/`$/, '');
+  
+  console.log('Initializing Clappr player with URL:', streamUrl);
+  
+  // Hide iframe completely
+  this.elements.playerIframe.style.display = 'none';
+  this.elements.playerIframe.src = 'about:blank';
+  
+  // Show and prepare clappr container
+  const clapprContainer = document.getElementById('clappr-player');
+  clapprContainer.style.display = 'block';
+  clapprContainer.innerHTML = ''; // Clear any previous content
+  
+  // Destroy existing player if any
+  if (this.clapprPlayer) {
+    try {
+      this.clapprPlayer.destroy();
+    } catch (e) {
+      console.log('Error destroying previous player:', e);
+    }
+    this.clapprPlayer = null;
+  }
+  
+  // Small delay to ensure DOM is ready
+  setTimeout(() => {
+    try {
+      // Create new Clappr player with better configuration
+      this.clapprPlayer = new Clappr.Player({
+        source: streamUrl,
+        parentId: '#clappr-player',
+        width: '100%',
+        height: '100%',
+        autoPlay: true,
+        mute: false,
+        loop: false,
+        plugins: {
+          core: [LevelSelector, AudioTrackSelector]
+        },
+        levelSelectorConfig: {
+          title: 'Quality'
+        },
+        audioTrackSelectorConfig: {
+          title: 'Audio',
+          labelCallback: function(track) {
+            return track.lang || track.name || 'Unknown';
+          }
+        },
+        mediacontrol: {
+          seekbar: "#e92065",
+          buttons: "#e92065"
+        },
+        playback: {
+          playInline: true,
+          crossOrigin: "anonymous",
+          recycleVideo: Clappr.Browser.isMobile,
+          hlsjsConfig: {
+            debug: false,
+            enableWorker: true,
+            lowLatencyMode: false,
+            backBufferLength: 90,
+            maxBufferLength: 30,
+            maxMaxBufferLength: 600,
+            maxBufferSize: 60 * 1000 * 1000,
+            maxBufferHole: 0.5,
+            highBufferWatchdogPeriod: 2,
+            nudgeOffset: 0.1,
+            nudgeMaxRetry: 3,
+            maxFragLookUpTolerance: 0.25,
+            liveSyncDurationCount: 3,
+            liveMaxLatencyDurationCount: Infinity,
+            liveDurationInfinity: false,
+            enableWebVTT: true,
+            enableCEA708Captions: true,
+            stretchShortVideoTrack: false,
+            maxAudioFramesDrift: 1,
+            forceKeyFrameOnDiscontinuity: true,
+            abrEwmaFastLive: 3.0,
+            abrEwmaSlowLive: 9.0,
+            abrEwmaFastVoD: 3.0,
+            abrEwmaSlowVoD: 9.0,
+            abrEwmaDefaultEstimate: 500000,
+            abrBandWidthFactor: 0.95,
+            abrBandWidthUpFactor: 0.7,
+            abrMaxWithRealBitrate: false,
+            maxStarvationDelay: 4,
+            maxLoadingDelay: 4,
+            minAutoBitrate: 0,
+            emeEnabled: true,
+            widevineLicenseUrl: undefined,
+            requestMediaKeySystemAccessFunc: null,
+            testBandwidth: true,
+            progressive: false,
+            xhrSetup: function(xhr, url) {
+              // Add any custom headers if needed
+              xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
+            }
+          }
+        },
+        events: {
+          onReady: function() {
+            console.log('Clappr: Player is ready');
+          },
+          onPlay: function() {
+            console.log('Clappr: Playback started');
+          },
+          onError: function(error) {
+            console.error('Clappr: Player error event', error);
+          }
+        }
+      });
+	  
+	  // Force stretch/fill mode
+this.clapprPlayer.core.getCurrentContainer().el.querySelector('video').style.objectFit = 'fill';
+      
+      console.log('Clappr player created successfully');
+      
+      // Handle various events
+      this.clapprPlayer.on(Clappr.Events.PLAYER_ERROR, (error) => {
+        console.error('Clappr PLAYER_ERROR:', error);
+        this.handleClapprError(error);
+      });
+      
+      this.clapprPlayer.on(Clappr.Events.PLAYER_READY, () => {
+        console.log('Clappr PLAYER_READY event');
+        this.hideLoading();
+      });
+      
+      this.clapprPlayer.on(Clappr.Events.PLAYER_PLAY, () => {
+        console.log('Clappr PLAYER_PLAY event');
+        this.hideLoading();
+      });
+      
+      this.clapprPlayer.on(Clappr.Events.PLAYER_PAUSE, () => {
+        console.log('Clappr PLAYER_PAUSE event');
+      });
+      
+      // Listen for core errors
+      this.clapprPlayer.core.on(Clappr.Events.CORE_READY, () => {
+        console.log('Clappr: Core ready');
+      });
+      
+    } catch (error) {
+      console.error('Error creating Clappr player:', error);
+      this.showError();
+      this.hideLoading();
+    }
+  }, 200);
+}
+
+handleClapprError(error) {
+  console.error('Handling Clappr error:', error);
+  
+  // Check if it's a CORS or network error
+  if (error && (error.code === 'MANIFEST_LOAD_ERROR' || error.message.includes('CORS'))) {
+    console.error('CORS or manifest load error detected');
+    
+    // Show custom error message
+    const clapprContainer = document.getElementById('clappr-player');
+    clapprContainer.innerHTML = `
+      <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: white; text-align: center; padding: 20px;">
+        <div style="font-size: 48px; color: #ff6b6b; margin-bottom: 20px;">⚠️</div>
+        <h3 style="font-size: 20px; margin-bottom: 10px;">Stream Load Failed</h3>
+        <p style="font-size: 14px; opacity: 0.8; margin-bottom: 20px; max-width: 400px;">
+          Unable to load the stream. This might be due to CORS restrictions or the stream being offline.
+        </p>
+        <button onclick="location.reload()" style="
+          background: #4ecdc4;
+          border: none;
+          padding: 12px 24px;
+          border-radius: 8px;
+          color: white;
+          cursor: pointer;
+          font-size: 14px;
+          font-weight: 600;
+        ">Try Again</button>
+      </div>
+    `;
+  } else {
+    this.showError();
+  }
+  
+  this.hideLoading();
+}
+
+destroyClapprPlayer() {
+  console.log('Destroying Clappr player');
+  
+  if (this.clapprPlayer) {
+    try {
+      this.clapprPlayer.destroy();
+    } catch (e) {
+      console.log('Error destroying Clappr player:', e);
+    }
+    this.clapprPlayer = null;
+  }
+  
+  const clapprContainer = document.getElementById('clappr-player');
+  if (clapprContainer) {
+    clapprContainer.style.display = 'none';
+    clapprContainer.innerHTML = ''; // Clear content
+  }
+  
+  // Show iframe back
+  this.elements.playerIframe.style.display = 'block';
+}
+
+createVideoIframe(videoUrl) {
+  // Create a simple HTML5 video player
+  const videoHtml = `
+    <html>
+      <head>
+        <style>
+          body { margin:0; padding:0; background:#000; }
+          video { width:100%; height:100vh; object-fit:fill; }
+        </style>
+      </head>
+      <body>
+        <video controls autoplay>
+          <source src="${videoUrl}" type="video/mp4">
+        </video>
+      </body>
+    </html>
+  `;
+  
+  const blob = new Blob([videoHtml], { type: 'text/html' });
+  return URL.createObjectURL(blob);
+}
+
+handleCastSessionChange(event) {
+  const context = cast.framework.CastContext.getInstance();
+  const session = context.getCurrentSession();
+  
+  if (session) {
+    console.log('Cast session started');
+    this.elements.castBtn.innerHTML = '<i class="fas fa-cast-connected"></i>';
+    this.elements.castBtn.style.color = '#4ecdc4';
+  } else {
+    console.log('Cast session ended');
+    this.elements.castBtn.innerHTML = '<i class="fa-solid fa-globe"></i>';
+    this.elements.castBtn.style.color = '';
+  }
+}
+
+updateCastButton() {
+  const context = cast.framework.CastContext.getInstance();
+  const castState = context.getCastState();
+  
+  if (castState === cast.framework.CastState.NO_DEVICES_AVAILABLE) {
+    this.elements.castBtn.style.opacity = '0.5';
+    this.elements.castBtn.title = 'No cast devices available';
+  } else {
+    this.elements.castBtn.style.opacity = '1';
+    this.elements.castBtn.classList.add('cast-available');
+    this.elements.castBtn.title = 'Cast to device';
+  }
+}  
+
+      showLoading() {
+        this.elements.playerLoading.style.display = 'flex';
+        this.elements.playerError.style.display = 'none';
+      }
+
+      hideLoading() {
+		this.elements.playerLoading.style.display = 'none';
+		// Apply stretch mode after video loads
+		setTimeout(() => this.applyStretchMode(), 500);
+	  }
+
+      showError() {
+        this.elements.playerError.style.display = 'flex';
+        this.elements.playerLoading.style.display = 'none';
+      }
+
+      hideError() {
+        this.elements.playerError.style.display = 'none';
+      }
+
+      handleLoadError() {
+        if (this.retryCount < this.maxRetries) {
+          this.retryCount++;
+          console.log(`Retry attempt ${this.retryCount} of ${this.maxRetries}`);
+          
+          setTimeout(() => {
+            const { platform, id } = this.currentVideo;
+            const embedUrl = this.getEmbedUrl(platform, id, this.retryCount - 1);
+            this.elements.playerIframe.src = embedUrl;
+            
+            const retryTimeout = setTimeout(() => {
+              this.handleLoadError();
+            }, 5000 * this.retryCount); // Increasing timeout
+            
+            this.elements.playerIframe.onload = () => {
+              clearTimeout(retryTimeout);
+              this.hideLoading();
+              console.log(`Successfully loaded on retry ${this.retryCount}`);
+            };
+          }, 1000 * this.retryCount);
+        } else {
+          this.showError();
+        }
+      }
+
+      setupEventListeners() {
+        // Share button
+        this.elements.shareBtn.addEventListener('click', () => this.openShareModal());
+
+        // Share modal
+        this.elements.copyBtn.addEventListener('click', () => this.copyShareUrl());
+        this.elements.mxBtn.addEventListener('click', () => this.openInMXPlayer());
+        this.elements.closeShareBtn.addEventListener('click', () => this.closeShareModal());
+        this.elements.shareModal.addEventListener('click', (e) => {
+          if (e.target === this.elements.shareModal) this.closeShareModal();
+        });
+		this.elements.downloadBtn = document.getElementById('downloadBtn');
+this.elements.downloadBtn.addEventListener('click', () => {
+  if (this.currentVideo.platform === 'gcs') {
+    // Direct download for GCS MP4 videos
+    this.downloadGCSVideo();
+  } else if (this.currentVideo.platform === 'dailymotion') {
+    // Store M3U8 data and redirect to stream.html
+    this.redirectToDownload();
+  }
+});
+		
+this.elements.customFsBtn = document.getElementById("customFsBtn");
+
+const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) 
+                 || window.innerWidth <= 768;
+
+let pressTimer;
+let longPressTriggered = false;
+
+if (isMobile) {
+  this.elements.customFsBtn.addEventListener('touchstart', (e) => {
+    longPressTriggered = false;
+    pressTimer = setTimeout(() => {
+      // long press action → toggle zoom-fill
+      if (document.fullscreenElement) {
+        this.elements.playerContainer.classList.toggle('zoom-fill');
+      }
+      longPressTriggered = true; // mark that long-press was done
+    }, 500); // hold 500ms
+  }, {passive: true});
+
+  this.elements.customFsBtn.addEventListener('touchend', (e) => {
+    clearTimeout(pressTimer);
+    // only do normal fullscreen toggle if long press did NOT fire
+    if (!longPressTriggered) {
+      this.toggleFullscreen();
+    }
+  });
+
+  this.elements.customFsBtn.addEventListener('touchmove', () => clearTimeout(pressTimer));
+} else {
+  // on PC just normal click
+  this.elements.customFsBtn.addEventListener('click', () => {
+    this.toggleFullscreen();
+  });
+}
+
+document.addEventListener("fullscreenchange", () => {
+  if (document.fullscreenElement) {
+    this.elements.customFsBtn.innerHTML = '<i class="fas fa-compress"></i>'; // exit fs
+  } else {
+    this.elements.customFsBtn.innerHTML = '<i class="fas fa-expand"></i>'; // enter fs
+  }
+});
+
+        // Cast button
+        this.elements.castBtn.addEventListener('click', () => this.handleCast());
+        
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+          switch(e.key) {
+            case 'Escape':
+              if (this.elements.shareModal.style.display === 'flex') {
+                this.closeShareModal();
+              }
+              break;
+            case 'f':
+            case 'F':
+              if (document.activeElement !== document.querySelector('input')) {
+                e.preventDefault();
+                this.toggleFullscreen();
+              }
+              break;
+          }
+        });
+		
+// Handle browser back/forward buttons
+window.addEventListener('popstate', async (event) => {
+  console.log('Browser navigation detected');
+  
+  if (event.state && event.state.video) {
+    const video = event.state.video;
+    console.log('Loading video from history:', video.title, 'isLocal:', video.isLocal);
+    await this.playRelatedVideo(video);
+  } else {
+    // If no state, reload from URL parameters
+    console.log('No state found, reloading from URL');
+    location.reload();
+  }
+});		
+
+		// Back button
+		this.elements.backBtn = document.getElementById('backBtn');
+		this.elements.backBtn.addEventListener("click", () => {
+			window.location.href = "index.html";
+		});
+      }
+	  
+	  downloadGCSVideo() {
+    const { id, title } = this.currentVideo;
+    const videoUrl = `https://storage.googleapis.com/mrpangu/${id}`;
+    
+    // Create download link
+    const link = document.createElement('a');
+    link.href = videoUrl;
+    link.download = `${title || 'video'}.mp4`;
+    link.style.display = 'none';
+    
+    // Add to DOM, click, and remove
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    // Show feedback
+    const originalHtml = this.elements.downloadBtn.innerHTML;
+    this.elements.downloadBtn.innerHTML = `
+        <i class="fas fa-check"></i>
+        <span>Downloading...</span>
+    `;
+    
+    setTimeout(() => {
+        this.elements.downloadBtn.innerHTML = originalHtml;
+    }, 3000);
+}
+
+redirectToDownload() {
+  if (!this.m3u8Url) {
+    alert('Download URL not available. Please wait for video to load.');
+    return;
+  }
+
+  // Store download data in sessionStorage
+  const downloadData = {
+    url: this.m3u8Url,
+    title: this.currentVideo.title,
+    platform: this.currentVideo.platform,
+    timestamp: Date.now()
+  };
+
+  sessionStorage.setItem('downloadData', JSON.stringify(downloadData));
+
+  // Show feedback
+  const originalHtml = this.elements.downloadBtn.innerHTML;
+  this.elements.downloadBtn.innerHTML = `
+    <div class="loading-spinner"></div>
+    <span>Opening...</span>
+  `;
+
+  // Redirect to stream.html
+  setTimeout(() => {
+    window.location.href = 'stream.html';
+  }, 500);
+}
+
+openShareModal() {
+  this.elements.shareModal.style.display = 'flex';
+
+  // Always use the page URL for sharing
+  this.elements.shareUrl.value = this.getShareableUrl();
+
+  // Show MX and Download buttons based on platform
+  if (this.currentVideo.platform === 'dailymotion' && this.m3u8Url) {
+    // Dailymotion: Show both MX and Download
+    this.elements.mxBtn.style.display = 'flex';
+    this.elements.downloadBtn.style.display = 'flex';
+  } else if (this.currentVideo.platform === 'gcs') {
+    // GCS: Show only Download (direct download)
+    this.elements.downloadBtn.style.display = 'flex';
+    this.elements.mxBtn.style.display = 'none';
+  } else {
+    // All other platforms: Hide both buttons
+    this.elements.mxBtn.style.display = 'none';
+    this.elements.downloadBtn.style.display = 'none';
+  }
+
+  this.elements.shareUrl.select();
+}
+
+      closeShareModal() {
+        this.elements.shareModal.style.display = 'none';
+      }
+
+      async copyShareUrl() {
+        try {
+          await navigator.clipboard.writeText(this.elements.shareUrl.value);
+          this.elements.copyBtn.innerHTML = `
+            <i class="fas fa-check"></i>
+            <span>Copied!</span>
+          `;
+          this.elements.copyBtn.style.background = '#4ecdc4';
+          
+          setTimeout(() => {
+            this.elements.copyBtn.innerHTML = `
+              <i class="fas fa-copy"></i>
+              <span>Copy Link</span>
+            `;
+            this.elements.copyBtn.style.background = '#4ecdc4';
+          }, 2000);
+        } catch (err) {
+          // Fallback for older browsers
+          this.elements.shareUrl.select();
+          document.execCommand('copy');
+          this.elements.copyBtn.innerHTML = `
+            <i class="fas fa-check"></i>
+            <span>Copied!</span>
+          `;
+          
+          setTimeout(() => {
+            this.elements.copyBtn.innerHTML = `
+              <i class="fas fa-copy"></i>
+              <span>Copy Link</span>
+            `;
+          }, 2000);
+        }
+      }
+
+detectCastDevices() {
+  // Initially hide cast button
+  //this.elements.castBtn.style.display = 'none';
+  
+  if (!window.chrome || !window.chrome.cast) {
+    console.log('Cast API not available');
+    return;
+  }
+
+  // Wait for cast API and check for devices
+  const checkCastDevices = () => {
+    try {
+      const context = cast.framework.CastContext.getInstance();
+      const castState = context.getCastState();
+      
+      if (castState === cast.framework.CastState.NO_DEVICES_AVAILABLE) {
+        this.elements.castBtn.style.display = 'none';
+        console.log('No cast devices available');
+      } else {
+        this.elements.castBtn.style.display = 'flex';
+        this.elements.castBtn.classList.add('cast-available');
+        console.log('Cast devices available');
+      }
+    } catch (error) {
+      this.elements.castBtn.style.display = 'none';
+      console.log('Cast state check failed:', error);
+    }
+  };
+
+  // Listen for cast state changes
+  if (window.cast && window.cast.framework) {
+    const context = cast.framework.CastContext.getInstance();
+    context.addEventListener(
+      cast.framework.CastContextEventType.CAST_STATE_CHANGED,
+      checkCastDevices
+    );
+    checkCastDevices(); // Initial check
+  }
+}
+
+handleCast() {
+  const { platform, id, title } = this.currentVideo;
+
+  // Only handle GCS casting as requested
+  if (platform === "gcs") {
+    const fullUrl = `https://storage.googleapis.com/mrpangu/${id}`;
+    
+    const mediaInfo = new chrome.cast.media.MediaInfo(fullUrl, 'video/mp4');
+    mediaInfo.metadata = new chrome.cast.media.GenericMediaMetadata();
+    mediaInfo.metadata.metadataType = chrome.cast.media.MetadataType.GENERIC;
+    mediaInfo.metadata.title = title || 'Video';
+    
+    const request = new chrome.cast.media.LoadRequest(mediaInfo);
+    request.autoplay = true;
+
+    const context = cast.framework.CastContext.getInstance();
+    
+    context.requestSession().then(session => {
+      session.loadMedia(request).then(
+        () => {
+          console.log("GCS video casting started successfully");
+          // Optional: Show success message
+          this.showCastSuccess();
+        },
+        (error) => {
+          console.error("Failed to load media on cast device:", error);
+          this.showCastError("Failed to start casting");
+        }
+      );
+    }).catch(error => {
+      console.error("Failed to start cast session:", error);
+      if (error.code === 'cancel') {
+        console.log("User cancelled cast session");
+      } else {
+        this.showCastError("Could not connect to cast device");
+      }
+    });
+  } else {
+    // For non-GCS platforms, just open the external link
+    window.open(this.getDirectVideoLink(), "_blank");
+  }
+}
+
+showCastSuccess() {
+  const originalHtml = this.elements.castBtn.innerHTML;
+  this.elements.castBtn.innerHTML = '<i class="fas fa-check"></i>';
+  this.elements.castBtn.style.color = '#4ecdc4';
+  
+  setTimeout(() => {
+    this.elements.castBtn.innerHTML = '<i class="fas fa-cast-connected"></i>';
+  }, 2000);
+}
+
+showCastError(message) {
+  console.error("Cast error:", message);
+  const originalHtml = this.elements.castBtn.innerHTML;
+  this.elements.castBtn.innerHTML = '<i class="fas fa-exclamation-triangle"></i>';
+  this.elements.castBtn.style.color = '#ff6b6b';
+  
+  setTimeout(() => {
+    this.elements.castBtn.innerHTML = originalHtml;
+    this.elements.castBtn.style.color = '';
+  }, 3000);
+}
+
+toggleFullscreen() {
+  if (!document.fullscreenElement) {
+    this.elements.playerContainer.classList.add("fullscreen-player");
+    this.elements.playerContainer.requestFullscreen().catch(err => {
+      console.log('Fullscreen error:', err);
+    });
+  } else {
+    document.exitFullscreen().then(() => {
+      this.elements.playerContainer.classList.remove("fullscreen-player", "zoom-fill");
+    });
+  }
+}
+
+      // Global retry function
+      retryLoad() {
+        this.retryCount = 0;
+        this.loadVideo();
+      }
+    }
+
+    // Initialize player when DOM is ready
+    let player;
+    
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', () => {
+        player = new VideoPlayer();
+      });
+    } else {
+      player = new VideoPlayer();
+    }
+
+    // Make retry function globally accessible
+    window.retryLoad = () => {
+      if (player) {
+        player.retryLoad();
+      }
+    };
+
+    // Handle offline/online status
+    window.addEventListener('online', () => {
+      console.log('Connection restored');
+      if (player && document.getElementById('playerError').style.display === 'flex') {
+        player.retryLoad();
+      }
+    });
+
+    window.addEventListener('offline', () => {
+      console.log('Connection lost');
+    });
+
+    // Service Worker registration (optional for PWA)
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        // navigator.serviceWorker.register('/sw.js')
+        //   .then(registration => console.log('SW registered'))
+        //   .catch(error => console.log('SW registration failed'));
+      });
+    }
+  </script>
+</body>
+</html>
