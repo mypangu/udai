@@ -3,8 +3,7 @@
     <head>
         <meta charset="UTF-8"/>
         <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
-        <title>OXOLIVE HLS Player</title>
-        <link rel="stylesheet" type="text/css" href="/clprr.css">
+        <title>Youdai HLS Player</title>
         <style>
             html,body {
                 margin: 0;
@@ -14,7 +13,6 @@
                 width: 100%;
                 overflow: hidden
             }
-
             #player-wrapper {
                 position: fixed;
                 inset: 0;
@@ -22,26 +20,20 @@
                 height: 100%;
                 background: #000
             }
-
             #player {
                 width: 100%;
                 height: 100%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
                 color: #fff;
                 font-family: Arial,sans-serif;
                 font-size: 16px;
                 text-align: center
             }
-
             #player video {
                 object-fit: fill !important;
                 width: 100% !important;
                 height: 100% !important;
                 background-color: #000
             }
-
             .error-message {
                 color: #ff4d4d;
                 font-size: 18px;
@@ -49,12 +41,41 @@
                 background: rgba(0,0,0,0.6);
                 padding: 12px 20px;
                 border-radius: 6px;
-                margin-bottom: 15px
+                margin-bottom: 15px;
+                display: inline-block
+            }
+            .info-message {
+                color: #4d9fff;
+                font-size: 16px;
+                background: rgba(0,0,0,0.6);
+                padding: 10px 16px;
+                border-radius: 6px;
+                margin-top: 10px;
+                max-width: 80%;
+                margin-left: auto;
+                margin-right: auto;
+                display: inline-block;
+                text-align: left
+            }
+            #loading {
+                display: none
+            }
+            #loading.show {
+                display: block
+            }
+            .loading {
+                color: #fff;
+                font-size: 18px;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
             }
         </style>
     </head>
     <body>
         <div id="player-wrapper">
+            <div id="loading" class="loading">Loading player...</div>
             <div id="player"></div>
         </div>
         <!-- Clappr Core -->
@@ -64,8 +85,29 @@
         <!-- Audio Track Selector Plugin -->
         <script src="https://cdn.jsdelivr.net/npm/@c3voc/clappr-audio-track-selector@0.2.4/dist/audio-track-selector.min.js"></script>
         <script>
-            var player = new Clappr.Player({
-                source: `https://livestream10.sunnxt.com/DolbyVision/SunTV_HDR/SunTV_HDR_Endpoints/SunTV-HDR10-IN-index.m3u8`,
+            // Function to get URL parameter
+            function getUrlParameter(name) {
+                name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+                var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+                var results = regex.exec(location.search);
+                return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+            }
+
+            // Get stream URL from query parameter or use default
+            var streamUrl = getUrlParameter('url');
+            var defaultUrl = 'https://livestream10.sunnxt.com/DolbyVision/SunTV_HDR/SunTV_HDR_Endpoints/SunTV-HDR10-IN-index.m3u8';
+            
+            if (!streamUrl) {
+                streamUrl = defaultUrl;
+            }
+
+            // Detect if device is mobile
+            var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+            var isiOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+            // Configure player with mobile-optimized settings
+            var playerConfig = {
+                source: streamUrl,
                 parentId: '#player',
                 width: '100%',
                 height: '100%',
@@ -89,16 +131,106 @@
                 playback: {
                     playInline: true,
                     crossOrigin: "anonymous",
+                    preload: 'auto',
+                    recycleVideo: isiOS, // Important for iOS
                     hlsjsConfig: {
                         capLevelToPlayerSize: true,
-                        maxBufferLength: 30
+                        maxBufferLength: 30,
+                        maxMaxBufferLength: 60,
+                        enableWorker: true,
+                        lowLatencyMode: false,
+                        backBufferLength: 90,
+                        // Mobile-specific settings
+                        maxBufferSize: isMobile ? 30 * 1000 * 1000 : 60 * 1000 * 1000,
+                        maxBufferHole: 0.5,
+                        highBufferWatchdogPeriod: 2,
+                        nudgeOffset: 0.1,
+                        nudgeMaxRetry: 3,
+                        maxFragLookUpTolerance: 0.25,
+                        manifestLoadingTimeOut: 20000,
+                        manifestLoadingMaxRetry: 4,
+                        manifestLoadingRetryDelay: 1000,
+                        levelLoadingTimeOut: 20000,
+                        levelLoadingMaxRetry: 4,
+                        fragLoadingTimeOut: 30000,
+                        fragLoadingMaxRetry: 6,
+                        // Enable xhrSetup for CORS headers
+                        xhrSetup: function(xhr, url) {
+                            // xhr.withCredentials = false; // Set to true if needed
+                        }
                     }
                 }
-            });
-            // Display static error message (no retry)
-            player.on(Clappr.Events.PLAYER_ERROR, function() {
-                document.getElementById('player').innerHTML = "<div><p class='error-message'>Stream down. Please try again later.</p></div>";
-            });
+            };
+
+            // For iOS, prefer native HLS when possible
+            if (isiOS) {
+                playerConfig.playback.hlsUseNextLevel = false;
+            }
+
+            try {
+                // Show loading
+                document.getElementById('loading').className = 'loading show';
+                
+                var player = new Clappr.Player(playerConfig);
+
+                // Handle player ready event
+                player.on(Clappr.Events.PLAYER_READY, function() {
+                    console.log('Player ready');
+                    // Hide loading message
+                    document.getElementById('loading').className = 'loading';
+                    
+                    // Try to play after a short delay on mobile
+                    if (isMobile) {
+                        setTimeout(function() {
+                            player.play();
+                        }, 500);
+                    }
+                });
+
+                // Handle playback state
+                player.on(Clappr.Events.PLAYER_PLAY, function() {
+                    console.log('Playing');
+                });
+
+                player.on(Clappr.Events.PLAYER_PAUSE, function() {
+                    console.log('Paused');
+                });
+
+                // Display error message
+                player.on(Clappr.Events.PLAYER_ERROR, function(error) {
+                    console.error('Player error:', error);
+                    // Hide loading message
+                    document.getElementById('loading').className = 'loading';
+                    
+                    var errorHtml = "<div style='position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:90%'>";
+                    errorHtml += "<p class='error-message'>Stream unavailable</p>";
+                    errorHtml += "<p class='info-message'>This may be due to:<br/>";
+                    errorHtml += "• CORS restrictions<br/>";
+                    errorHtml += "• Unsupported format on this device<br/>";
+                    errorHtml += "• Network connectivity issues<br/>";
+                    errorHtml += "• Stream is currently offline</p>";
+                    if (streamUrl !== defaultUrl) {
+                        errorHtml += "<p class='info-message' style='font-size: 14px'>Stream URL: " + streamUrl.substring(0, 50) + "...</p>";
+                    }
+                    errorHtml += "</div>";
+                    document.getElementById('player').innerHTML = errorHtml;
+                });
+
+                // Handle touch events for mobile autoplay
+                if (isMobile) {
+                    document.addEventListener('touchstart', function() {
+                        if (player && player.play) {
+                            player.play();
+                        }
+                    }, { once: true });
+                }
+
+            } catch (e) {
+                console.error('Failed to initialize player:', e);
+                document.getElementById('loading').className = 'loading';
+                document.getElementById('player').innerHTML = 
+                    "<div style='position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:90%'><p class='error-message'>Failed to initialize player</p><p class='info-message'>" + e.message + "</p></div>";
+            }
         </script>
     </body>
 </html>
