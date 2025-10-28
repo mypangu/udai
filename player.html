@@ -16,6 +16,7 @@
   src="https://www.gstatic.com/cv/js/sender/v1/cast_sender.js?loadCastFramework">
 </script>
 
+  <script src="https://cdn.jsdelivr.net/npm/dashjs@4.7.0/dist/dash.all.min.js"></script>
 
   <style>
     * {
@@ -911,7 +912,6 @@ async getVideoFromUrl() {
       const response = await fetch('videos.json');
       if (response.ok) {
         videos = await response.json();
-        // Save to sessionStorage for future use
         sessionStorage.setItem('allVideos', JSON.stringify(videos));
       }
     } catch (error) {
@@ -920,9 +920,9 @@ async getVideoFromUrl() {
     }
   }
   
-  // For HLS streams, use title as identifier
-  if (platform === 'hls' && title) {
-    return videos.find(v => v.platform === 'hls' && v.title === decodeURIComponent(title));
+  // For HLS and MPD streams, use title as identifier
+  if ((platform === 'hls' || platform === 'mpd') && title) {
+    return videos.find(v => v.platform === platform && v.title === decodeURIComponent(title));
   }
   
   // For other platforms, use id
@@ -1311,7 +1311,13 @@ applyStretchMode() {
       getDirectVideoLink() {
         const { platform, id } = this.currentVideo;
         switch(platform) {
-          case 'youtube': return `https://www.youtube.com/watch?v=${id}`;
+case 'youtube': 
+  // Check if it's a channel ID for live stream
+  const isChannelId = id.startsWith('UC');
+  if (isChannelId) {
+    return `https://www.youtube.com/channel/${id}/live`;
+  }
+  return `https://www.youtube.com/watch?v=${id}`;
           case 'dailymotion': return `https://www.dailymotion.com/video/${id}`;
           case 'ok': return `https://ok.ru/video/${id}`;
           case 'yupptv': return `https://www.yupptv.com/yupptvnew/channels/${id}/live`;
@@ -1329,6 +1335,9 @@ case 'vimeo':
 case 'hls':
   return id; // id contains the full stream URL  
   
+case 'mpd':
+  return id;  
+  
           default: return window.location.href;
         }
       }
@@ -1337,8 +1346,8 @@ getShareableUrl() {
   const { platform, id, title } = this.currentVideo;
   const baseUrl = window.location.origin + window.location.pathname;
   
-  // For HLS streams, use title as parameter
-  if (platform === 'hls') {
+  // For HLS and MPD streams, use title as parameter
+  if (platform === 'hls' || platform === 'mpd') {
     return `${baseUrl}?platform=${platform}&title=${encodeURIComponent(title)}`;
   }
   
@@ -1351,9 +1360,15 @@ getShareableUrl() {
         let url = '#';
         
         switch(platform) {
-          case 'youtube':
-            url = `https://www.youtube.com/watch?v=${id}`;
-            break;
+case 'youtube':
+  // Check if it's a channel ID for live stream
+  const isYtChannelId = id.startsWith('UC');
+  if (isYtChannelId) {
+    url = `https://www.youtube.com/channel/${id}/live`;
+  } else {
+    url = `https://www.youtube.com/watch?v=${id}`;
+  }
+  break;
           case 'dailymotion':
             url = `https://www.dailymotion.com/video/${id}`;
             break;
@@ -1378,6 +1393,10 @@ case 'vimeo':
 case 'hls':
   url = id; // id contains the full stream URL
   break;
+  
+case 'mpd':
+  url = id; // id contains the full MPD URL
+  break;  
   
         }
         
@@ -1901,20 +1920,35 @@ showManualMXInstructions(streamUrl) {
 
       getEmbedUrl(platform, id, retryAttempt = 0) {
         switch(platform) {
-		  case 'youtube':
-			// detect PC vs mobile
-			const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) 
-                       || window.innerWidth <= 768;
+case 'youtube':
+  // detect PC vs mobile
+  const isMobile = /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) 
+                   || window.innerWidth <= 768;
 
-			// fs=1 (enable YouTube fullscreen button) on PC; fs=0 (hide) on mobile
-			const fsParam = isMobile ? 0 : 1;
+  // fs=1 (enable YouTube fullscreen button) on PC; fs=0 (hide) on mobile
+  const fsParam = isMobile ? 0 : 1;
 
-			const ytUrls = [
-			 `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&modestbranding=1&controls=1&fs=${fsParam}`,
-			 `https://www.youtube.com/embed/${id}?autoplay=1&rel=0&modestbranding=1&controls=1&fs=${fsParam}`,
-			 `https://www.youtube-nocookie.com/embed/${id}?rel=0&controls=1&fs=${fsParam}`
-			];
-		  return ytUrls[retryAttempt] || ytUrls[0];
+  // Check if it's a channel ID (starts with UC) for live stream
+  const isChannelId = id.startsWith('UC');
+  
+  let ytUrls;
+  if (isChannelId) {
+    // Live stream URLs using channel ID
+    ytUrls = [
+      `https://www.youtube-nocookie.com/embed/live_stream?channel=${id}&autoplay=1&rel=0&modestbranding=1&controls=1&fs=${fsParam}`,
+      `https://www.youtube.com/embed/live_stream?channel=${id}&autoplay=1&rel=0&modestbranding=1&controls=1&fs=${fsParam}`,
+      `https://www.youtube-nocookie.com/embed/live_stream?channel=${id}&rel=0&controls=1&fs=${fsParam}`
+    ];
+  } else {
+    // Regular video URLs using video ID
+    ytUrls = [
+      `https://www.youtube-nocookie.com/embed/${id}?autoplay=1&rel=0&modestbranding=1&controls=1&fs=${fsParam}`,
+      `https://www.youtube.com/embed/${id}?autoplay=1&rel=0&modestbranding=1&controls=1&fs=${fsParam}`,
+      `https://www.youtube-nocookie.com/embed/${id}?rel=0&controls=1&fs=${fsParam}`
+    ];
+  }
+  
+  return ytUrls[retryAttempt] || ytUrls[0];
             
           case 'dailymotion':
             return `https://www.dailymotion.com/embed/video/${id}?autoplay=1&ui-logo=0&controls=1`;
@@ -2422,6 +2456,211 @@ video.addEventListener('error', (e) => {
     </body>
     </html>
   `)}`;
+  
+case 'mpd':
+  // For MPD streams, create custom player
+  const mpdUrl = id; // id contains the full MPD URL
+  return `data:text/html;charset=utf-8,${encodeURIComponent(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <script src="https://cdn.jsdelivr.net/npm/dashjs@4.7.0/dist/dash.all.min.js"><\/script>
+      <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+          background: #000; 
+          width: 100vw; 
+          height: 100vh; 
+          display: flex; 
+          position: relative; 
+          overflow: hidden;
+        }
+        video { 
+          width: 100%; 
+          height: 100%; 
+          object-fit: fill; 
+          background: #000; 
+        }
+        #errorOverlay {
+          position: absolute;
+          top: 0; left: 0;
+          width: 100%; height: 100%;
+          background: rgba(0,0,0,0.9);
+          display: none;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          z-index: 999;
+          color: white;
+          text-align: center;
+          padding: 20px;
+        }
+        .error-icon {
+          font-size: 48px;
+          color: #ff6b6b;
+          margin-bottom: 20px;
+        }
+        #errorTitle {
+          font-size: 20px;
+          margin-bottom: 10px;
+        }
+        #errorMessage {
+          font-size: 14px;
+          opacity: 0.8;
+          margin-bottom: 20px;
+        }
+        #retryBtn {
+          background: #4ecdc4;
+          border: none;
+          padding: 12px 24px;
+          border-radius: 8px;
+          color: white;
+          cursor: pointer;
+          font-size: 14px;
+          font-weight: 600;
+        }
+      </style>
+    </head>
+    <body>
+      <video id="video" controls autoplay playsinline webkit-playsinline><\/video>
+      
+      <div id="errorOverlay">
+        <div class="error-icon">⚠️</div>
+        <h3 id="errorTitle">Stream Not Available</h3>
+        <p id="errorMessage"></p>
+        <button id="retryBtn">Try Again</button>
+      </div>
+      
+      <script>
+        const video = document.getElementById('video');
+        const errorOverlay = document.getElementById('errorOverlay');
+        const errorTitle = document.getElementById('errorTitle');
+        const errorMessage = document.getElementById('errorMessage');
+        const retryBtn = document.getElementById('retryBtn');
+        
+        const mpdUrl = '${mpdUrl}';
+        let player = null;
+        
+        console.log('MPD URL:', mpdUrl);
+        
+        function showError(title, message) {
+          errorTitle.textContent = title;
+          errorMessage.textContent = message;
+          errorOverlay.style.display = 'flex';
+        }
+        
+        function cleanup() {
+          if (player) {
+            player.reset();
+            player = null;
+          }
+          video.pause();
+          video.removeAttribute('src');
+          video.load();
+        }
+        
+        function initPlayer() {
+          try {
+            // Initialize Dash.js player
+            player = dashjs.MediaPlayer().create();
+            
+            player.initialize(video, mpdUrl, true); // autoplay = true
+            
+            player.updateSettings({
+              streaming: {
+                buffer: {
+                  bufferTimeAtTopQuality: 30,
+                  bufferTimeAtTopQualityLongForm: 60,
+                  initialBufferLevel: 10,
+                  stableBufferTime: 30
+                },
+                abr: {
+                  autoSwitchBitrate: {
+                    video: true,
+                    audio: true
+                  }
+                }
+              }
+            });
+            
+            // Handle errors
+            player.on(dashjs.MediaPlayer.events.ERROR, (e) => {
+              console.error('DASH Error:', e);
+              
+              if (e.error === 'download') {
+                showError(
+                  'Connection Failed',
+                  'Cannot connect to the stream. The channel may be offline or experiencing issues.'
+                );
+              } else if (e.error === 'manifestError') {
+                showError(
+                  'Stream Error',
+                  'Cannot load stream manifest. The stream may be unavailable.'
+                );
+              } else {
+                showError(
+                  'Playback Error',
+                  'An error occurred during playback.'
+                );
+              }
+            });
+            
+            // Handle successful stream start
+            player.on(dashjs.MediaPlayer.events.STREAM_INITIALIZED, () => {
+              console.log('DASH stream initialized successfully');
+            });
+            
+            console.log('DASH player initialized');
+            
+          } catch (error) {
+            console.error('Init error:', error);
+            showError('Player Error', 'Failed to initialize player: ' + error.message);
+          }
+        }
+        
+        // Video element error handler
+        video.addEventListener('error', (e) => {
+          console.error('Video element error:', video.error);
+          if (video.error) {
+            switch(video.error.code) {
+              case MediaError.MEDIA_ERR_NETWORK:
+                showError('Network Error', 'A network error caused the stream to fail.');
+                break;
+              case MediaError.MEDIA_ERR_DECODE:
+                showError('Decode Error', 'Cannot decode this stream format.');
+                break;
+              case MediaError.MEDIA_ERR_SRC_NOT_SUPPORTED:
+                showError('Format Not Supported', 'This stream format is not supported.');
+                break;
+              default:
+                showError('Video Error', 'An error occurred while playing the video.');
+            }
+          }
+        });
+        
+        // Retry button
+        retryBtn.addEventListener('click', async () => {
+          console.log('Retry button clicked');
+          errorOverlay.style.display = 'none';
+          cleanup();
+          await new Promise(resolve => setTimeout(resolve, 300));
+          initPlayer();
+        });
+        
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', () => {
+          cleanup();
+        });
+        
+        // Initialize player
+        initPlayer();
+        
+      <\/script>
+    </body>
+    </html>
+  `)}`;  
             
           default:
             return '';
