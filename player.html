@@ -817,6 +817,11 @@
 </div>
       
       <iframe id="playerIframe" class="player-iframe" allowfullscreen allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"></iframe>
+	  
+	  <!-- Add this right after the existing playerIframe -->
+<div id="directIframeContainer" class="player-container" style="display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
+  <iframe id="directIframe" style="width: 100%; height: 100%; border: none;" allowfullscreen allow="autoplay; encrypted-media; fullscreen"></iframe>
+</div>
       
       <div class="player-error" id="playerError">
         <i class="fas fa-exclamation-triangle error-icon"></i>
@@ -919,6 +924,8 @@ this.stretchModeNames = {
         this.elements = {
           playerIframe: document.getElementById('playerIframe'),
           playerLoading: document.getElementById('playerLoading'),
+		  directIframeContainer: document.getElementById('directIframeContainer'),
+		  directIframe: document.getElementById('directIframe'),
           playerError: document.getElementById('playerError'),
           playerContainer: document.getElementById('playerContainer'),
           videoTitle: document.getElementById('videoTitle'),
@@ -1391,6 +1398,9 @@ case 'gcs':
 case 'vimeo':
   return `https://vimeo.com/${id}`;
   
+case 'iframe':
+  return id;  
+  
 case 'hls':
   return id; // id contains the full stream URL  
   
@@ -1448,6 +1458,10 @@ case 'gcs':
 case 'vimeo':
   url = `https://vimeo.com/${id}`;
   break;
+  
+case 'iframe':
+  url = id; // id contains the full URL
+  break;  
 
 case 'hls':
   url = id; // id contains the full stream URL
@@ -1706,10 +1720,58 @@ if (this.currentVideo?.isLocal === "True") {
   this.showLoading();
   this.hideError();
   
-  const { platform, id } = this.currentVideo;
-  let embedUrl = this.getEmbedUrl(platform, id);
+const { platform, id } = this.currentVideo;
+
+// Check if this is a direct iframe embed
+if (platform === 'iframe') {
+  // Hide regular iframe, show direct iframe
+  this.elements.playerIframe.style.display = 'none';
+  this.elements.directIframeContainer.style.display = 'block';
+  this.elements.directIframe.src = id; // id contains the full URL
   
+  // Handle iframe load events
+  this.elements.directIframe.onload = () => {
+    if (this.loadTimeout) {
+      clearTimeout(this.loadTimeout);
+      this.loadTimeout = null;
+    }
+    this.hideLoading();
+    console.log('Direct iframe loaded successfully');
+  };
+  
+  this.elements.directIframe.onerror = () => {
+    if (this.loadTimeout) {
+      clearTimeout(this.loadTimeout);
+      this.loadTimeout = null;
+    }
+    this.handleLoadError();
+  };
+} else {
+  // Show regular iframe, hide direct iframe
+  this.elements.playerIframe.style.display = 'block';
+  this.elements.directIframeContainer.style.display = 'none';
+  
+  let embedUrl = this.getEmbedUrl(platform, id);
   this.elements.playerIframe.src = embedUrl;
+  
+  // Handle regular iframe load events (existing code)
+  this.elements.playerIframe.onload = () => {
+    if (this.loadTimeout) {
+      clearTimeout(this.loadTimeout);
+      this.loadTimeout = null;
+    }
+    this.hideLoading();
+    console.log('Video loaded successfully');
+  };
+  
+  this.elements.playerIframe.onerror = () => {
+    if (this.loadTimeout) {
+      clearTimeout(this.loadTimeout);
+      this.loadTimeout = null;
+    }
+    this.handleLoadError();
+  };
+}
   
   // Clear any existing timeout first
 if (this.loadTimeout) {
@@ -2100,6 +2162,10 @@ case 'twitch':
 
 case 'vimeo':
   return `https://player.vimeo.com/video/${id}?autoplay=1&title=0&byline=0&portrait=0`;  
+
+case 'iframe':
+  // For direct iframe embed URLs
+  return id;  
   
 case 'hls':
   // Check if it's dual stream (video&audio)
