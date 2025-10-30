@@ -63,6 +63,35 @@
       position: relative;
       padding-bottom: 56.25%;
       background: #000;
+      cursor: pointer;
+    }
+
+    /* Fullscreen styles */
+    .player-wrapper:fullscreen,
+    .player-wrapper:-webkit-full-screen,
+    .player-wrapper:-moz-full-screen,
+    .player-wrapper:-ms-fullscreen {
+      padding-bottom: 0;
+      width: 100vw;
+      height: 100vh;
+    }
+
+    .player-wrapper:fullscreen .player-container,
+    .player-wrapper:-webkit-full-screen .player-container,
+    .player-wrapper:-moz-full-screen .player-container,
+    .player-wrapper:-ms-fullscreen .player-container {
+      position: static;
+      width: 100%;
+      height: 100%;
+    }
+
+    .player-wrapper:fullscreen iframe,
+    .player-wrapper:fullscreen video,
+    .player-wrapper:-webkit-full-screen iframe,
+    .player-wrapper:-webkit-full-screen video {
+      position: static;
+      width: 100%;
+      height: 100%;
     }
 
     iframe, video {
@@ -329,8 +358,8 @@
         name: "Sun TV HD",
         language: "Tamil",
         logo: "https://oxolive.com/wp-content/uploads/2025/02/ChatGPT-Image-Sep-14-2025-03_56_04-PM-1-150x150.png",
-        url: "https://oxo.porus-in2012.workers.dev/https://livestream10.sunnxt.com/DolbyVision/SunTV_HDR/SunTV_HDR_Endpoints/SunTV-HDR10-IN-index.m3u8",
-        type: "hls"
+        url: "https://oxo.porus-in2012.workers.dev/https://playyonogames.in/watch.php?id=896",
+        type: "iframe"
       },
       {
         name: "Astro Thangathirai",
