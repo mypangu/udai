@@ -1614,8 +1614,19 @@ if (this.loadTimeout) {
   this.loadTimeout = null;
 }
 
-// Stop any currently playing video
+// ENHANCED: Stop ALL currently playing videos
+// Stop regular iframe
 this.elements.playerIframe.src = 'about:blank';
+this.elements.playerIframe.style.display = 'none';
+
+// Stop direct iframe if it exists
+if (this.elements.directIframeContainer) {
+  this.elements.directIframe.src = 'about:blank';
+  this.elements.directIframeContainer.style.display = 'none';
+}
+
+// Small delay to ensure cleanup completes
+await new Promise(resolve => setTimeout(resolve, 100));
   
   // Update current video data
   this.currentVideo = video;
@@ -1691,6 +1702,17 @@ if (isTamilTVChannel) {
 
 loadVideo() {
 
+  console.log('Loading new video, stopping previous...');
+  
+  // Stop and clear ALL iframes first
+  this.elements.playerIframe.src = 'about:blank';
+  this.elements.playerIframe.style.display = 'none';
+  
+  if (this.elements.directIframeContainer && this.elements.directIframe) {
+    this.elements.directIframe.src = 'about:blank';
+    this.elements.directIframeContainer.style.display = 'none';
+  }
+
 if (this.currentVideo?.isLocal === "True") {
   console.warn("Blocked loadVideo() for local-only stream:", this.currentVideo.title);
   this.hideLoading();
@@ -1724,8 +1746,11 @@ const { platform, id } = this.currentVideo;
 
 // Check if this is a direct iframe embed
 if (platform === 'iframe') {
-  // Hide regular iframe, show direct iframe
+  // STOP regular iframe completely before showing direct iframe
+  this.elements.playerIframe.src = 'about:blank';
   this.elements.playerIframe.style.display = 'none';
+  
+  // Now show and load direct iframe
   this.elements.directIframeContainer.style.display = 'block';
   this.elements.directIframe.src = id; // id contains the full URL
   
@@ -1747,9 +1772,14 @@ if (platform === 'iframe') {
     this.handleLoadError();
   };
 } else {
-  // Show regular iframe, hide direct iframe
+  // STOP direct iframe completely before showing regular iframe
+  if (this.elements.directIframeContainer && this.elements.directIframe) {
+    this.elements.directIframe.src = 'about:blank';
+    this.elements.directIframeContainer.style.display = 'none';
+  }
+  
+  // Now show and load regular iframe
   this.elements.playerIframe.style.display = 'block';
-  this.elements.directIframeContainer.style.display = 'none';
   
   let embedUrl = this.getEmbedUrl(platform, id);
   this.elements.playerIframe.src = embedUrl;
@@ -1808,6 +1838,12 @@ removeLocalOverlay() {
   const existingOverlay = document.getElementById('localOnlyOverlay');
   if (existingOverlay) {
     existingOverlay.remove();
+  }
+  
+  // Clear both iframes before showing
+  this.elements.playerIframe.src = 'about:blank';
+  if (this.elements.directIframe) {
+    this.elements.directIframe.src = 'about:blank';
   }
   
   // Show the iframe again
