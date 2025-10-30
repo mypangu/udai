@@ -3,36 +3,69 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Astro Thangathirai Player</title>
+  <title>Live TV Player</title>
   <style>
-    /* Reset and body */
-    body, html {
+    * {
       margin: 0;
       padding: 0;
-      height: 100%;
-      width: 100%;
-      background-color: #0b0c10;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-family: 'Poppins', sans-serif;
+      box-sizing: border-box;
     }
 
-    /* Container for player */
-    .player-container {
-      width: 100%;
-      max-width: 1200px;
-      height: 0;
-      padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
-      position: relative;
-      box-shadow: 0 0 30px rgba(0,0,0,0.7);
-      border-radius: 10px;
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0b0c10 0%, #1a1d29 100%);
+      color: #ffffff;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid #00c9a7;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      background: linear-gradient(135deg, #00c9a7, #00d4ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      color: #8892b0;
+      font-size: 1rem;
+    }
+
+    .main-content {
+      display: grid;
+      grid-template-columns: 1fr 350px;
+      gap: 20px;
+      align-items: start;
+    }
+
+    .player-section {
+      background: #1a1d29;
+      border-radius: 15px;
       overflow: hidden;
-      background-color: #000;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
     }
 
-    /* Responsive iframe */
-    .player-container iframe {
+    .player-wrapper {
+      position: relative;
+      padding-bottom: 56.25%;
+      background: #000;
+    }
+
+    iframe, video {
       position: absolute;
       top: 0;
       left: 0;
@@ -41,30 +74,525 @@
       border: none;
     }
 
-    /* Optional footer / info */
-    .player-footer {
-      text-align: center;
-      color: #eaeaea;
-      margin-top: 10px;
-      font-size: 0.9rem;
+    .now-playing {
+      padding: 20px;
+      background: linear-gradient(135deg, #1a1d29 0%, #252a3d 100%);
     }
 
-    .player-footer span {
+    .now-playing h2 {
+      font-size: 1.5rem;
       color: #00c9a7;
-      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .now-playing .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: #ff4444;
+      font-size: 0.9rem;
+      margin-top: 10px;
+    }
+
+    .live-indicator {
+      width: 10px;
+      height: 10px;
+      background: #ff4444;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.1); }
+    }
+
+    .channel-list {
+      background: #1a1d29;
+      border-radius: 15px;
+      padding: 20px;
+      max-height: 700px;
+      overflow-y: auto;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    .channel-list h3 {
+      font-size: 1.3rem;
+      margin-bottom: 20px;
+      color: #00c9a7;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .channel-item {
+      background: #252a3d;
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+
+    .channel-item:hover {
+      transform: translateX(5px);
+      background: #2d3447;
+      border-color: #00c9a7;
+    }
+
+    .channel-item.active {
+      background: linear-gradient(135deg, #00c9a7 0%, #00a896 100%);
+      border-color: #00d4ff;
+      box-shadow: 0 5px 20px rgba(0, 201, 167, 0.3);
+    }
+
+    .channel-logo {
+      width: 50px;
+      height: 50px;
+      background: #1a1d29;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+
+    .channel-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .channel-item.active .channel-logo {
+      background: rgba(255, 255, 255, 0.2);
+      box-shadow: 0 0 15px rgba(0, 201, 167, 0.5);
+    }
+
+    .channel-info {
+      flex: 1;
+    }
+
+    .channel-name {
+      font-weight: 600;
+      font-size: 1rem;
+      margin-bottom: 3px;
+    }
+
+    .channel-language {
+      font-size: 0.85rem;
+      color: #8892b0;
+    }
+
+    .channel-item.active .channel-language {
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .loading-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+    }
+
+    .loading-overlay.show {
+      display: flex;
+    }
+
+    .spinner {
+      border: 4px solid rgba(255, 255, 255, 0.1);
+      border-top: 4px solid #00c9a7;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Scrollbar styling */
+    .channel-list::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .channel-list::-webkit-scrollbar-track {
+      background: #0b0c10;
+      border-radius: 10px;
+    }
+
+    .channel-list::-webkit-scrollbar-thumb {
+      background: #00c9a7;
+      border-radius: 10px;
+    }
+
+    .channel-list::-webkit-scrollbar-thumb:hover {
+      background: #00d4ff;
+    }
+
+    /* Responsive */
+    @media (max-width: 968px) {
+      .main-content {
+        grid-template-columns: 1fr;
+      }
+
+      .channel-list {
+        max-height: 400px;
+      }
+
+      h1 {
+        font-size: 2rem;
+      }
+    }
+
+    .error-message {
+      background: #ff4444;
+      color: white;
+      padding: 15px;
+      border-radius: 10px;
+      margin: 20px;
+      display: none;
+    }
+
+    .error-message.show {
+      display: block;
+    }
+
+    .player-container {
+      display: none;
+    }
+
+    .player-container.active {
+      display: block;
     }
   </style>
 </head>
 <body>
-  <div class="player-container">
-    <iframe
-      src="https://southlive.net/player.php?mpd=https://linearjitp-playback.astro.com.my/dash-wv/linear/2109/default_ott.mpd&keyId=918adebe10a9848d567dc6cb5adce510&key=084e76561bba9d4f3ae953acdd37b3ed"
-      allow="autoplay; encrypted-media"
-      allowfullscreen>
-    </iframe>
+  <div class="container">
+    <header>
+      <h1>🎬 Live TV Player</h1>
+      <p class="subtitle">Watch your favorite channels in HD quality</p>
+    </header>
+
+    <div class="main-content">
+      <div class="player-section">
+        <div class="player-wrapper">
+          <!-- HLS Video Player -->
+          <div id="hls-player" class="player-container">
+            <video id="video" controls autoplay muted></video>
+          </div>
+          
+          <!-- iFrame Player for embedded players -->
+          <div id="iframe-player" class="player-container">
+            <iframe id="player-iframe" allow="autoplay; encrypted-media; fullscreen" allowfullscreen></iframe>
+          </div>
+          
+          <div class="loading-overlay" id="loading">
+            <div class="spinner"></div>
+          </div>
+        </div>
+        <div class="now-playing">
+          <h2 id="currentChannel">Select a channel to start</h2>
+          <div class="status">
+            <span class="live-indicator"></span>
+            <span>LIVE</span>
+          </div>
+        </div>
+        <div class="error-message" id="error"></div>
+      </div>
+
+      <div class="channel-list">
+        <h3>📺 Available Channels</h3>
+        <div id="channels"></div>
+      </div>
+    </div>
   </div>
-  <div class="player-footer">
-    Playing <span>Astro Thangathirai</span>
-  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <script>
+    // Channel configuration - Add your channels here
+    const channels = [
+      {
+        name: "Sun TV HD",
+        language: "Tamil",
+        logo: "https://oxolive.com/wp-content/uploads/2025/02/ChatGPT-Image-Sep-14-2025-03_56_04-PM-1-150x150.png",
+        url: "https://oxo.porus-in2012.workers.dev/https://livestream10.sunnxt.com/DolbyVision/SunTV_HDR/SunTV_HDR_Endpoints/SunTV-HDR10-IN-index.m3u8",
+        type: "hls"
+      },
+      {
+        name: "Astro Thangathirai",
+        language: "Tamil",
+        logo: "https://oxolive.com/wp-content/uploads/2025/06/ChatGPT-Image-Jun-23-2025-06_55_03-PM-150x150.png",
+        url: "https://oxo.porus-in2012.workers.dev/https://southlive.net/player.php?mpd=https://linearjitp-playback.astro.com.my/dash-wv/linear/2109/default_ott.mpd?&keyId=918adebe10a9848d567dc6cb5adce510&key=084e76561bba9d4f3ae953acdd37b3ed",
+        type: "iframe"
+      },
+      {
+        name: "SUN MUSIC HD",
+        language: "Tamil",
+        logo: "https://oxolive.com/wp-content/uploads/2025/02/ChatGPT-Image-May-14-2025-11_22_04-AM-1-150x150.png",
+        url: "https://oxo.porus-in2012.workers.dev/https://playyonogames.in/watch.php?id=895",
+        type: "iframe"
+      },
+      {
+        name: "KTV HD",
+        language: "Tamil",
+        logo: "https://oxolive.com/wp-content/uploads/2025/02/ChatGPT-Image-May-27-2025-02_32_51-PM-150x150.png",
+        url: "https://oxo.porus-in2012.workers.dev/https://playyonogames.in/watch.php?id=894",
+        type: "iframe"
+      },
+      {
+        name: "Z Tamil",
+        language: "Tamil",
+        logo: "https://oxolive.com/wp-content/uploads/2021/06/ZTAMHD-150x150.webp",
+        url: "https://oxo.porus-in2012.workers.dev/https://colorsportscreen.com/sfive/play.php?c=0-9-9z5383487",
+        type: "iframe"
+      },
+      {
+        name: "THANTHI ONE",
+        language: "Tamil",
+        logo: "https://oxolive.com/wp-content/uploads/2024/05/ChatGPT-Image-Apr-10-2025-12_10_10-PM-150x150.png",
+        url: "https://oxo.porus-in2012.workers.dev/https://playyonogames.in/watch.php?id=3059",
+        type: "iframe"
+      },
+      {
+        name: "Adithya TV",
+        language: "Tamil",
+        logo: "https://oxolive.com/wp-content/uploads/2025/02/ChatGPT-Image-May-27-2025-03_03_11-PM-150x150.png",
+        url: "https://oxo.porus-in2012.workers.dev/https://playyonogames.in/watch.php?id=709",
+        type: "iframe"
+      },
+      {
+        name: "Sun Life",
+        language: "Tamil",
+        logo: "https://oxolive.com/wp-content/uploads/2025/02/ChatGPT-Image-May-27-2025-03_06_07-PM-150x150.png",
+        url: "https://oxo.porus-in2012.workers.dev/https://playyonogames.in/watch.php?id=682",
+        type: "iframe"
+      },
+      {
+        name: "Colors Tamil HD",
+        language: "Tamil",
+        logo: "https://oxolive.com/wp-content/uploads/2020/03/ChatGPT-Image-May-14-2025-11_47_45-AM-150x150.png",
+        url: "https://oxo.porus-in2012.workers.dev/https://southlive.net/player.php?mpd=https://linearjitp-playback.astro.com.my/dash-wv/linear/2101/default_ott.mpd?&keyId=e46354fb39c28e5956bc946ac2a05010&key=511905bf191474b412b4ec117515a79c",
+        type: "iframe"
+      },
+      {
+        name: "Chutti TV",
+        language: "Tamil",
+        logo: "https://oxolive.com/wp-content/uploads/2020/04/ChatGPT-Image-May-28-2025-09_58_36-AM-150x150.png",
+        url: "https://oxo.porus-in2012.workers.dev/https://playyonogames.in/watch.php?id=557",
+        type: "iframe"
+      },
+      {
+        name: "Cartoon Network Tamil",
+        language: "Tamil",
+        logo: "https://oxolive.com/wp-content/uploads/2025/10/ChatGPT-Image-Oct-25-2025-08_06_03-AM-1-150x150.png",
+        url: "https://oxo.porus-in2012.workers.dev/https://playyonogames.in/watch.php?id=817",
+        type: "iframe"
+      },
+      {
+        name: "Discovery Kids Tamil",
+        language: "Tamil",
+        logo: "https://oxolive.com/wp-content/uploads/2025/10/ChatGPT-Image-Oct-24-2025-05_22_31-PM-1-1-150x150.png",
+        url: "https://oxo.porus-in2012.workers.dev/https://playyonogames.in/watch.php?id=550",
+        type: "iframe"
+      },
+      {
+        name: "Pogo Tamil",
+        language: "Tamil",
+        logo: "https://oxolive.com/wp-content/uploads/2025/09/ChatGPT-Image-Oct-9-2025-09_21_16-PM-1-150x150.png",
+        url: "https://oxo.porus-in2012.workers.dev/https://playyonogames.in/watch.php?id=542",
+        type: "iframe"
+      },
+      {
+        name: "Nick Sonic Tamil",
+        language: "Tamil",
+        logo: "https://oxolive.com/wp-content/uploads/2021/08/ChatGPT-Image-Oct-24-2025-05_27_15-PM-1-150x150.png",
+        url: "https://oxo.porus-in2012.workers.dev/https://playyonogames.in/watch.php?id=290",
+        type: "iframe"
+      },
+      {
+        name: "History TV18 HD Tamil",
+        language: "Tamil",
+        logo: "https://oxolive.com/wp-content/uploads/2025/10/ChatGPT-Image-Oct-29-2025-10_02_11-PM-1-150x150.png",
+        url: "https://oxo.porus-in2012.workers.dev/https://playyonogames.in/watch.php?id=579",
+        type: "iframe"
+      }
+    ];
+
+    const video = document.getElementById('video');
+    const hlsPlayerDiv = document.getElementById('hls-player');
+    const iframePlayerDiv = document.getElementById('iframe-player');
+    const playerIframe = document.getElementById('player-iframe');
+    const channelsContainer = document.getElementById('channels');
+    const currentChannelEl = document.getElementById('currentChannel');
+    const loadingEl = document.getElementById('loading');
+    const errorEl = document.getElementById('error');
+    let hls = null;
+    let currentChannelIndex = -1;
+
+    // Render channel list
+    function renderChannels() {
+      channelsContainer.innerHTML = '';
+      channels.forEach((channel, index) => {
+        const channelEl = document.createElement('div');
+        channelEl.className = 'channel-item';
+        
+        // Check if logo is an image URL or emoji
+        const isImageUrl = channel.logo.startsWith('http') || channel.logo.startsWith('/');
+        const logoHTML = isImageUrl 
+          ? `<img src="${channel.logo}" alt="${channel.name}" onerror="this.style.display='none'; this.parentElement.textContent='📺';">`
+          : channel.logo;
+        
+        channelEl.innerHTML = `
+          <div class="channel-logo">${logoHTML}</div>
+          <div class="channel-info">
+            <div class="channel-name">${channel.name}</div>
+            <div class="channel-language">${channel.language}</div>
+          </div>
+        `;
+        channelEl.onclick = () => playChannel(index);
+        channelsContainer.appendChild(channelEl);
+      });
+    }
+
+    // Play selected channel
+    function playChannel(index) {
+      const channel = channels[index];
+      
+      // Update UI
+      document.querySelectorAll('.channel-item').forEach((el, i) => {
+        el.classList.toggle('active', i === index);
+      });
+      
+      currentChannelEl.textContent = channel.name;
+      loadingEl.classList.add('show');
+      errorEl.classList.remove('show');
+      currentChannelIndex = index;
+
+      // Clean up previous player
+      if (hls) {
+        hls.destroy();
+        hls = null;
+      }
+
+      // Hide both players
+      hlsPlayerDiv.classList.remove('active');
+      iframePlayerDiv.classList.remove('active');
+
+      // Play based on type
+      if (channel.type === 'iframe') {
+        playIframe(channel.url);
+      } else if (channel.type === 'hls') {
+        playHLS(channel.url);
+      } else {
+        showError('Unsupported stream format');
+      }
+    }
+
+    // Play HLS stream
+    function playHLS(url) {
+      hlsPlayerDiv.classList.add('active');
+      
+      if (Hls.isSupported()) {
+        hls = new Hls({
+          enableWorker: true,
+          lowLatencyMode: true,
+          backBufferLength: 90,
+          maxBufferLength: 30,
+          maxMaxBufferLength: 60
+        });
+        
+        hls.loadSource(url);
+        hls.attachMedia(video);
+        
+        hls.on(Hls.Events.MANIFEST_PARSED, function() {
+          video.play().then(() => {
+            loadingEl.classList.remove('show');
+          }).catch(err => {
+            showError('Playback failed. Click to play.');
+            loadingEl.classList.remove('show');
+          });
+        });
+
+        hls.on(Hls.Events.ERROR, function(event, data) {
+          if (data.fatal) {
+            showError('Stream loading failed. Try another channel.');
+            loadingEl.classList.remove('show');
+          }
+        });
+      }
+      // Native HLS support (Safari)
+      else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        video.src = url;
+        video.addEventListener('loadedmetadata', function() {
+          video.play().then(() => {
+            loadingEl.classList.remove('show');
+          }).catch(err => {
+            showError('Playback failed. Click to play.');
+            loadingEl.classList.remove('show');
+          });
+        });
+      } else {
+        showError('HLS is not supported in your browser');
+        loadingEl.classList.remove('show');
+      }
+    }
+
+    // Play iframe embedded player
+    function playIframe(url) {
+      iframePlayerDiv.classList.add('active');
+      playerIframe.src = url;
+      
+      // Remove loading after iframe loads
+      playerIframe.onload = function() {
+        loadingEl.classList.remove('show');
+      };
+      
+      // Handle iframe errors
+      playerIframe.onerror = function() {
+        showError('Failed to load embedded player');
+        loadingEl.classList.remove('show');
+      };
+    }
+
+    // Show error message
+    function showError(message) {
+      errorEl.textContent = message;
+      errorEl.classList.add('show');
+      setTimeout(() => {
+        errorEl.classList.remove('show');
+      }, 5000);
+    }
+
+    // Initialize
+    renderChannels();
+    
+    // Auto-play first channel
+    if (channels.length > 0) {
+      playChannel(0);
+    }
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowUp' && currentChannelIndex > 0) {
+        playChannel(currentChannelIndex - 1);
+      } else if (e.key === 'ArrowDown' && currentChannelIndex < channels.length - 1) {
+        playChannel(currentChannelIndex + 1);
+      }
+    });
+  </script>
 </body>
 </html>
