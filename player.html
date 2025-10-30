@@ -413,6 +413,60 @@
   }
 }
 
+.related-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 15px;
+  flex-wrap: nowrap;
+}
+
+.related-header .section-title {
+  flex: 0 1 auto;
+  font-size: 18px;        /* ↓ smaller font for better fit */
+  font-weight: 600;
+  margin: 0;
+  max-width: 60%;         /* prevents it from occupying full width */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.related-search {
+  flex: 0 0 35%;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  min-width: 120px;
+}
+
+.related-search:focus {
+  outline: none;
+  border-color: #4ecdc4;
+  background: rgba(255,255,255,0.15);
+}
+
+/* On very small phones, stack neatly */
+@media (max-width: 400px) {
+  .related-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .related-header .section-title {
+    max-width: 100%;
+    font-size: 16px;
+  }
+  .related-search {
+    width: 100%;
+    margin-top: 6px;
+  }
+}
+
     .related-card {
       background: rgba(255,255,255,0.05);
       border-radius: 12px;
@@ -791,12 +845,17 @@
   </section>
 
   <!-- Related Videos -->
-  <section class="related-section">
-    <h2 class="section-title" id="relatedTitle">More from Channel</h2>
-    <div class="related-grid" id="relatedGrid">
-      <!-- Related videos will be populated here -->
-    </div>
-  </section>
+<section class="related-section">
+  <div class="related-header">
+	<h2 class="section-title" id="relatedTitle">More from Channel</h2>
+	<input type="text" id="relatedSearch" placeholder="Search videos..." class="related-search">
+  </div>
+
+  <div class="related-grid" id="relatedGrid">
+    <!-- Related videos will be populated here -->
+  </div>
+</section>
+
 
 <!-- Share Modal -->
 <div class="share-modal" id="shareModal">
@@ -1458,7 +1517,76 @@ case 'mpd':
     });
   });
 }, 100);
+
+this.setupSearchFilter();
+
       }
+	  
+setupSearchFilter() {
+  const searchInput = document.getElementById('relatedSearch');
+  if (!searchInput) return;
+
+  // --- Handle search input ---
+  searchInput.addEventListener('input', (e) => {
+    const query = e.target.value.toLowerCase().trim();
+
+    const filteredVideos = query
+      ? this.relatedVideos.filter(v =>
+          v.title.toLowerCase().includes(query) ||
+          (v.channel && v.channel.toLowerCase().includes(query))
+        )
+      : this.relatedVideos;
+
+    this.renderFilteredVideos(filteredVideos);
+  });
+}
+
+renderFilteredVideos(videoList) {
+  const grid = this.elements.relatedGrid;
+
+  if (!videoList.length) {
+    grid.innerHTML = `
+      <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: rgba(255,255,255,0.6);">
+        <i class="fas fa-video" style="font-size: 48px; margin-bottom: 15px; opacity: 0.5;"></i>
+        <p>No results found</p>
+      </div>
+    `;
+    return;
+  }
+
+  grid.innerHTML = videoList.map(video => `
+    <div class="related-card" data-platform="${video.platform}" data-id="${video.id}">
+      <div class="related-thumbnail">
+        <img src="${this.getOptimalThumbnail(video)}" alt="${video.title}" loading="lazy">
+        <div class="play-icon"><i class="fas fa-play"></i></div>
+      </div>
+      <div class="related-content">
+        <h3 class="related-title">${video.title}</h3>
+        <p class="related-date">${this.formatDate(video.date)}</p>
+      </div>
+    </div>
+  `).join('');
+
+  // --- Attach click listeners with search reset ---
+  grid.querySelectorAll('.related-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const platform = card.dataset.platform;
+      const id = card.dataset.id;
+      const video = this.allVideos.find(v => v.platform === platform && v.id === id);
+      if (video) {
+        // Clear search field
+        const searchInput = document.getElementById('relatedSearch');
+        if (searchInput) searchInput.value = '';
+
+        // Reset grid back to all related videos
+        this.renderRelatedVideos();
+
+        // Play the video
+        this.playRelatedVideo(video);
+      }
+    });
+  });
+}	  
 
 async playRelatedVideo(video) {
   console.log('Playing related video:', video.title, 'isLocal:', video.isLocal);
