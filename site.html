@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Astro Thangathirai Player</title>
+  <style>
+    /* Reset and body */
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      background-color: #0b0c10;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Poppins', sans-serif;
+    }
+
+    /* Container for player */
+    .player-container {
+      width: 100%;
+      max-width: 1200px;
+      height: 0;
+      padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+      position: relative;
+      box-shadow: 0 0 30px rgba(0,0,0,0.7);
+      border-radius: 10px;
+      overflow: hidden;
+      background-color: #000;
+    }
+
+    /* Responsive iframe */
+    .player-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+
+    /* Optional footer / info */
+    .player-footer {
+      text-align: center;
+      color: #eaeaea;
+      margin-top: 10px;
+      font-size: 0.9rem;
+    }
+
+    .player-footer span {
+      color: #00c9a7;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <div class="player-container">
+    <iframe
+      src="https://southlive.net/player.php?mpd=https://linearjitp-playback.astro.com.my/dash-wv/linear/2109/default_ott.mpd&keyId=918adebe10a9848d567dc6cb5adce510&key=084e76561bba9d4f3ae953acdd37b3ed"
+      allow="autoplay; encrypted-media"
+      allowfullscreen>
+    </iframe>
+  </div>
+  <div class="player-footer">
+    Playing <span>Astro Thangathirai</span>
+  </div>
+</body>
+</html>
