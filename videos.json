@@ -1,4 +1,32 @@
 [
+
+    {
+        "platform": "iframe",
+        "id": "https://oxo.porus-in2012.workers.dev/https://playyonogames.in/watch.php?id=368",
+        "title": "Star Vijay HD",
+        "channel": "Tamil TV",
+        "date": "2025-10-31",
+        "dthumb": "https://img.imageride.net/images/2025/10/25/vijay.png",
+        "mthumb": "https://img.imageride.net/images/2025/10/25/vijay.png"
+    },
+    {
+        "platform": "iframe",
+        "id": "https://oxo.porus-in2012.workers.dev/https://playyonogames.in/watch.php?id=3266",
+        "title": "Vijay Super HD",
+        "channel": "Tamil TV",
+        "date": "2025-10-31",
+        "dthumb": "https://img.imageride.net/images/2025/10/25/vsuper.png",
+        "mthumb": "https://img.imageride.net/images/2025/10/25/vsuper.png"
+    },
+    {
+        "platform": "iframe",
+        "id": "https://oxo.porus-in2012.workers.dev/https://playyonogames.in/watch.php?id=3269",
+        "title": "Vijay Takkar",
+        "channel": "Tamil TV",
+        "date": "2025-10-31",
+        "dthumb": "https://img.imageride.net/images/2025/10/25/vtakkar.png",
+        "mthumb": "https://img.imageride.net/images/2025/10/25/vtakkar.png"
+    },
 {
     "platform": "iframe",
     "id": "https://oxo.porus-in2012.workers.dev/https://playyonogames.in/watch.php?id=896",
@@ -7,16 +35,6 @@
     "date": "2025-10-25",
     "dthumb": "https://www.tataplay.com/s3-api/v1/assets/channels/sun-tv-hd.webp",
     "mthumb": "https://www.tataplay.com/s3-api/v1/assets/channels/sun-tv-hd.webp"
-
-},
-{
-    "platform": "iframe",
-    "id": "https://oxo.porus-in2012.workers.dev/https://southlive.net/player.php?mpd=https://linearjitp-playback.astro.com.my/dash-wv/linear/2109/default_ott.mpd?&keyId=918adebe10a9848d567dc6cb5adce510&key=084e76561bba9d4f3ae953acdd37b3ed",
-    "title": "Astro Thangathirai",
-    "channel": "Tamil TV",
-    "date": "2025-10-25",
-    "dthumb": "https://oxolive.com/wp-content/uploads/2025/06/ChatGPT-Image-Jun-23-2025-06_55_03-PM-150x150.png",
-    "mthumb": "https://oxolive.com/wp-content/uploads/2025/06/ChatGPT-Image-Jun-23-2025-06_55_03-PM-150x150.png"
 
 },
 {
@@ -42,7 +60,7 @@
 {
     "platform": "iframe",
     "id": "https://oxo.porus-in2012.workers.dev/https://colorsportscreen.com/sfive/play.php?c=0-9-zeetamil",
-    "title": "Z Tamil",
+    "title": "Zee Tamil",
     "channel": "Tamil TV",
     "date": "2025-10-25",
     "dthumb": "https://oxolive.com/wp-content/uploads/2021/06/ZTAMHD-150x150.webp",
@@ -99,6 +117,25 @@
     "mthumb": "https://img1.imageride.net/images/2025/10/25/chutti.png"
 
 },
+	{
+        "platform": "iframe",
+        "id": "https://oxo.porus-in2012.workers.dev/https://playyonogames.in/watch.php?id=676",
+        "title": "Sun News",
+        "channel": "Tamil TV",
+        "date": "2025-10-25",
+        "dthumb": "https://img.imageride.net/images/2025/10/25/snews.png",
+        "mthumb": "https://img.imageride.net/images/2025/10/25/snews.png"
+    },
+{
+    "platform": "iframe",
+    "id": "https://oxo.porus-in2012.workers.dev/https://southlive.net/player.php?mpd=https://linearjitp-playback.astro.com.my/dash-wv/linear/2109/default_ott.mpd?&keyId=918adebe10a9848d567dc6cb5adce510&key=084e76561bba9d4f3ae953acdd37b3ed",
+    "title": "Astro Thangathirai",
+    "channel": "Tamil TV",
+    "date": "2025-10-25",
+    "dthumb": "https://oxolive.com/wp-content/uploads/2025/06/ChatGPT-Image-Jun-23-2025-06_55_03-PM-150x150.png",
+    "mthumb": "https://oxolive.com/wp-content/uploads/2025/06/ChatGPT-Image-Jun-23-2025-06_55_03-PM-150x150.png"
+
+},	
 {
     "platform": "iframe",
     "id": "https://oxo.porus-in2012.workers.dev/https://playyonogames.in/watch.php?id=817",
@@ -202,38 +239,6 @@
     "date": "2025-10-25",
     "dthumb": "https://img10.hotstar.com/image/upload/f_auto,q_90,w_556/sources/r1/cms/prod/6690/1759685236690-h",
     "mthumb": "https://img10.hotstar.com/image/upload/f_auto,q_90,w_556/sources/r1/cms/prod/6690/1759685236690-h",
-    "isLocal": "True"
-
-},
-{
-    "platform": "hls",
-    "id": "http://87.255.35.150:18955",
-    "title": "Star Vijay HD",
-    "channel": "Tamil TV",
-    "date": "2025-10-25",
-    "dthumb": "https://img.imageride.net/images/2025/10/25/vijay.png",
-    "mthumb": "https://img.imageride.net/images/2025/10/25/vijay.png",
-    "isLocal": "True"
-
-},
-{
-    "platform": "hls",
-    "id": "http://87.255.35.150:18954",
-    "title": "Vijay Super HD",
-    "channel": "Tamil TV",
-    "date": "2025-10-25",
-    "dthumb": "https://img.imageride.net/images/2025/10/25/vsuper.png",
-    "mthumb": "https://img.imageride.net/images/2025/10/25/vsuper.png",
-    "isLocal": "True"
-},
-{
-    "platform": "hls",
-    "id": "http://87.255.35.150:18950",
-    "title": "Vijay Takkar",
-    "channel": "Tamil TV",
-    "date": "2025-10-25",
-    "dthumb": "https://img.imageride.net/images/2025/10/25/vtakkar.png",
-    "mthumb": "https://img.imageride.net/images/2025/10/25/vtakkar.png",
     "isLocal": "True"
 
 },
@@ -510,6 +515,24 @@
     "channel": "Tamil TV",
     "date": "2025-10-25"
   },
+	{
+        "platform": "iframe",
+        "id": "https://oxo.porus-in2012.workers.dev/https://playyonogames.in/watch.php?id=603",
+        "title": "Nambikkai",
+        "channel": "Tamil TV",
+        "date": "2025-10-25",
+        "dthumb": "https://jiotvimages.cdn.jio.com/dare_images/images/Nambikkai.png",
+        "mthumb": "https://jiotvimages.cdn.jio.com/dare_images/images/Nambikkai.png"
+    },
+    {
+        "platform": "iframe",
+        "id": "https://oxo.porus-in2012.workers.dev/https://playyonogames.in/watch.php?id=671",
+        "title": "Sathiyam TV",
+        "channel": "Tamil TV",
+        "date": "2025-10-25",
+        "dthumb": "https://jiotvimages.cdn.jio.com/dare_images/images/Sathiyam.png",
+        "mthumb": "https://jiotvimages.cdn.jio.com/dare_images/images/Sathiyam.png"
+    },  
   {
     "platform": "hls",
     "id": "https://nw18live.cdn.jio.com/bpk-tv/News18_Tamil_Nadu_NW18_MOB/output01/index.m3u8",
@@ -926,6 +949,38 @@
     "date": "2025-10-25",
     "dthumb": "https://oxolive.com/wp-content/uploads/2025/10/ChatGPT-Image-Oct-24-2025-05_22_31-PM-1-1-150x150.png",
     "mthumb": "https://oxolive.com/wp-content/uploads/2025/10/ChatGPT-Image-Oct-24-2025-05_22_31-PM-1-1-150x150.png",
+    "isLocal": "True"
+
+},
+{
+    "platform": "hls",
+    "id": "http://87.255.35.150:18955",
+    "title": "Star Vijay HD",
+    "channel": "Tamil TV",
+    "date": "2025-10-25",
+    "dthumb": "https://img.imageride.net/images/2025/10/25/vijay.png",
+    "mthumb": "https://img.imageride.net/images/2025/10/25/vijay.png",
+    "isLocal": "True"
+
+},
+{
+    "platform": "hls",
+    "id": "http://87.255.35.150:18954",
+    "title": "Vijay Super HD",
+    "channel": "Tamil TV",
+    "date": "2025-10-25",
+    "dthumb": "https://img.imageride.net/images/2025/10/25/vsuper.png",
+    "mthumb": "https://img.imageride.net/images/2025/10/25/vsuper.png",
+    "isLocal": "True"
+},
+{
+    "platform": "hls",
+    "id": "http://87.255.35.150:18950",
+    "title": "Vijay Takkar",
+    "channel": "Tamil TV",
+    "date": "2025-10-25",
+    "dthumb": "https://img.imageride.net/images/2025/10/25/vtakkar.png",
+    "mthumb": "https://img.imageride.net/images/2025/10/25/vtakkar.png",
     "isLocal": "True"
 
 },
