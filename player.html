@@ -443,6 +443,7 @@
   font-size: 14px;
   transition: all 0.3s ease;
   min-width: 120px;
+  margin-left: auto;
 }
 
 .related-search:focus {
@@ -845,6 +846,8 @@
           <div class="channel-badge" id="channelName">Loading...</div>
         </div>
         <div class="video-date" id="videoDate">Loading...</div>
+		
+	<input type="text" id="relatedSearch" placeholder="Search videos..." class="related-search">
       </div>
     </div>
   </section>
@@ -853,7 +856,6 @@
 <section class="related-section">
   <div class="related-header">
 	<h2 class="section-title" id="relatedTitle">More from Channel</h2>
-	<input type="text" id="relatedSearch" placeholder="Search videos..." class="related-search">
   </div>
 
   <div class="related-grid" id="relatedGrid">

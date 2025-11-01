@@ -1,5 +1,4 @@
 [
-
     {
         "platform": "iframe",
         "id": "https://oxo.porus-in2012.workers.dev/https://playyonogames.in/watch.php?id=368",
@@ -11,8 +10,26 @@
     },
     {
         "platform": "iframe",
+        "id": "https://oxo.porus-in2012.workers.dev/https://playyonogames.in/watch.php?id=1130",
+        "title": "Star Vijay",
+        "channel": "Tamil TV",
+        "date": "2025-10-31",
+        "dthumb": "https://img.imageride.net/images/2025/10/25/vijay.png",
+        "mthumb": "https://img.imageride.net/images/2025/10/25/vijay.png"
+    },	
+    {
+        "platform": "iframe",
         "id": "https://oxo.porus-in2012.workers.dev/https://playyonogames.in/watch.php?id=3266",
         "title": "Vijay Super HD",
+        "channel": "Tamil TV",
+        "date": "2025-10-31",
+        "dthumb": "https://img.imageride.net/images/2025/10/25/vsuper.png",
+        "mthumb": "https://img.imageride.net/images/2025/10/25/vsuper.png"
+    },
+    {
+        "platform": "iframe",
+        "id": "https://oxo.porus-in2012.workers.dev/https://playyonogames.in/watch.php?id=1131",
+        "title": "Vijay Super",
         "channel": "Tamil TV",
         "date": "2025-10-31",
         "dthumb": "https://img.imageride.net/images/2025/10/25/vsuper.png",
@@ -60,11 +77,21 @@
 {
     "platform": "iframe",
     "id": "https://oxo.porus-in2012.workers.dev/https://colorsportscreen.com/sfive/play.php?c=0-9-zeetamil",
-    "title": "Zee Tamil",
+    "title": "Zee Tamil HD",
     "channel": "Tamil TV",
     "date": "2025-10-25",
     "dthumb": "https://oxolive.com/wp-content/uploads/2021/06/ZTAMHD-150x150.webp",
     "mthumb": "https://oxolive.com/wp-content/uploads/2021/06/ZTAMHD-150x150.webp"
+
+},
+{
+    "platform": "iframe",
+    "id": "https://oxo.porus-in2012.workers.dev/https://colorsportscreen.com/sfive/play.php?c=0-9-9z5383487",
+    "title": "Zee Tamil",
+    "channel": "Tamil TV",
+    "date": "2025-10-25",
+    "dthumb": "https://oxolive.com/wp-content/uploads/2020/01/ZTAM-150x150.webp",
+    "mthumb": "https://oxolive.com/wp-content/uploads/2020/01/ZTAM-150x150.webp"
 
 },
 {
@@ -230,6 +257,26 @@
     "date": "2025-10-25",
     "dthumb": "https://jiotvimages.cdn.jio.com/dare_images/images/Madhimugam_TV.png",
     "mthumb": "https://jiotvimages.cdn.jio.com/dare_images/images/Madhimugam_TV.png"
+},
+{
+    "platform": "hls",
+    "id": "https://thamilaaramtv24-hls.secdn.net/thamilaaramtv24-channel/play/ThamilaaramTV.smil/playlist.m3u8",
+    "title": "Thamilaaram TV",
+    "channel": "Tamil TV",
+    "date": "2025-10-25",
+    "dthumb": "https://oxolive.com/wp-content/uploads/2025/04/ChatGPT-Image-Apr-28-2025-02_57_02-PM-150x150.png",
+    "mthumb": "https://oxolive.com/wp-content/uploads/2025/04/ChatGPT-Image-Apr-28-2025-02_57_02-PM-150x150.png"
+
+},
+{
+    "platform": "hls",
+    "id": "https://d35j504z0x2vu2.cloudfront.net/v1/master/0bc8e8376bd8417a1b6761138aa41c26c7309312/vikatan-tv/master.m3u8",
+    "title": "Vikatan TV",
+    "channel": "Tamil TV",
+    "date": "2025-10-25",
+    "dthumb": "https://oxolive.com/wp-content/uploads/2023/06/ChatGPT-Image-Apr-10-2025-11_22_44-AM-200x300.png",
+    "mthumb": "https://oxolive.com/wp-content/uploads/2023/06/ChatGPT-Image-Apr-10-2025-11_22_44-AM-200x300.png"
+
 },
 {
     "platform": "hls",
@@ -561,7 +608,6 @@
     "mthumb": "https://oxolive.com/wp-content/uploads/2025/01/ChatGPT-Image-Apr-13-2025-08_24_57-AM-150x150.png"
 
 },
-
 {
     "platform": "iframe",
     "id": "https://oxo.porus-in2012.workers.dev/https://southlive.net/player.php?mpd=https://times-ott-live.akamaized.net/mnplus_wv_drm/index.mpd?&keyId=40f019b86241d23ef075633fd7f1e927&key=058dec845bd340178a388edd104a015e",
@@ -612,6 +658,16 @@
     "mthumb": "https://oxolive.com/wp-content/uploads/2025/08/ChatGPT-Image-Aug-30-2025-11_24_59-AM-1-150x150.png"
 
 },  
+{
+    "platform": "iframe",
+    "id": "https://oxo.porus-in2012.workers.dev/https://colorsportscreen.com/sfive/play.php?c=0-9-zeecafehd",
+    "title": "Zee Café",
+    "channel": "Tamil TV",
+    "date": "2025-10-25",
+    "dthumb": "https://www.kindpng.com/picc/m/732-7327906_zee-cafe-logo-png-transparent-png.png",
+    "mthumb": "https://www.kindpng.com/picc/m/732-7327906_zee-cafe-logo-png-transparent-png.png"
+
+},
   {
     "platform": "hls",
     "id": "https://cdn-6.pishow.tv/live/13/master.m3u8",
